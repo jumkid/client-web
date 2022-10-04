@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 12px;
+  font-family: BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: url(./../public/images/garage-wallpaper.jpg) no-repeat top left #111;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.navigation {
+  background-color: #C41407;
+}
+.navigation-logo {
+	float: left;
+	display: block;
+	min-height: 38px;
+	min-width: 128px;
+	padding: 0;
+	margin: 0 6px 0 6px;
+	background: url(./../public/images/logo-jumkid-white.png) no-repeat top left;
+	background-size: contain;
+	cursor: pointer;
+}
+
+/* navigation */
+nav {
+    float: left;
+    display: block;
+    height: 100%;
+    font-size: 16px;
+    padding: 0 0;
+    margin: 0 38px 0 338px;
+}
+nav > ul {
+    margin: 0 0;
+    padding: 0 0 0 20px;
+    list-style-type: none;
+    width: auto;
+    float: left;
+}
+nav > ul li {
+    display: block;
+    float: left;
+    margin: 0 0;
+    padding: 0 0;
+}
+nav > ul li a {
+    display:block;
+    float:left;
+    color:#ffffff;
+    height: 36px;
+    padding: 17px 10px 0 10px;
+    text-align: center;
+    text-decoration:none;
+}
+nav > ul li a:hover, nav ul li.current_page_item a {
+    color: #4d4d4d;
+    background-color: #FFF;
+    text-align: center;
+    padding: 17px 10px 0 10px;
+}
+/* navigation end*/
