@@ -1,43 +1,56 @@
 import React from 'react';
-import { Container, AppBar, Toolbar, Icon, Divider } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import NavButtons from './MainLayout.NavButtons';
+import PropTypes from 'prop-types';
+import './index.css';
+import TopBar from './MainLayout.TopBar';
 
-const theme = createTheme({
+const jkTheme = createTheme({
   palette: {
-    secondary: {
+    primary: {
       main: '#C41407'
     }
   }
 });
 
+const styles = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(12, 1fr)',
+  gap: 1,
+  borderColor: 'text.primary',
+  m: 2,
+  border: 0,
+  height: '87vh',
+  minHeight: '600px',
+  minWidth: '1024px',
+  padding: '6px 8px',
+  borderRadius: 3,
+  opacity: [0.5, 0.8, 0.9]
+};
+
 const menuItems = [
-  { title: 'Car Owner', isCurrent: true, route: '/' },
+  { title: 'My Garage', isCurrent: true, route: '/' },
   { title: 'Professional', isCurrent: false, route: '/professional' }
 ];
 
-function MainLayout () {
-  const menuOnClickHandler = () => {
-    console.log('clicked menu item');
-  };
+const userSettings = ['Profile', 'Account', '-', 'Logout'];
 
+function MainLayout (props) {
   return (
-    <ThemeProvider theme={theme}>
-      <AppBar color="secondary" position="static">
-        <Container maxWidth="xl">
-          <Toolbar variant="dense">
-            <Icon className="navigation-logo"/>
-            <Divider />
-            <NavButtons items={menuItems} handleClick={menuOnClickHandler}/>
-          </Toolbar>
-        </Container>
-      </AppBar>
+    <ThemeProvider theme={jkTheme}>
+      <TopBar menuItems={menuItems} settings={userSettings}/>
 
-      <Container fixed>
-        <h1> here you go</h1>
+      <Container maxWidth='xl'>
+        <Box sx={{ ...styles }}>
+          { props.children }
+        </Box>
       </Container>
     </ThemeProvider>
   );
 }
+
+MainLayout.propTypes = {
+  children: PropTypes.array.isRequired
+};
 
 export default MainLayout;

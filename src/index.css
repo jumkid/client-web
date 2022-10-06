@@ -1,19 +1,18 @@
 body {
-  margin: 0;
-  padding: 0;
-  color: #fff;
-  font-size: 12px;
-  font-family: BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-size: 12px;
+    font-family: BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: url(./../public/images/garage-wallpaper.jpg) no-repeat top left #111;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: url(./../public/images/garage-wallpaper.jpg) no-repeat top left #111;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .navigation {
@@ -36,7 +35,9 @@ nav {
     float: left;
     display: block;
     height: 100%;
+    min-width: 360px;
     font-size: 16px;
+    font-family: Verdana, arial, serif;
     padding: 0 0;
     margin: 0 38px 0 338px;
 }
