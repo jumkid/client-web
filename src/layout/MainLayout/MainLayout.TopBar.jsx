@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   Container,
   Divider,
@@ -14,6 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import NavButtons from './MainLayout.NavButtons';
+import { Notifications } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 
 function TopBar ({ menuItems, settings }) {
@@ -31,19 +33,32 @@ function TopBar ({ menuItems, settings }) {
     setAnchorElUser(null);
   };
 
+  const handleNotification = () => {
+    console.log('click notification');
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth={false} disableGutters={true}>
         <Toolbar variant="dense">
           <Icon className="navigation-logo"/>
           <NavButtons items={menuItems} handleClick={menuOnClickHandler}/>
+
           <Box sx={{ flex: 1 }}/>
+
+          <IconButton aria-label={handleNotification}>
+            <Badge sx={{ mr: 2 }} badgeContent={1} overlap="circular" color="success">
+              <Notifications fontSize='large'/>
+            </Badge>
+          </IconButton>
+
           <Box>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Chooli Yip" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
+
             <Menu id="menu-appbar"
               sx={{ mt: '8px', mr: '200px' }}
               anchorEl={anchorElUser}

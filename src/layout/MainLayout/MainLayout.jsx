@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import './index.css';
 import TopBar from './MainLayout.TopBar';
 
 const jkTheme = createTheme({
@@ -15,7 +14,7 @@ const jkTheme = createTheme({
 
 const styles = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(12, 1fr)',
+  gridTemplateColumns: 'repeat(10, 1fr)',
   gap: 1,
   borderColor: 'text.primary',
   m: 2,

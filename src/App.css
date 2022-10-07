@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+.App-container {
+  padding: 2px 28px;
+  margin: 1px 1px;
+  border: 0 solid;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.App-sub-container {
+  padding: 2px 28px;
+  margin: 26px 26px;
+  border: 0 solid;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background-color: rgba(0, 0, 0, 0.66);
+}
+
+.MuiContainer-root {
+  padding: 0 0 0 0;
+}

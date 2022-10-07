@@ -1,6 +1,7 @@
 import React from 'react';
 import MainLayout from '../layout/MainLayout';
 import { Box } from '@mui/material';
+import GarageSideBar from '../GarageSideBar';
 
 const styles = {
   p: 2,
@@ -16,8 +17,10 @@ const styles = {
 function CarOwner () {
   return (
     <MainLayout>
-      <Box sx={styles} gridColumn="span 3">1</Box>
-      <Box sx={styles} gridColumn="span 9">Your garage is empty</Box>
+      <Box sx={styles} gridColumn="span 2">
+        <GarageSideBar />
+      </Box>
+      <Box sx={styles} gridColumn="span 8">Your garage is empty</Box>
     </MainLayout>
   );
 }
