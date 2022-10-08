@@ -1,6 +1,6 @@
 import JwtDecode from 'jwt-decode';
 import C from '../App.constants';
-import authenticationService from '../service';
+import authenticationService from '../service/AuthenticationService';
 
 const localStoredToken = {
   get: () => {

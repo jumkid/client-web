@@ -6,10 +6,10 @@ export class AuthenticationService {
     this.baseUrl = '/v1/user/';
   }
 
-  async login (email, password) {
+  async login (username, password) {
     const _this = this;
     const result = await dataExchangeService.postWithPromise(_this.baseUrl + 'login', {
-      email,
+      username,
       password
     });
     if (result.status === 200) {
@@ -20,7 +20,7 @@ export class AuthenticationService {
 
   async refresh (refreshToken) {
     const _this = this;
-    return await dataExchangeService.postWithPromise(_this.baseUrl + 'refreshtoken', refreshToken);
+    return await dataExchangeService.postWithPromise(_this.baseUrl + 'refresh-token', refreshToken);
   }
 }
 

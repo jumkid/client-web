@@ -16,15 +16,13 @@ const styles = {
   display: 'grid',
   gridTemplateColumns: 'repeat(10, 1fr)',
   gap: 1,
-  borderColor: 'text.primary',
   m: 2,
   border: 0,
   height: '87vh',
   minHeight: '600px',
   minWidth: '1024px',
   padding: '6px 8px',
-  borderRadius: 3,
-  opacity: [0.5, 0.8, 0.9]
+  borderRadius: 3
 };
 
 const menuItems = [

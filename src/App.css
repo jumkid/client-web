@@ -48,15 +48,19 @@
 }
 
 .App-sub-container {
-  padding: 2px 28px;
+  padding: 22px 28px;
   margin: 26px 26px;
   border: 0 solid;
   border-radius: 16px;
   font-size: 1.25rem;
   font-weight: 700;
-  background-color: rgba(0, 0, 0, 0.66);
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .MuiContainer-root {
   padding: 0 0 0 0;
+}
+
+.MuiTextField-root {
+  width: 368px;
 }
