@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isJson } from '../App.utils';
 
 const buildUrlWithParams = (url, params) => {
   let _url = url + (params ? '?' : '');
@@ -38,17 +39,40 @@ export class DataExchangeService {
     }
   };
 
-  async postWithPromise (url, params) {
-    const _headers = {
+  post (url, params, callback) {
+    const contentType = this.#getContentTypeByParams(params);
+    const conf = {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': contentType
       }
     };
-    const result = await axios.post(url, JSON.stringify(params), _headers);
-    if (result.status === 200) {
-      return result;
+    axios.post(url, params, conf).then(res => {
+      return callback(res.data);
+    });
+  };
+
+  async postWithPromise (url, params) {
+    const contentType = this.#getContentTypeByParams(params);
+    const conf = {
+      headers: {
+        'Content-Type': contentType
+      }
+    };
+    return await axios.post(url, params, conf)
+      .catch(error => {
+        console.log(error.toJSON());
+        return false;
+      });
+  };
+
+  #getContentTypeByParams (params) {
+    if (isJson(params)) {
+      params = JSON.stringify(params);
+      return 'application/json';
+    } else {
+      return 'application/x-www-form-urlencoded';
     }
-  }
+  };
 }
 
 export default new DataExchangeService();

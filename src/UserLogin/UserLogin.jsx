@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainLayout from '../layout/MainLayout';
-import { Box, Button, Divider, FormControl, Stack, TextField } from '@mui/material';
+import { Box, Button, Divider, FormControl, Stack, TextField, Typography } from '@mui/material';
 import '../App.css';
 import authenticationService from '../service/AuthenticationService';
-import { Navigate } from 'react-router-dom';
 
 function UserLogin () {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginMessage, setLoginMessage] = useState(' ');
   const changeUsername = (event) => {
     setUsername(event.target.value);
   };
@@ -17,9 +19,17 @@ function UserLogin () {
   const handleUserLogin = () => {
     console.log(`user login ${username} ${password}`);
     authenticationService.login(username, password)
-      .then(() => {
-        return (<Navigate to={{ pathname: '/' }}/>);
+      .then((isLoggedIn) => {
+        setLoginMessage(isLoggedIn
+          ? ' '
+          : 'Login failed. Please make sure username and password is correct');
+        if (isLoggedIn) navigate('/');
       });
+  };
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleUserLogin();
+    }
   };
 
   return (
@@ -38,6 +48,7 @@ function UserLogin () {
                 autoComplete="username"
                 value={username}
                 onChange={changeUsername}
+                onKeyPress={handleEnterKeyPress}
                 InputProps={{ style: { fontSize: 20 } }}
                 InputLabelProps={{ style: { fontSize: 20 } }}
                 required />
@@ -49,11 +60,14 @@ function UserLogin () {
                 autoComplete="current-password"
                 value={password}
                 onChange={changePassword}
+                onKeyPress={handleEnterKeyPress}
                 InputProps={{ style: { fontSize: 20 } }}
                 InputLabelProps={{ style: { fontSize: 20 } }}
                 required/>
+
+              <Typography className="warning-text" textAlign="center">{loginMessage}</Typography>
             </Stack>
-            <Divider sx={{ my: '28px' }}/>
+            <Divider sx={{ mb: '28px' }}/>
           </FormControl>
           <Button onClick={handleUserLogin} variant="contained">Submit</Button>
         </Stack>

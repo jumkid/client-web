@@ -43,11 +43,11 @@ export class AuthenticationManager {
       () => this.checkTokenExpiry(this)
       , 60000
     );
-  }
+  };
 
   tokenUpdated (newToken) {
     this.jwtToken = newToken;
-  }
+  };
 
   checkTokenExpiry (_this) {
     if (!_this) {
@@ -67,7 +67,7 @@ export class AuthenticationManager {
       }
     }
     return Promise.resolve();
-  }
+  };
 
   #processToken (token) {
     if (!token) {
@@ -80,7 +80,7 @@ export class AuthenticationManager {
       console.log(error);
       alert(error.message);
     }
-  }
+  };
 
   updateToken (token) {
     this.jwtToken = token;
@@ -90,13 +90,17 @@ export class AuthenticationManager {
     } else {
       localStoredToken.delete();
     }
-  }
+  };
+
+  getTokenUser () {
+    return this.jwtUser;
+  };
 
   getAccessToken () {
     const result = localStoredToken.get();
     if (!result) { return null; }
-    return JSON.parse(result).accessToken;
-  }
+    return JSON.parse(result);
+  };
 
   getRefreshToken () {
     const result = localStoredToken.get();
@@ -104,15 +108,16 @@ export class AuthenticationManager {
       return '';
     }
     return JSON.parse(result).refreshToken;
-  }
+  };
 
   isLoggedIn () {
+    console.log(`is user logged in ${!!this.getAccessToken()}`);
     return !!this.getAccessToken();
-  }
+  };
 
   logout () {
     this.updateToken(null);
-  }
+  };
 }
 
 export default new AuthenticationManager();
