@@ -3,6 +3,7 @@ import { Container, Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import TopBar from './MainLayout.TopBar';
+import authenticationManager from '../../Auth/AuthenticationManager';
 
 const jkTheme = createTheme({
   palette: {
@@ -30,7 +31,18 @@ const menuItems = [
   { title: 'Professional', isCurrent: false, route: '/professional' }
 ];
 
-const userSettings = ['Profile', 'Account', '-', 'Logout'];
+const userSettings = [
+  { title: 'Profile', callback: () => {} },
+  { title: 'Account', callback: () => {} },
+  { title: '-' },
+  {
+    title: 'Logout',
+    callback: () => {
+      authenticationManager.logout();
+      window.location.assign('/login');
+    }
+  }
+];
 
 function MainLayout (props) {
   return (
