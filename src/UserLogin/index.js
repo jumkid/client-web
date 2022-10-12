@@ -1,3 +1,7 @@
 import UserLogin from './UserLogin';
+import UserSignUp from './UserSignUp';
 
-export default UserLogin;
+export {
+  UserLogin,
+  UserSignUp
+};

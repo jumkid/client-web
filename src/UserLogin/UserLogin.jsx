@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../layout/MainLayout';
-import { Box, Button, Divider, Fade, FormControl, Stack, TextField, Typography } from '@mui/material';
-import '../App.css';
+import { Box, Button, Divider, Fade, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
 import authenticationService from '../service/AuthenticationService';
 
 function UserLogin () {
@@ -49,8 +48,6 @@ function UserLogin () {
                 value={username}
                 onChange={changeUsername}
                 onKeyPress={handleEnterKeyPress}
-                InputProps={{ style: { fontSize: 20 } }}
-                InputLabelProps={{ style: { fontSize: 20 } }}
                 required />
               <TextField
                 margin='dense'
@@ -61,8 +58,6 @@ function UserLogin () {
                 value={password}
                 onChange={changePassword}
                 onKeyPress={handleEnterKeyPress}
-                InputProps={{ style: { fontSize: 20 } }}
-                InputLabelProps={{ style: { fontSize: 20 } }}
                 required/>
 
               { loginMessage
@@ -75,6 +70,8 @@ function UserLogin () {
             <Divider sx={{ mb: '28px' }}/>
           </FormControl>
           <Button onClick={handleUserLogin} variant="contained">Submit</Button>
+          &nbsp;
+          <Typography>Not have a user account? <Link href="/sign-up">SignUp</Link> here</Typography>
         </Stack>
 
       </Box>

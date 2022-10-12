@@ -7,12 +7,17 @@ export class AuthenticationService {
     this.apiUrl = process.env.REACT_APP_API_GATEWAY_HOST;
   }
 
+  async signUp (userProfile) {
+    console.log(userProfile);
+    const response = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_SIGNUP_API,
+      userProfile);
+    return { isSuccess: (response.status === 201), data: response.data };
+  }
+
   async login (username, password) {
-    const _this = this;
-    const response = await dataExchangeService.postWithPromise(_this.apiUrl + process.env.REACT_APP_USER_LOGIN_API,
+    const response = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_LOGIN_API,
       `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`);
     if (response.status === 200) {
-      console.log(`got access token ${response.data.access_token}`);
       authenticationManager.updateToken(response.data.access_token);
       return true;
     } else {

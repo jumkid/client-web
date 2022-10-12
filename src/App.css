@@ -13,12 +13,14 @@
 }
 
 .App-sub-container {
+  width: 80%;
   padding: 22px 28px;
   margin: 26px 26px;
   border: 0 solid;
   border-radius: 16px;
   font-size: 1.25rem;
   font-weight: 700;
+  color: #000;
   background-color: rgba(255, 255, 255, 1);
 }
 
@@ -35,15 +37,10 @@
   height: 28px;
 }
 
-.blinker {
-  animation: blinker-animation 1s linear infinite;
-  -webkit-animation: blinker-animation 1s linear infinite;
-}
-@keyframes blinker-animation {
-  from { opacity: 1; }
-  to { opacity: 1; }
-}
-@-webkit-keyframes blinker-animation {
-  from { opacity: 1; }
-  to { opacity: 1; }
+.auto-login {
+  text-align: center;
+  min-width: 428px;
+  background: url(./../public/images/user-auto-login.png) no-repeat top center #FFF;
+  padding: 360px 10px 10px 10px;
+  border-radius: 16px !important;
 }
