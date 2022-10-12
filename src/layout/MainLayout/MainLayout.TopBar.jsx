@@ -56,14 +56,13 @@ function TopBar ({ menuItems, settings }) {
           <Box>
             { tokenUser && <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={tokenUser.name} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={tokenUser.preferred_username} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip> }
 
             <Menu id="menu-appbar"
               sx={{ mt: '8px', mr: '200px' }}
               anchorEl={anchorElUser}
-              getContentAnchorEl={null}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               open={Boolean(anchorElUser)}

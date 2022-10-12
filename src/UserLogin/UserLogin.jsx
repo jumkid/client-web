@@ -48,7 +48,8 @@ function UserLogin () {
                 value={username}
                 onChange={changeUsername}
                 onKeyPress={handleEnterKeyPress}
-                required />
+                required
+              />
               <TextField
                 margin='dense'
                 id="user-password"
@@ -58,7 +59,8 @@ function UserLogin () {
                 value={password}
                 onChange={changePassword}
                 onKeyPress={handleEnterKeyPress}
-                required/>
+                required
+              />
 
               { loginMessage
                 ? <Fade appear={true} in={true} timeout={1000}>

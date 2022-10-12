@@ -33,7 +33,7 @@ const menuItems = [
 
 const userSettings = [
   { title: 'Profile', callback: () => {} },
-  { title: 'Account', callback: () => {} },
+  { title: 'Setting', callback: () => {} },
   { title: '-' },
   {
     title: 'Logout',
