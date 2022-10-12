@@ -16,12 +16,12 @@ function GarageSideBar (props) {
   return (
     <Stack m="auto" alignItems="center">
       <Button
-        sx={{ mb: 2, p: 1.24, fontSize: '14px' }}
+        sx={{ mb: 2, fontSize: '14px', borderRadius: '28px' }}
         variant="contained"
         onClick={handleVehicleConnect}
         startIcon={<DirectionsCarFilled sx={{ mr: 1 }} />}
       >
-        Connect new vehicle
+        Connect a vehicle
       </Button>
 
       <Card sx={ cardStyles }>

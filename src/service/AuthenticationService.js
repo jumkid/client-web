@@ -9,9 +9,9 @@ export class AuthenticationService {
 
   async signUp (userProfile) {
     console.log(userProfile);
-    const response = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_SIGNUP_API,
+    const { status, data } = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_SIGNUP_API,
       userProfile);
-    return { isSuccess: (response.status === 201), data: response.data };
+    return { isSuccess: (status === 201), data };
   }
 
   async login (username, password) {

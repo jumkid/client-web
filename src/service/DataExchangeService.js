@@ -60,7 +60,8 @@ export class DataExchangeService {
     };
     return await axios.post(url, params, conf)
       .catch(error => {
-        return { status: error.response.status, data: error.response.data };
+        const response = error.response;
+        return { status: response ? response.status : '000', data: response ? response.data : null };
       });
   };
 

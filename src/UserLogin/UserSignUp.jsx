@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button, Checkbox,
@@ -37,13 +37,6 @@ function UserSignUp () {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [signUpMessage, setSignUpMessage] = useState(null);
   const [isAutoLogin, setIsAutoLogin] = useState(false);
-
-  useEffect(() => {
-    const isValidErrors = () =>
-      Object.values(errors).filter(error => typeof error !== 'undefined')
-        .length > 0;
-    if (isSubmitted && !isValidErrors()) handleSubmit();
-  }, [errors]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -95,9 +88,9 @@ function UserSignUp () {
         if (!isSuccess) {
           setIsSubmitted(false);
           setSignUpMessage('Something goes wrong. Sign Up failed.');
-          if (/\busername\b/i.test(data.errorMessage)) {
+          if (data && /\busername\b/i.test(data.errorMessage)) {
             setErrors((errors) => ({ ...errors, username: 'username is not available' }));
-          } else if (/\bemail\b/i.test(data.errorMessage)) {
+          } else if (data && /\bemail\b/i.test(data.errorMessage)) {
             setErrors((errors) => ({ ...errors, email: 'email is not available' }));
           }
         } else {
