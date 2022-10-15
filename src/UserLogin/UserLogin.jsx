@@ -15,19 +15,22 @@ function UserLogin () {
   const changePassword = (event) => {
     setPassword(event.target.value);
   };
-  const handleUserLogin = () => {
+  const handleSubmit = () => {
     setLoginMessage(null);
     authenticationService.login(username, password)
-      .then((isLoggedIn) => {
-        setLoginMessage(isLoggedIn
-          ? null
-          : 'Login failed. Please make sure username and password is correct');
-        if (isLoggedIn) navigate('/');
+      .then(({ isLoggedIn, status }) => {
+        if (isLoggedIn) {
+          navigate('/');
+        } else {
+          setLoginMessage(status === '500'
+            ? 'Oops! Something goes wrong with network connection or the online service.'
+            : 'Login failed. Please make sure username and password is correct');
+        }
       });
   };
   const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
-      handleUserLogin();
+      handleSubmit();
     }
   };
 
@@ -71,7 +74,7 @@ function UserLogin () {
             </Stack>
             <Divider sx={{ mb: '28px' }}/>
           </FormControl>
-          <Button onClick={handleUserLogin} variant="contained">Submit</Button>
+          <Button onClick={handleSubmit} variant="contained" type="submit">Submit</Button>
           &nbsp;
           <Typography>Not have a user account? <Link href="/sign-up">SignUp</Link> here</Typography>
         </Stack>

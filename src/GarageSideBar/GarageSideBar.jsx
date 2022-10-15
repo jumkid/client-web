@@ -1,12 +1,7 @@
 import React from 'react';
-import { Card, CardContent, Button, Stack, CardHeader } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { DirectionsCarFilled } from '@mui/icons-material';
-
-const cardStyles = {
-  width: '100%',
-  height: '128px',
-  cursor: 'pointer'
-};
+import GarageSideTabs from './GarageSideTabs';
 
 function GarageSideBar (props) {
   const handleVehicleConnect = (event) => {
@@ -14,9 +9,9 @@ function GarageSideBar (props) {
   };
 
   return (
-    <Stack m="auto" alignItems="center">
+    <Stack pt="18px" m="auto" alignItems="center">
       <Button
-        sx={{ mb: 2, fontSize: '14px', borderRadius: '28px' }}
+        id="connect-car"
         variant="contained"
         onClick={handleVehicleConnect}
         startIcon={<DirectionsCarFilled sx={{ mr: 1 }} />}
@@ -24,12 +19,8 @@ function GarageSideBar (props) {
         Connect a vehicle
       </Button>
 
-      <Card sx={ cardStyles }>
-        <CardHeader title="Toyota Highlander"/>
-        <CardContent>
-          whatever it takes
-        </CardContent>
-      </Card>
+      <GarageSideTabs />
+
     </Stack>
   );
 }

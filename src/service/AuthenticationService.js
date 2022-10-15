@@ -17,12 +17,12 @@ export class AuthenticationService {
   async login (username, password) {
     const response = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_LOGIN_API,
       `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`);
+    let isLoggedIn = false;
     if (response.status === 200) {
       authenticationManager.updateToken(response.data.access_token);
-      return true;
-    } else {
-      return false;
+      isLoggedIn = true;
     }
+    return { isLoggedIn, status: response.status };
   };
 
   async refresh (refreshToken) {

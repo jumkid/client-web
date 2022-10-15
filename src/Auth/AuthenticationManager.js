@@ -14,10 +14,8 @@ const localStoredToken = {
   }
 };
 
-export class AuthenticationManager {
+class AuthenticationManager {
   constructor () {
-    console.log('initiate authentication for current user');
-
     this.jwtToken = null;
     this.jwtUser = null;
 
@@ -78,7 +76,7 @@ export class AuthenticationManager {
       this.jwtUser = JwtDecode(token);
     } catch (error) {
       console.log(error);
-      alert(error.message);
+      this.logout();
     }
   };
 
