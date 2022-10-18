@@ -41,7 +41,7 @@ function UserLogin () {
         <h2>User Login</h2>
 
         <Stack m="auto" alignItems="center" className="App-sub-container">
-          <FormControl fullWidth>
+          <FormControl fullWidth={true}>
             <Stack alignItems="center">
               <TextField
                 margin='dense'

@@ -112,7 +112,7 @@ function UserSignUp () {
             <h2>User Sign Up</h2>
 
             <Stack m="auto" alignItems="center" className="App-sub-container">
-              <FormControl fullWidth>
+              <FormControl fullWidth={true}>
                 <Stack alignItems="center">
                   <TextField
                     margin='dense'

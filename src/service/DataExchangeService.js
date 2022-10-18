@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { isJson } from '../App.utils';
+import authenticationManager from '../Auth/AuthenticationManager';
 
 const buildUrlWithParams = (url, params) => {
   let _url = url + (params ? '?' : '');
   for (const param in params) {
-    _url += param + '=' + params[param];
+    if (Object.prototype.hasOwnProperty.call(params, param)) {
+      _url += param + '=' + params[param];
+    }
   }
   return _url;
 };
@@ -26,16 +29,21 @@ export class DataExchangeService {
         callback(JSON.parse(data));
       });
     }).on('error', (err) => {
-      console.error('Data exchange error: ' + err.message);
+      console.error(`Data exchange error: ${err.message}`);
     });
   };
 
   async getWithPromise (url, params) {
     const _url = buildUrlWithParams(url, params);
+    const conf = {
+      headers: {
+        Authorization: authenticationManager.isLoggedIn() ? `Bearer ${authenticationManager.getAccessToken()}` : null
+      }
+    };
     try {
-      return await axios.get(_url);
+      return await axios.get(_url, conf);
     } catch (error) {
-      console.error('failed to do get with promise: ' + error);
+      console.error(`failed to do get with promise: ${error}`);
     }
   };
 
@@ -55,7 +63,8 @@ export class DataExchangeService {
     const contentType = this.#getContentTypeByParams(params);
     const conf = {
       headers: {
-        'Content-Type': contentType
+        'Content-Type': contentType,
+        Authorization: authenticationManager.isLoggedIn() ? `Bearer ${authenticationManager.getAccessToken()}` : null
       }
     };
     return await axios.post(url, params, conf)

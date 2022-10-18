@@ -1,7 +1,7 @@
 import { parsePhoneNumber } from 'react-phone-number-input';
 import { get } from 'lodash';
 
-export class Validator {
+class Validator {
   constructor (values, fieldName) {
     const errors = {};
 

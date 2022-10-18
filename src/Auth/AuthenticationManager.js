@@ -109,7 +109,7 @@ class AuthenticationManager {
   };
 
   isLoggedIn () {
-    console.log(`is user logged in ${!!this.getAccessToken()}`);
+    console.log(`is user logged in: ${!!this.getAccessToken()}`);
     return !!this.getAccessToken();
   };
 

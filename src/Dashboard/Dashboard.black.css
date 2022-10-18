@@ -8,8 +8,16 @@
     background-color: #000;
     opacity: 0.9;
 }
+.dashboard-list-box {
+    padding: 18px;
+}
+.dashboard-viewer-box {
+    padding: 18px 28px;
+}
+
 
 .MuiCard-root {
+    float: left;
     width: 238px;
     height: 138px;
     padding: 12px;

@@ -2,8 +2,9 @@ import React from 'react';
 import { Button, Stack } from '@mui/material';
 import { DirectionsCarFilled } from '@mui/icons-material';
 import GarageSideTabs from './GarageSideTabs';
+import PropTypes from 'prop-types';
 
-function GarageSideBar (props) {
+function GarageSideBar ({ vehicles }) {
   const handleVehicleConnect = (event) => {
     console.log("let's connect a new vehicle");
   };
@@ -19,10 +20,14 @@ function GarageSideBar (props) {
         Connect a vehicle
       </Button>
 
-      <GarageSideTabs />
+      <GarageSideTabs vehicles={vehicles} />
 
     </Stack>
   );
 }
+
+GarageSideBar.propTypes = {
+  vehicles: PropTypes.array.isRequired
+};
 
 export default GarageSideBar;

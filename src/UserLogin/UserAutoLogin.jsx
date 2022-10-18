@@ -4,6 +4,7 @@ import MainLayout from '../layout/MainLayout';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import authenticationService from '../service/AuthenticationService';
+import './UserLogin.module.css';
 
 function UserAutoLogin ({ username, password }) {
   const [message, setMessage] = useState('Please wait');

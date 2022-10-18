@@ -3,19 +3,15 @@ import dataExchangeService from './DataExchangeService';
 import C from '../App.constants';
 
 export class AuthenticationService {
-  constructor () {
-    this.apiUrl = process.env.REACT_APP_API_GATEWAY_HOST;
-  }
-
   async signUp (userProfile) {
     console.log(userProfile);
-    const { status, data } = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_SIGNUP_API,
+    const { status, data } = await dataExchangeService.postWithPromise(C.USER_SIGNUP_API,
       userProfile);
     return { isSuccess: (status === 201), data };
   }
 
   async login (username, password) {
-    const response = await dataExchangeService.postWithPromise(this.apiUrl + process.env.REACT_APP_USER_LOGIN_API,
+    const response = await dataExchangeService.postWithPromise(C.USER_LOGIN_API,
       `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`);
     let isLoggedIn = false;
     if (response.status === 200) {
@@ -26,9 +22,8 @@ export class AuthenticationService {
   };
 
   async refresh (refreshToken) {
-    const _this = this;
     return await dataExchangeService
-      .postWithPromise(_this.apiUrl + process.env.REACT_APP_USER_TOKEN_REFRESH_API, refreshToken);
+      .postWithPromise(C.USER_TOKEN_REFRESH_API, refreshToken);
   }
 }
 
