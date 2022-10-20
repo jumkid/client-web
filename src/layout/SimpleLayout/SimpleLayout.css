@@ -1,0 +1,36 @@
+.auto-login {
+    text-align: center;
+    min-width: 428px;
+    background: url(/public/images/user-auto-login.png) no-repeat center #FFF;
+    padding: 360px 10px 10px 10px;
+}
+
+.App-container {
+    padding: 2px 28px;
+    margin: 28px 1px;
+    border: 0 solid;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 96%;
+}
+
+.App-sub-container {
+    width: 80%;
+    padding: 22px 28px;
+    margin: 26px 26px;
+    border: 0 solid;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.warning-text {
+    color: #C41407;
+    height: 28px;
+}
+
+.MuiTextField-root {
+    width: 368px;
+}
