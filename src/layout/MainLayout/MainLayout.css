@@ -1,0 +1,82 @@
+.dashboard-container {
+    margin: 2px 2px;
+    padding: 6px 8px;
+    border: 0;
+    height: 87vh;
+    min-height: 600px;
+    min-width: 1024px;
+}
+
+.dashboard-box {
+    padding: 0 0;
+    margin: 0 0;
+    border: 0 solid #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background-color: #000;
+    opacity: 0.9;
+}
+.dashboard-list-box {
+    padding: 18px;
+}
+.dashboard-viewer-box {
+    padding: 18px 28px;
+}
+
+.navigation-logo {
+    float: left;
+    display: block;
+    min-height: 38px;
+    min-width: 128px;
+    padding: 0;
+    margin: 0 6px 0 6px;
+    background: url(/public/images/logo-jumkid-white.png) no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+}
+
+/* navigation */
+nav {
+    float: left;
+    display: block;
+    height: 100%;
+    min-width: 360px;
+    font-size: 16px;
+    font-family: Verdana, arial, serif;
+    padding: 0 0;
+    margin: 0 38px 0 338px;
+}
+nav > ul {
+    margin: 0 0;
+    padding: 0 0 0 20px;
+    list-style-type: none;
+    width: auto;
+    float: left;
+}
+nav > ul li {
+    display: block;
+    float: left;
+    margin: 0 0;
+    padding: 0 0;
+}
+nav > ul li a {
+    display:block;
+    float:left;
+    color:#ffffff;
+    height: 36px;
+    padding: 17px 10px 0 10px;
+    text-align: center;
+    text-decoration:none;
+}
+nav > ul li a:hover, nav ul li.current_page_item a {
+    color: #4d4d4d;
+    background-color: #FFF;
+    text-align: center;
+    padding: 17px 10px 0 10px;
+}
+/* navigation end*/
+
+button#connect-car {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
