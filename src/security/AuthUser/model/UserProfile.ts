@@ -14,5 +14,8 @@ export interface UserProfile {
   credentials: UserCredential[]
   password: string
   confirmPassword: string
-  phone: string
+  phone?: string,
+  attributes?: {
+    avatar: string[]
+  }
 }

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import MainLayout from '../../layout/MainLayout';
+import MainLayout from '../../../layout/MainLayout';
 import { Box } from '@mui/material';
 import GarageSideBar from '../GarageSideBar';
 import GarageMainPanel from '../GarageMainPanel';
-import { fetchUserVehicles } from '../store/userVehiclesSlice';
-import { useAppDispatch, useAppSelector } from '../../App.hooks';
+import { fetchUserVehicles } from '../../../store/userVehiclesSlice';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 
 function CarOwner () {
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ function CarOwner () {
   }, [userVehiclesStatus, dispatch]);
 
   return (
-    <MainLayout menuIndex={0}>
+    <MainLayout mode="dark" menuIndex={0}>
       <Box sx={{ height: '100%', maxHeight: '1024px' }} className="dashboard-box" gridColumn="span 2">
         <GarageSideBar vehicles={userVehicles} />
       </Box>

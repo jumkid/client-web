@@ -12,10 +12,10 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import authenticationService from '../service/AuthenticationService';
-import Validator from './UserSignUp.Validator';
+import authenticationService from '../../service/AuthenticationService';
+import Validator from './UserProfile.Validator';
 import UserAutoLogin from './UserAutoLogin';
-import SimpleLayout from '../layout/SimpleLayout/SimpleLayout';
+import SimpleLayout from '../../layout/SimpleLayout/SimpleLayout';
 import { UserProfile } from './model/UserProfile';
 import { ValidationErrors } from './model/ValidationErrors';
 
@@ -52,8 +52,8 @@ function UserSignUp () {
   const [isAutoLogin, setIsAutoLogin] = useState(false);
   const validator = new Validator(userProfile, initValidationErrors);
 
-  const handleChange = (event:any):void => {
-    const { name, value } = event.target;
+  const handleChange = (event:React.ChangeEvent<HTMLInputElement>):void => {
+    const { value, name } = event.target;
     setUserProfile(() => ({
       ...userProfile,
       [name]: value
@@ -68,7 +68,7 @@ function UserSignUp () {
     }));
   };
 
-  const handleEnterKeyPress = (event:any) => {
+  const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && isValidForm) {
       handleSubmit();
     }
@@ -116,8 +116,7 @@ function UserSignUp () {
       {isAutoLogin
         ? <UserAutoLogin username={userProfile.username} password={userProfile.password} />
         : <SimpleLayout>
-          <Box gridColumn="span 2" />
-          <Box className="App-container" gridColumn="span 6">
+          <Box className="App-container">
             <h2>User Sign Up</h2>
 
             <Stack m="auto" alignItems="center" className="App-sub-container">

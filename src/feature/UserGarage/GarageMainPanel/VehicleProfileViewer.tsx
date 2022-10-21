@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { Lock, ModeEdit } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { Theme } from '@emotion/react';
-import { VehicleProfile } from '../model/VehicleProfile';
+import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import * as C from '../../../App.constants';
 
 interface ItemProps {
     theme: Theme
@@ -14,12 +15,22 @@ const Item = styled(Paper)(({ theme }:ItemProps) => ({
   ...theme,
   backgroundImage: 'none',
   paddingBottom: '8px',
+  fontSize: '16px',
+  fontWeight: '200',
   float: 'left'
 }));
 
 const ItemText = styled(Box)(({ theme }:ItemProps) => ({
   ...theme,
-  width: '208px',
+  width: '248px',
+  textTransform: 'uppercase',
+  fontWeight: '700',
+  fontSize: '18px'
+}));
+
+const ItemHeader = styled(Box)(({ theme }:ItemProps) => ({
+  ...theme,
+  width: '100%',
   textTransform: 'uppercase',
   fontWeight: '700',
   fontSize: '18px'
@@ -35,22 +46,33 @@ function VehicleProfileViewer ({ vehicleProfile }:Props) {
 
   return (
     <Stack className="dashboard-viewer-box">
-      <Item>
-        <h1>
-          {vehicleProfile.name}
-          &nbsp;&nbsp;
-          <IconButton color="primary" aria-label="edit name" component="label"><ModeEdit/></IconButton>
-          <IconButton color="primary" aria-label="access scope" component="label"><Lock/></IconButton>
-        </h1>
-      </Item>
-      <Item>
-        <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
-        <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
-      </Item>
-      <Item>
-        <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
-        <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
-      </Item>
+      <Grid container spacing={2} columns={16}>
+        <Grid item xs={12}>
+          <ItemHeader>
+            <h1>
+              {vehicleProfile.name}
+              &nbsp;&nbsp;
+              <IconButton color="primary" aria-label="edit name" component="label"><ModeEdit/></IconButton>
+              <IconButton color="primary" aria-label="access scope" component="label"><Lock/></IconButton>
+            </h1>
+          </ItemHeader>
+          <Item>
+            <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
+            <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
+          </Item>
+          <Item>
+            <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
+            <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
+          </Item>
+        </Grid>
+        <Grid item xs={4}>
+          <Avatar
+            variant="rounded"
+            src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
+            sx={{ float: "right", mt: 2, width: 167, height: 178 }}
+          />
+        </Grid>
+      </Grid>
 
       <Item>
         <h2>Engine</h2>
@@ -74,9 +96,9 @@ function VehicleProfileViewer ({ vehicleProfile }:Props) {
       </Item>
       <Item>
         <Item>Type <ItemText>{vehicleTransmission.type}</ItemText></Item>
-        <Item>Drivetrain <ItemText>{vehicleTransmission.drivetrain}</ItemText></Item>
         <Item>Automatic Type <ItemText>{vehicleTransmission.automaticType}</ItemText></Item>
         <Item>Number of Speeds <ItemText>{vehicleTransmission.numberOfSpeeds}</ItemText></Item>
+        <Item>Drivetrain <ItemText>{vehicleTransmission.drivetrain}</ItemText></Item>
       </Item>
     </Stack>
   );

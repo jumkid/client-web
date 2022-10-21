@@ -4,8 +4,8 @@ import { Box, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import VehicleProfileViewer from './VehicleProfileViewer';
 import VehicleListViewer from './VehicleListViewer';
-import { VehicleProfile } from '../model/VehicleProfile';
-import { RootState } from '../store';
+import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { RootState } from '../../../store';
 
 interface Props {
   vehicles: VehicleProfile[]

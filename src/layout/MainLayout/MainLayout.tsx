@@ -3,7 +3,7 @@ import { Container, Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import TopBar from './MainLayout.TopBar';
-import authenticationManager from '../../Auth/AuthenticationManager';
+import authenticationManager from '../../security/Auth/AuthenticationManager';
 import { DesignTokens, ColorModeContext } from '../Layout.Theme';
 import './MainLayout.css';
 import { MenuSetting, UserSetting } from './model';
@@ -14,7 +14,11 @@ const menuSettings: MenuSetting[] = [
 ];
 
 const userSettings: UserSetting[] = [
-  { title: 'Profile' },
+  { title: 'Profile',
+    callback: () => {
+      window.location.assign('/user-profile');
+    }
+  },
   { title: 'Setting' },
   { title: '-' },
   {
@@ -27,12 +31,13 @@ const userSettings: UserSetting[] = [
 ];
 
 interface Props {
+  mode: string
   menuIndex: number
   children?: React.ReactNode
 }
 
 function MainLayout (props: Props) {
-  const [mode, setMode] = React.useState('dark');
+  const [mode, setMode] = React.useState(props.mode);
   const colorMode = React.useMemo(
     () => ({
       // The dark mode switch would invoke this method
@@ -70,6 +75,7 @@ function MainLayout (props: Props) {
 }
 
 MainLayout.propTypes = {
+  mode: PropTypes.string.isRequired,
   menuIndex: PropTypes.number.isRequired,
   children: PropTypes.array.isRequired
 };

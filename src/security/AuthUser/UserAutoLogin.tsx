@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Fade, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import authenticationService from '../service/AuthenticationService';
-import SimpleLayout from '../layout/SimpleLayout';
+import authenticationService from '../../service/AuthenticationService';
+import SimpleLayout from '../../layout/SimpleLayout';
 
 interface Props {
   username: string

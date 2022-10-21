@@ -1,9 +1,9 @@
 export interface JWTTokenUser {
-    exp: number
-    iat: number
-    jti: string
-    iss: string
-    aud: string
+    exp?: number
+    iat?: number
+    jti?: string
+    iss?: string
+    aud?: string
     sub: string
     typ: 'Bearer'
     azp: string

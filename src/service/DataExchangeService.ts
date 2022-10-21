@@ -1,9 +1,9 @@
 import axios from 'axios';
 import * as U from '../App.utils';
-import authenticationManager from '../Auth/AuthenticationManager';
-import APIResponse from './model/APIResponse';
+import authenticationManager from '../security/Auth/AuthenticationManager';
+import { APIResponse } from './model/Response';
 
-const buildUrlWithParams = (url: string, params: object | null) => {
+const buildUrlWithParams = (url: string, params?: object | null) => {
   let _url = url + ((params != null) ? '?' : '');
   for (const param in params) {
     if (Object.prototype.hasOwnProperty.call(params, param)) {
@@ -15,8 +15,10 @@ const buildUrlWithParams = (url: string, params: object | null) => {
   return _url;
 };
 
+type Callback = (data?:object | object[] | string | undefined) => void
+
 export class DataExchangeService {
-  get (url: string, params: object | null, callback: (data:any) => {} | null): void {
+  get (url: string, params: object | null, callback:Callback | undefined): void {
     const _url = buildUrlWithParams(url, params);
 
     axios.get(_url).then(response => {
@@ -24,7 +26,7 @@ export class DataExchangeService {
     });
   }
 
-  async getWithPromise (url: string, params: object | null) {
+  async getWithPromise (url: string, params?: object | null) {
     const _url = buildUrlWithParams(url, params);
     const conf = {
       headers: {
@@ -41,7 +43,7 @@ export class DataExchangeService {
     }
   }
 
-  post (url: string, params: object | null, callback: Function | null):void {
+  post (url: string, params: object | null, callback: Callback | undefined):void {
     const contentType = this.getContentTypeByParams(params);
     const conf = {
       headers: {
@@ -62,6 +64,24 @@ export class DataExchangeService {
       }
     };
     return await axios.post(url, params, conf)
+      .catch(error => {
+        const response = error.response;
+        if (response && response.status === 403) {
+          authenticationManager.logout();
+        }
+        return { status: response ? response.status : 500, data: response ? response.data : null };
+      });
+  }
+
+  async putWithPromise(url: string, params: object | string | null):Promise<APIResponse> {
+    const contentType = this.getContentTypeByParams(params);
+    const conf = {
+      headers: {
+        'Content-Type': contentType,
+        Authorization: authenticationManager.isLoggedIn() ? `Bearer ${authenticationManager.getAccessToken()}` : null
+      }
+    };
+    return await axios.put(url, params, conf)
       .catch(error => {
         const response = error.response;
         if (response && response.status === 403) {

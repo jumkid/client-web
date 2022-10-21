@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import dataExchangeService from '../../service/DataExchangeService';
-import * as C from '../../App.constants';
-import { VehicleProfile } from '../model/VehicleProfile';
+import dataExchangeService from '../service/DataExchangeService';
+import * as C from '../App.constants';
+import { VehicleProfile } from './model/VehicleProfile';
 
 export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles', async () => {
   console.log('fetch user vehicles');

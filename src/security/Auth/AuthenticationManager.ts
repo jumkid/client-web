@@ -1,6 +1,6 @@
 import JwtDecode from 'jwt-decode';
-import * as C from '../App.constants';
-import authenticationService from '../service/AuthenticationService';
+import * as C from '../../App.constants';
+import authenticationService from '../../service/AuthenticationService';
 import { JWTTokenUser } from './model/JWTTokenUser';
 
 const localStoredToken = {
@@ -48,7 +48,7 @@ class AuthenticationManager {
   }
 
   async checkTokenExpiry (self:AuthenticationManager) {
-    if (self.jwtUser != null) {
+    if (self.jwtUser && self.jwtUser.exp) {
       const expired = self.jwtUser.exp < (Date.now() - 1000 * 60 * 5) / 1000;
       if (expired) {
         authenticationService.refresh(self.getRefreshToken())

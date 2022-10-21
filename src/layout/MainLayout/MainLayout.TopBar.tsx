@@ -17,7 +17,7 @@ import {
 import NavButtons from './MainLayout.NavButtons';
 import { Notifications } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import authenticationManager from '../../Auth/AuthenticationManager';
+import authenticationManager from '../../security/Auth/AuthenticationManager';
 import { HandleClick, MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
 

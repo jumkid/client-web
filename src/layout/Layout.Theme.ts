@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ColorModeContext = React.createContext({ toggleColorMode: ():void => {} });
+const ColorModeContext = React.createContext({ toggleColorMode: ():void => { console.log("empty function");} });
 
-const DesignTokens: (mode: string) => object = (mode: string) => ({
+const DesignTokens = (mode: string):object => ({
   palette: {
     mode,
     ...(
@@ -20,8 +20,9 @@ const DesignTokens: (mode: string) => object = (mode: string) => ({
           }
         }
         : {
-          // palette values for dark mode
+          // palette values for dark or other mode
           primary: { main: '#C41407', dark: '#000', contrastText: '#fff' },
+          secondary: { main: '#FFF'},
           divider: '#898989',
           action: {
             hover: 'rgba(196,20,6,1)'
@@ -40,21 +41,10 @@ const DesignTokens: (mode: string) => object = (mode: string) => ({
     borderRadius: 4
   },
   components: {
-    MuiCard: {
+    MuiTabs: {
       styleOverrides: {
-        root: {
-          float: 'left',
-          color: '#FFF',
-          borderRadius: 0,
-          width: '238px',
-          height: '138px',
-          padding: '8px',
-          margin: '2px 8px',
-          cursor: 'pointer',
-          fontSize: '1.25rem',
-          fontWeight: 700,
-          border: '1px solid #FFFFFF',
-          backgroundColor: '#4d4d4d'
+        indicator: {
+          width: 8
         }
       }
     },
@@ -70,10 +60,51 @@ const DesignTokens: (mode: string) => object = (mode: string) => ({
         }
       }
     },
-    MuiTabs: {
+    MuiCard: {
       styleOverrides: {
-        indicator: {
-          width: 8
+        root: {
+          float: 'left',
+          color: '#FFF',
+          borderRadius: 0,
+          width: '353px',
+          height: '200px',
+          padding: '0 0',
+          margin: '6px 6px',
+          fontSize: '1.25rem',
+          fontWeight: 700,
+          border: '1px solid #FFFFFF',
+          backgroundColor: '#4d4d4d'
+        }
+      }
+    },
+    MuiCardHeader: {
+      styleOverrides: {
+        root: {
+          textTransform: 'uppercase'
+        }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#232323',
+          padding: '0 0',
+          margin: '2px 2px'
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          marginLeft: 0,
+          width: '348px'
+        }
+      }
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          cursor: 'pointer'
         }
       }
     }

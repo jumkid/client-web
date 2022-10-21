@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Divider, Fade, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
-import authenticationService from '../service/AuthenticationService';
-import SimpleLayout from '../layout/SimpleLayout';
+import authenticationService from '../../service/AuthenticationService';
+import SimpleLayout from '../../layout/SimpleLayout';
 
 const initialLoginMessage:string | null = null;
 

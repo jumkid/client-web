@@ -4,4 +4,5 @@ export interface ValidationErrors {
     password?: string | undefined
     confirmPassword?: string | undefined
     acceptedTerms?: true | false  | undefined
+    hasUpdate?: true | false
 }

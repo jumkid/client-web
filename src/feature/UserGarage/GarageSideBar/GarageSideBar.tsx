@@ -3,7 +3,7 @@ import { Button, Stack } from '@mui/material';
 import { DirectionsCarFilled } from '@mui/icons-material';
 import GarageSideTabs from './GarageSideTabs';
 import PropTypes from 'prop-types';
-import { VehicleProfile } from '../model/VehicleProfile';
+import { VehicleProfile } from '../../../store/model/VehicleProfile';
 
 interface Props {
     vehicles: VehicleProfile[]
