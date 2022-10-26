@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { UserProfile } from '../security/AuthUser/model/UserProfile';
 import authenticationService from '../service/AuthenticationService';
-import authenticationManager from '../security/Auth/AuthenticationManager';
 import { APIResponse } from '../service/model/Response';
 
 export const fetchUserProfile = createAsyncThunk('tokenUser/fetchUserProfile', async (userId:string) => {

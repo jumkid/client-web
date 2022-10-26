@@ -16,7 +16,6 @@ function UserProfileUpdateForm () {
 
   const [errors, setErrors] = useState(initValidationErrors);
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState('');
 
   const dispatch = useAppDispatch();
 
@@ -49,18 +48,16 @@ function UserProfileUpdateForm () {
     if (isSubmitted) { return; }
     else{
       setIsSubmitted(true);
-      setSubmitMessage('');
     }
 
     dispatch(submitUserProfile(tokenUser)).then(
       (success) => {
         setIsSubmitted(false);
-        setSubmitMessage("Save successfully");
         setErrors(initValidationErrors);
       },
       (error) => {
         setIsSubmitted(false);
-        setSubmitMessage('Something goes wrong. Save failed.');
+        setErrors(error);
       }
     );
   };
