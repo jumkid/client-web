@@ -6,15 +6,15 @@ import authenticationService from '../../service/AuthenticationService';
 import SimpleLayout from '../../layout/SimpleLayout';
 
 interface Props {
-  username: string
-  password: string
+  username?: string
+  password?: string
 }
 
 function UserAutoLogin ({ username, password }: Props) {
   const [message, setMessage] = useState('Please wait');
   const navigate = useNavigate();
 
-  const handleAutoLogin = (username: string, password: string) => {
+  const handleAutoLogin = (username?: string, password?: string) => {
     authenticationService.login(username, password)
       .then((isLoggedIn) => {
         if (isLoggedIn) {

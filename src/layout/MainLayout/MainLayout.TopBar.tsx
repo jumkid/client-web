@@ -17,20 +17,26 @@ import {
 import NavButtons from './MainLayout.NavButtons';
 import { Notifications } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import authenticationManager from '../../security/Auth/AuthenticationManager';
 import { HandleClick, MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 interface Props {
   menuSettings: MenuSetting[],
   userSettings: UserSetting[]
 }
 
-const initialState: HTMLButtonElement | null = null;
+const initialElement: HTMLButtonElement | null = null;
 
 function TopBar ({ menuSettings, userSettings }: Props) {
-  const [anchorElUser, setAnchorElUser] = useState(initialState);
-  const tokenUser = authenticationManager.getTokenUser();
+  const [anchorElUser, setAnchorElUser] = useState(initialElement);
+
+  const tokenUser = useSelector((state:RootState) => state.tokenUser);
+  const userProfile = tokenUser.userProfile;
+  const userAvatar = userProfile.attributes?.avatar[0];
+  const userName = userProfile.username;
+
   const [items, setItems] = useState(menuSettings);
   const menuOnClickHandler:HandleClick = (index:number) => {
     setItems(prevItems => prevItems.map((item, _index) => {
@@ -62,16 +68,16 @@ function TopBar ({ menuSettings, userSettings }: Props) {
 
           <Box sx={{ flex: 1 }}/>
 
-          { tokenUser && <IconButton onClick={handleNotification} aria-label="check notification">
+          { tokenUser && userSettings.length > 0 && <IconButton onClick={handleNotification} aria-label="check notification">
             <Badge sx={{ mr: 2 }} badgeContent={1} overlap="circular" color="success">
               <Notifications fontSize='large'/>
             </Badge>
           </IconButton> }
 
           <Box>
-            { tokenUser && <Tooltip title="Open settings">
+            { tokenUser && userSettings.length > 0 && <Tooltip title="Open settings">
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Avatar alt={tokenUser.preferred_username} src={C.CONTENT_THUMBNAIL_API + tokenUser.avatarId} />
+                <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}${userAvatar}?size=medium`} />
               </IconButton>
             </Tooltip> }
 

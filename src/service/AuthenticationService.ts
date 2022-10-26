@@ -4,54 +4,80 @@ import * as C from '../App.constants';
 import { UserProfile } from '../security/AuthUser/model/UserProfile';
 import { AuthResponse } from './model/Response';
 
-export class AuthenticationService {
-  async getUser (userId:string):Promise<AuthResponse> {
+interface IAuthenticationService {
+  getUser(userId:string):Promise<AuthResponse>
+  signUp (userProfile: UserProfile):Promise<AuthResponse>
+  updateUser (userId:string, userProfile: UserProfile):Promise<AuthResponse>
+  resetPassword (userId:string, newPassword:string):Promise<AuthResponse>
+  login (username:string, password?:string):Promise<AuthResponse>
+  refresh (refreshToken:string):Promise<AuthResponse>
+}
+
+export class AuthenticationService implements IAuthenticationService{
+  async getUser (userId:string) {
     const response = await dataExchangeService.getWithPromise(`${C.USER_API}/${userId}`);
     return {
       isSuccess: response ? response.status === 200 : false,
+      status: response.status,
       data: response ? response.data : null
     }
   }
 
-  async signUp (userProfile: UserProfile):Promise<AuthResponse> {
+  async signUp (userProfile: UserProfile) {
     // re-assemble data for backend usage
     // confirmPassword, phone is not needed and should be removed
     const { password, confirmPassword, phone, ...data } = userProfile;
-    data.credentials[0].value = password ? password : '';
+    data.credentials![0].value = password ? password : '';
 
     const response = await dataExchangeService.postWithPromise(C.USER_SIGNUP_API, data);
     return {
       isSuccess: response ? response.status === 201 : false,
+      status: response.status,
       data: response ? response.data : null
     };
   }
 
-  async updateUser (userId:string, userProfile: UserProfile):Promise<AuthResponse> {
-    const { username, email, firstName, lastName } = userProfile;
-    const data = { username, email, firstName, lastName };
+  async updateUser (userId:string, userProfile: UserProfile) {
+    const { username, email, firstName, lastName, attributes } = userProfile;
+    const data = { username, email, firstName, lastName, attributes };
 
     const response = await dataExchangeService.putWithPromise(`${C.USER_API}/${userId}`, data);
     return {
       isSuccess: response ? response.status === 204: false,
+      status: response.status,
       data: response ? response.data : null
     };
   }
 
-  async login (username: string, password: string) {
+  async resetPassword (userId:string, newPassword:string) {
+    const data = { credentials: [{ type: "password", value: newPassword }]};
+    const response = await dataExchangeService.putWithPromise(`${C.USER_API}/${userId}`, data);
+    return {
+      isSuccess: response ? response.status === 204: false,
+      status: response.status,
+      data: response ? response.data : null
+    };
+  }
+
+  async login (username?:string, password?:string) {
+    let isSuccess = false;
     const response = await dataExchangeService.postWithPromise(C.USER_LOGIN_API,
       `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`);
-
-    let isLoggedIn = false;
     if (response && response.status === 200 && response.data) {
       authenticationManager.updateToken(response.data.access_token);
-      isLoggedIn = true;
+      isSuccess = true;
     }
-    return { isLoggedIn, status: response ? response.status : null };
+    return { isSuccess, status: response.status, data: null };
   }
 
   async refresh (refreshToken:string) {
-    return await dataExchangeService
+    const response = await dataExchangeService
       .postWithPromise(C.USER_TOKEN_REFRESH_API, refreshToken);
+    return {
+      isSuccess: response ? response.status === 204: false,
+      status: response.status,
+      data: response ? response.data : null
+    }
   }
 }
 

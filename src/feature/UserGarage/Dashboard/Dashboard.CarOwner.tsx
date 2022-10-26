@@ -19,7 +19,7 @@ function CarOwner () {
 
   return (
     <MainLayout mode="dark" menuIndex={0}>
-      <Box sx={{ height: '100%', maxHeight: '1024px' }} className="dashboard-box" gridColumn="span 2">
+      <Box sx={{ height: '100%', maxHeight: '1024px', minWidth: "233px" }} className="dashboard-box" gridColumn="span 2">
         <GarageSideBar vehicles={userVehicles} />
       </Box>
       <Box className="dashboard-box" gridColumn="span 8">

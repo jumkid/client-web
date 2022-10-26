@@ -15,7 +15,18 @@ const localStoredToken = {
   }
 };
 
-class AuthenticationManager {
+export interface IAuthenticationManager {
+  checkTokenExpiry(self:AuthenticationManager):Promise<void>
+  getTokenUserId():string | undefined
+  getAccessToken():string | null
+  getRefreshToken():string
+  updateToken (token:string | null):void
+  updateTokenUserAvatar(avatarId:string):void
+  isLoggedIn():true | false
+  logout():void
+}
+
+export class AuthenticationManager implements IAuthenticationManager{
   jwtToken:string | null = null;
   jwtUser:JWTTokenUser | null = null;
 
@@ -24,27 +35,12 @@ class AuthenticationManager {
     if (!token) return;
 
     token = JSON.parse(token);
-    this.#processToken(token);
-
-    window.addEventListener('storage', (event) => {
-      if (event.key === C.JWT_TOKEN_KEY) {
-        let newToken = event.newValue;
-        if (newToken) {
-          newToken = JSON.parse(newToken);
-          this.#processToken(newToken);
-        }
-        this.tokenUpdated(newToken);
-      }
-    }, false);
+    this.#processToken(token!);
 
     setInterval(
       async () => await this.checkTokenExpiry(this)
       , 60000
     );
-  }
-
-  tokenUpdated (newToken:string | null) {
-    this.jwtToken = newToken;
   }
 
   async checkTokenExpiry (self:AuthenticationManager) {
@@ -64,9 +60,7 @@ class AuthenticationManager {
     return await Promise.resolve();
   }
 
-  #processToken (token:string | null) {
-    if (!token) { return; }
-
+  #processToken (token:string) {
     this.jwtToken = token;
     try {
       this.jwtUser = JwtDecode(token);
@@ -76,7 +70,33 @@ class AuthenticationManager {
     }
   }
 
-  updateToken (token:string | null) {
+  getTokenUserId (): string | undefined {
+    return this.jwtUser?.sub;
+  }
+
+  getTokenUserAvatar (): string | undefined {
+    return this.jwtUser?.avatarId;
+  }
+
+  getTokenUserName (): string | undefined {
+    return this.jwtUser?.preferred_username;
+  }
+
+  getAccessToken(): string | null {
+    const result = localStoredToken.get();
+    if (!result) { return null; }
+    return JSON.parse(result);
+  }
+
+  getRefreshToken(): string {
+    const result = localStoredToken.get();
+    if (!result) {
+      return '';
+    }
+    return JSON.parse(result).refreshToken;
+  }
+
+  updateToken (token:string | null): void {
     this.jwtToken = token;
     if (token) {
       this.#processToken(token);
@@ -86,30 +106,17 @@ class AuthenticationManager {
     }
   }
 
-  getTokenUser () {
-    return this.jwtUser;
+  updateTokenUserAvatar(avatarId: string): void {
+    console.log("updated token user avatar");
+    if (this.jwtUser) this.jwtUser.avatarId = avatarId;
   }
 
-  getAccessToken () {
-    const result = localStoredToken.get();
-    if (!result) { return null; }
-    return JSON.parse(result);
-  }
-
-  getRefreshToken () {
-    const result = localStoredToken.get();
-    if (!result) {
-      return '';
-    }
-    return JSON.parse(result).refreshToken;
-  }
-
-  isLoggedIn () {
+  isLoggedIn(): true | false {
     console.log(`is user logged in: ${!!this.getAccessToken()}`);
     return !!this.getAccessToken();
   }
 
-  logout () {
+  logout(): void {
     this.updateToken(null);
   }
 }

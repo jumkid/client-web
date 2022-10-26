@@ -74,7 +74,7 @@ function UserSignUp () {
     }
   };
 
-  const handleTermsAcceptance = (event:any) => {
+  const handleTermsAcceptance = (event:React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       setErrors((errors:ValidationErrors) => {
         const { acceptedTerms, ...rest } = errors;
@@ -153,7 +153,6 @@ function UserSignUp () {
                     name="password"
                     label="Password"
                     type="password"
-                    defaultValue={userProfile.credentials[0].value}
                     onChange={handleChange}
                     onKeyPress={handleEnterKeyPress}
                     onBlur={handleBlur}

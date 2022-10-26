@@ -9,6 +9,7 @@ const DesignTokens = (mode: string):object => ({
       mode === 'light'
         ? {
           primary: { main: '#C41407', light: '#000' },
+          secondary: { main: '#53a23b' },
           divider: '#777',
           text: {
             primary: '#000',
@@ -22,7 +23,7 @@ const DesignTokens = (mode: string):object => ({
         : {
           // palette values for dark or other mode
           primary: { main: '#C41407', dark: '#000', contrastText: '#fff' },
-          secondary: { main: '#FFF'},
+          secondary: { main: '#FFF' },
           divider: '#898989',
           action: {
             hover: 'rgba(196,20,6,1)'
@@ -41,6 +42,13 @@ const DesignTokens = (mode: string):object => ({
     borderRadius: 4
   },
   components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+
+        }
+      }
+    },
     MuiTabs: {
       styleOverrides: {
         indicator: {
@@ -105,6 +113,13 @@ const DesignTokens = (mode: string):object => ({
       styleOverrides: {
         root: {
           cursor: 'pointer'
+        }
+      }
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          color: '#686868'
         }
       }
     }

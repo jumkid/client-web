@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Card, CardActions, CardContent, CardHeader, Chip, Icon, Link } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { changePick } from '../../../store/vehiclePickerSlice';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import * as C from '../../../App.constants';
 import { PlayArrow } from '@mui/icons-material';
+import { useAppDispatch } from '../../../App.hooks';
 
 interface Props {
   vehicles: VehicleProfile[]
 }
 
 function VehicleListViewer ({ vehicles }:Props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleClick = (index:number) => {
     dispatch(changePick(++index));

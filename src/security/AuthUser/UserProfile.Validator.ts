@@ -90,7 +90,7 @@ class Validator {
     }
   }
 
-  validateConfirmPassword (password: string, confirmPass: string, errors: ValidateErrors) {
+  validateConfirmPassword (password: string | undefined, confirmPass: string | undefined, errors: ValidateErrors) {
     if (!confirmPass) {
       errors.confirmPassword = 'Confirm Password is Required';
     } else if (password !== confirmPass) {

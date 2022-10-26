@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Divider, Fade, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
 import authenticationService from '../../service/AuthenticationService';
 import SimpleLayout from '../../layout/SimpleLayout';
+import { useAppDispatch } from '../../App.hooks';
 
 const initialLoginMessage:string | null = null;
 
@@ -11,6 +12,9 @@ function UserLogin () {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginMessage, setLoginMessage] = useState(initialLoginMessage);
+
+  const dispatch = useAppDispatch();
+
   const changeUsername = (event:React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
   };
@@ -20,8 +24,8 @@ function UserLogin () {
   const handleSubmit = () => {
     setLoginMessage(null);
     authenticationService.login(username, password)
-      .then(({ isLoggedIn, status }) => {
-        if (isLoggedIn) {
+      .then(({ isSuccess, status }) => {
+        if (isSuccess) {
           navigate('/');
         } else {
           setLoginMessage(status === 500

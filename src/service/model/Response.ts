@@ -5,5 +5,6 @@ export interface APIResponse {
 
 export interface AuthResponse {
   isSuccess: true | false
+  status: number
   data: any | null
 }

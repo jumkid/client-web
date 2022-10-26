@@ -3,33 +3,47 @@
 
 // If they are: they proceed to the page
 // If not: they are redirected to the login page.
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import authenticationManager from './AuthenticationManager';
+import { AppDispatch } from '../../store';
+import { fetchUserProfile, setUserId, updateUserProfile } from '../../store/tokenUserSlice';
+import { useAppDispatch } from '../../App.hooks';
 
 interface Props {
   children: ReactNode
   path?: string
 }
 
-class AuthRoute extends React.Component {
-  component:ReactNode = null;
-  path:string | undefined = '';
+function AuthRoute (props:React.PropsWithChildren<Props>) {
+  const dispatch = useAppDispatch();
 
-  constructor (props:Props) {
-    super(props);
+  const isLoggedIn = authenticationManager.isLoggedIn();
+  const userId = authenticationManager.getTokenUserId();
 
-    this.component = props.children;
-    this.path = props.path;
+  const initiateUserProfileAction = (userId:string) => {
+    return (dispatch:AppDispatch) => {
+      dispatch(setUserId(userId));
+      dispatch(fetchUserProfile(userId!)).then(
+        (data) => {
+          dispatch(updateUserProfile(data));
+        }
+      )
+    }
   }
 
-  render () {
-    return (
-      authenticationManager.isLoggedIn()
-        ? this.component
-        : <Navigate to='/login' state={{ from: this.path }} />
-    );
-  }
+  useEffect(()=>{
+    if (isLoggedIn && userId) {
+      dispatch(initiateUserProfileAction(userId));
+    }
+  },[userId, isLoggedIn]);
+
+
+  return (
+    isLoggedIn
+      ? <>{props.children}</>
+      : <Navigate to='/login' state={{ from: props.path }} />
+  );
 }
 
 export default AuthRoute;

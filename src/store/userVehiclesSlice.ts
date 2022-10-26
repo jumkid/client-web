@@ -5,7 +5,7 @@ import { VehicleProfile } from './model/VehicleProfile';
 
 export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles', async () => {
   console.log('fetch user vehicles');
-  const response = await dataExchangeService.getWithPromise(C.USER_VEHICLES_API, null);
+  const response = await dataExchangeService.getWithPromise(C.USER_VEHICLES_API);
   return (response != null) && response.data || [];
 });
 
@@ -37,7 +37,6 @@ export const userVehiclesSlice = createSlice({
       })
       .addCase(fetchUserVehicles.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        // Add any fetched posts to the array
         state.data = action.payload;
       })
       .addCase(fetchUserVehicles.rejected, (state, action) => {
@@ -45,7 +44,6 @@ export const userVehiclesSlice = createSlice({
         state.error = action.error.message;
       });
   }
-
 });
 
 export default userVehiclesSlice.reducer;
