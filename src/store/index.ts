@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import vehiclePickerReducer from './vehiclePickerSlice';
 import userVehiclesReducer from './userVehiclesSlice';
+import connectedVehicleReducer from './connectedVehicleSlice';
 import tokenUserReducer from './tokenUserSlice';
 
 export const store = configureStore({
   reducer: {
-    vehiclePicker: vehiclePickerReducer,
     userVehicles: userVehiclesReducer,
+    connectedVehicle: connectedVehicleReducer,
     tokenUser: tokenUserReducer
   }
 });

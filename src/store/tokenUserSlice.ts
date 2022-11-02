@@ -4,7 +4,6 @@ import authenticationService from '../service/AuthenticationService';
 import { APIResponse } from '../service/model/Response';
 
 export const fetchUserProfile = createAsyncThunk('tokenUser/fetchUserProfile', async (userId:string) => {
-  console.log('fetch user profile');
   const response = await authenticationService.getUser(userId);
   return (response && response.isSuccess) ? response.data : {};
 });

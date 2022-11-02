@@ -1,21 +1,17 @@
 import React from 'react';
 import { Tabs, Tab } from '@mui/material';
-import { ViewList } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
-import { changePick } from '../../../store/vehiclePickerSlice';
-import PropTypes from 'prop-types';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { DirectionsCarFilled, ViewList } from '@mui/icons-material';
 import { RootState } from '../../../store';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { grey } from '@mui/material/colors';
+import { changePick } from '../../../store/userVehiclesSlice';
 
-interface Props {
-  vehicles: VehicleProfile[]
-}
+function GarageSideTabs () {
+  const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
+  const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
+  const dispatch = useAppDispatch();
 
-function GarageSideTabs ({ vehicles }: Props) {
-  const currentPick = useSelector((state: RootState) => state.vehiclePicker.value);
-  const dispatch = useDispatch();
-
-  const handleChange = (event: any, index: number) => {
+  const handleChange = (event: React.SyntheticEvent, index: number) => {
     dispatch(changePick(index));
   };
 
@@ -26,18 +22,20 @@ function GarageSideTabs ({ vehicles }: Props) {
       value={currentPick}
       onChange={handleChange}
       aria-label="Vertical tabs example"
-      sx={{ borderColor: 'divider', width: '100%', m: 0, p: 0 }}
+      sx={{ borderColor: 'divider', width: '100%', mt: 2, p: 0 }}
     >
-      <Tab icon={<ViewList/>} iconPosition="start" label="ALL" sx={{ backgroundColor: "#232323"}}/>
-      { vehicles.map((vehicle, index) =>
-        <Tab key={index} label={vehicle.name} />
+      <Tab
+        sx={{ border: '1px solid', m: '8px 8px 8px 8px' }}
+        label="connect a vehicle"
+        iconPosition="start"
+        icon={<DirectionsCarFilled sx={{ mr: 1 }} />}
+      />
+      <Tab icon={<ViewList/>} iconPosition="start" label="LIST" sx={{ backgroundColor: grey[900] }}/>
+      { userVehicles.map((vehicle, index) =>
+        <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }}/>
       )}
     </Tabs>
   );
 }
-
-GarageSideTabs.propTypes = {
-  vehicles: PropTypes.array.isRequired
-};
 
 export default GarageSideTabs;

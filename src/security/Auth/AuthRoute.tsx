@@ -24,7 +24,7 @@ function AuthRoute (props:React.PropsWithChildren<Props>) {
   const initiateUserProfileAction = (userId:string) => {
     return (dispatch:AppDispatch) => {
       dispatch(setUserId(userId));
-      dispatch(fetchUserProfile(userId!)).then(
+      dispatch(fetchUserProfile(userId)).then(
         (data) => {
           dispatch(updateUserProfile(data));
         }

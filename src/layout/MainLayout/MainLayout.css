@@ -7,20 +7,21 @@
     min-width: 1024px;
 }
 
-.dashboard-box {
+.dashboard-grid {
     padding: 0 0;
     margin: 0 0;
     border: 0 solid #FFFFFF;
     font-size: 1.25rem;
     font-weight: 700;
     background-color: #000;
-    opacity: 0.9;
+    opacity: 91%;
 }
 .dashboard-list-box {
     padding: 18px;
 }
 .dashboard-viewer-box {
-    padding: 18px 28px;
+    margin: 0 0;
+    padding: 0 26px;
 }
 
 .navigation-logo {
@@ -75,8 +76,3 @@ nav > ul li a:hover, nav ul li.current_page_item a {
     padding: 17px 10px 0 10px;
 }
 /* navigation end*/
-
-button#connect-car {
-    margin-bottom: 12px;
-    font-size: 14px;
-}

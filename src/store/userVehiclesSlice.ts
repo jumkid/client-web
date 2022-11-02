@@ -1,22 +1,34 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import dataExchangeService from '../service/DataExchangeService';
-import * as C from '../App.constants';
 import { VehicleProfile } from './model/VehicleProfile';
+import { vehicleService } from '../service';
+import { PagingSearch, VehicleProfileUpdate } from '../service/model/Request';
 
-export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles', async () => {
-  console.log('fetch user vehicles');
-  const response = await dataExchangeService.getWithPromise(C.USER_VEHICLES_API);
-  return (response != null) && response.data || [];
-});
+export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles',
+  async (pagingSearch:PagingSearch) => { return vehicleService.getByUser(pagingSearch); }
+);
+
+export const updateUserVehicleName = createAsyncThunk('userVehicles/updateName',
+  async (vehicleUpdate:VehicleProfileUpdate) => { return vehicleService.updateName(vehicleUpdate.id, vehicleUpdate.vehicle); }
+);
+
+export const saveNewVehicle = createAsyncThunk('userVehicles/saveNew',
+  async (vehicleProfile:VehicleProfile) => { return vehicleService.saveNew(vehicleProfile); }
+);
+
+export const deleteVehicle = createAsyncThunk('userVehicles/delete',
+  async (id:string) => { return vehicleService.delete(id); }
+);
 
 interface UserVehicleListState {
-  data: VehicleProfile[]
+  currentPick: number
+  vehicles: VehicleProfile[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error?: string | undefined
 }
 
 const initialState: UserVehicleListState = {
-  data: [],
+  currentPick: 1,
+  vehicles: [],
   status: 'idle',
   error: ''
 };
@@ -27,7 +39,14 @@ export const userVehiclesSlice = createSlice({
   initialState,
 
   reducers: {
-
+    changePick: (state, action) => {
+      state.currentPick = action.payload;
+    },
+    updateCurrentName: (state, action) => {
+      // the first two index (0 and 1) of tabs are used for specific actions
+      const index = state.currentPick - 2;
+      state.vehicles[index].name = action.payload;
+    }
   },
 
   extraReducers (builder) {
@@ -37,7 +56,7 @@ export const userVehiclesSlice = createSlice({
       })
       .addCase(fetchUserVehicles.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = action.payload;
+        state.vehicles = action.payload;
       })
       .addCase(fetchUserVehicles.rejected, (state, action) => {
         state.status = 'failed';
@@ -45,5 +64,7 @@ export const userVehiclesSlice = createSlice({
       });
   }
 });
+
+export const { changePick, updateCurrentName } = userVehiclesSlice.actions;
 
 export default userVehiclesSlice.reducer;

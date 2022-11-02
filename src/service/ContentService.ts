@@ -7,12 +7,14 @@ export interface IContentService {
 }
 
 export class ContentService implements IContentService{
+
   async upload(file:Blob, accessScope: "public" | "private") {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("accessScope", accessScope);
-    return await dataExchangeService.postWithPromise(C.CONTENT_UPLOAD_API, formData)
+    return await dataExchangeService.postWithPromise(C.CONTENT_UPLOAD_API, formData);
   }
+
 }
 
 export default new ContentService();

@@ -1,6 +1,12 @@
 import React from 'react';
+import { grey } from '@mui/material/colors';
+import styled from '@emotion/styled';
+import { Box, Paper } from '@mui/material';
+import { Theme } from '@emotion/react';
 
 const ColorModeContext = React.createContext({ toggleColorMode: ():void => { console.log("empty function");} });
+
+const JK_RED = '#C41407';
 
 const DesignTokens = (mode: string):object => ({
   palette: {
@@ -8,23 +14,26 @@ const DesignTokens = (mode: string):object => ({
     ...(
       mode === 'light'
         ? {
-          primary: { main: '#C41407', light: '#000' },
+          primary: { main: JK_RED, light: '#000' },
           secondary: { main: '#53a23b' },
-          divider: '#777',
+          divider: grey[900],
+          action: {
+            hover: 'rgba(196,20,6,1)'
+          },
           text: {
             primary: '#000',
-            secondary: '#777'
+            secondary: grey[900]
           },
           background: {
-            default: '#C41407',
+            default: JK_RED,
             paper: '#FFF'
           }
         }
         : {
           // palette values for dark or other mode
-          primary: { main: '#C41407', dark: '#000', contrastText: '#fff' },
+          primary: { main: JK_RED, dark: '#642408' },
           secondary: { main: '#FFF' },
-          divider: '#898989',
+          divider: grey[900],
           action: {
             hover: 'rgba(196,20,6,1)'
           },
@@ -42,10 +51,40 @@ const DesignTokens = (mode: string):object => ({
     borderRadius: 4
   },
   components: {
-    MuiButton: {
+    MuiTableHead: {
       styleOverrides: {
         root: {
-
+          backgroundColor: JK_RED
+        }
+      }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          cursor: 'pointer',
+          backgroundColor: grey[900],
+          '&.MuiTableRow-hover:hover': {
+            backgroundColor: grey[700]
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          padding: '8px'
+        },
+        stickyHeader: {
+          backgroundColor: JK_RED,
+          fontWeight: '900'
+        }
+      }
+    },
+    MuiStepper: {
+      styleOverrides: {
+        root: {
+          padding: '28px 120px 18px 120px',
+          backgroundColor: grey[900]
         }
       }
     },
@@ -59,12 +98,13 @@ const DesignTokens = (mode: string):object => ({
     MuiTab: {
       styleOverrides: {
         root: {
-          fontSize: '1.1rem',
-          color: '#ababab',
-          minHeight: 18,
+          cursor: 'hand',
+          fontSize: '1.0rem',
+          color: grey[300],
+          minHeight: 10,
           alignItems: 'end',
           justifyContent: 'right',
-          padding: '10px 20px'
+          padding: '8px 12px'
         }
       }
     },
@@ -95,7 +135,8 @@ const DesignTokens = (mode: string):object => ({
     MuiChip: {
       styleOverrides: {
         root: {
-          backgroundColor: '#232323',
+          color: grey[900],
+          backgroundColor: grey[500],
           padding: '0 0',
           margin: '2px 2px'
         }
@@ -106,6 +147,14 @@ const DesignTokens = (mode: string):object => ({
         root: {
           marginLeft: 0,
           width: '348px'
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontSize: 'medium',
+          padding: '2px 10px 2px 10px'
         }
       }
     },
@@ -126,7 +175,37 @@ const DesignTokens = (mode: string):object => ({
   }
 });
 
+interface ItemProps {
+  theme: Theme
+}
+
+const Item = styled(Paper)(({ theme }:ItemProps) => ({
+  ...theme,
+  backgroundImage: 'none',
+  paddingBottom: '8px',
+  fontSize: '16px',
+  fontWeight: '200',
+  float: 'left'
+}));
+
+const ItemText = styled(Box)(({ theme }:ItemProps) => ({
+  ...theme,
+  width: '248px',
+  textTransform: 'uppercase',
+  fontWeight: '500',
+  fontSize: '18px'
+}));
+
+const ItemHeader = styled(Box)(({ theme }:ItemProps) => ({
+  ...theme,
+  width: '100%',
+  textTransform: 'uppercase',
+  fontWeight: '500',
+  fontSize: '18px'
+}));
+
 export {
+  Item, ItemText, ItemHeader,
   ColorModeContext,
   DesignTokens
 };

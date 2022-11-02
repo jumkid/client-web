@@ -8,13 +8,13 @@ const buildUrlWithParams = (url: string, params?: object | string) => {
   if (params !== null) {
     _url = url + ((params != null) ? '?' : '');
     if (typeof params === "string") {
-      _url += params;
+      _url += `params`;
     } else {
       for (const param in params) {
         if (Object.prototype.hasOwnProperty.call(params, param)) {
           type ObjectKey = keyof typeof params
           const key = param as ObjectKey;
-          _url += param + '=' + params[key];
+          _url += `${param}=${params[key]}&`;
         }
       }
     }
@@ -82,6 +82,20 @@ export class DataExchangeService implements IDataExchangeService {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     return await axios.put(url, params, conf)
+      .then(response => {
+        return { status: response ? response.status : 500, data: response ? response.data : null };
+      })
+      .catch(error => {
+        const response = error.response;
+        this.if403Logout(response);
+        return { status: response ? response.status : 500, data: response ? response.data : null };
+      });
+  }
+
+  async deleteWithPromise(url:string, params?: object | string):Promise<APIResponse> {
+    const contentType = this.getContentTypeByParams(params);
+    const conf = this.getConf(contentType);
+    return await axios.delete(url, conf)
       .then(response => {
         return { status: response ? response.status : 500, data: response ? response.data : null };
       })

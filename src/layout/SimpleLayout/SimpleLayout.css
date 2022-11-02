@@ -6,6 +6,7 @@
 }
 
 .App-container {
+    min-width: 800px;
     padding: 2px 28px;
     margin: 28px 1px;
     border: 0 solid;

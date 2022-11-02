@@ -1,38 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, TextField } from '@mui/material';
-import PropTypes from 'prop-types';
 import VehicleProfileViewer from './VehicleProfileViewer';
 import VehicleListViewer from './VehicleListViewer';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import { RootState } from '../../../store';
+import { useAppSelector } from '../../../App.hooks';
+import VehicleConnector from '../VehicleConnector';
 
-interface Props {
-  vehicles: VehicleProfile[]
-}
-
-function GarageMainPanel ({ vehicles }:Props) {
-  const currentPick = useSelector((state:RootState) => state.vehiclePicker.value);
-  const currentIndex = currentPick - 1;
+function GarageMainPanel () {
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
+  const currentPick = useSelector((state:RootState) => state.userVehicles.currentPick);
+  const currentIndex = currentPick - 2;
 
   return (
     <>
       { currentPick === 0 &&
-        <Box className="dashboard-list-box">
-          <Box>
-            <TextField sx={{ backgroundColor: '#fff' }} fullWidth={true} placeholder="search your vehicle"/>
-          </Box>
-          <br/>
-          <VehicleListViewer vehicles={vehicles} />
-        </Box>
+        <VehicleConnector/>
       }
-      { currentPick > 0 && <VehicleProfileViewer vehicleProfile={vehicles[currentIndex]} />}
+
+      { currentPick === 1 &&
+        <VehicleListViewer
+          searchKeyword={searchKeyword}
+          changeSearchKeyword={(value) =>
+            setSearchKeyword(()=>value)}
+        />
+      }
+
+      { currentPick > 1 && <VehicleProfileViewer showName={true} vehicleProfile={userVehicles[currentIndex]} />}
     </>
   );
 }
-
-GarageMainPanel.propTypes = {
-  vehicles: PropTypes.array.isRequired
-};
 
 export default GarageMainPanel;

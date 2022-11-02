@@ -15,9 +15,11 @@ function UserLogin () {
   const changeUsername = (event:React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
   };
+
   const changePassword = (event:React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
+
   const handleSubmit = () => {
     setLoginMessage(null);
     authenticationService.login(username, password)
@@ -31,6 +33,7 @@ function UserLogin () {
         }
       });
   };
+
   const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleSubmit();
