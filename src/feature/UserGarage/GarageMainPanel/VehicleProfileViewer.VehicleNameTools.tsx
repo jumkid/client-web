@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, IconButton, TextField } from '@mui/material';
 import { Clear, Delete, ModeEdit, Save } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { deleteVehicle, updateCurrentName, updateUserVehicleName } from '../../../store/userVehiclesSlice';
-import { AppDispatch, RootState } from '../../../store';
+import { deleteVehicle, updateUserVehicleName } from '../../../store/userVehiclesSlice';
+import { RootState } from '../../../store';
 import ConfirmDialog from '../../../component/ConfirmDialog';
 
 interface Prop {
@@ -11,7 +11,7 @@ interface Prop {
   vehicleId: string
 }
 
-function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
+function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
   const [name, setName] = useState(vehicleName);
   const [editable, setEditable] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -21,12 +21,6 @@ function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.vehicles[currentPick - 2]);
 
   const dispatch = useAppDispatch();
-  const nameUpdateAction = (id:string, name:string, modificationDate:string) => {
-    return (dispatch:AppDispatch) => {
-      dispatch(updateCurrentName(name));
-      return dispatch(updateUserVehicleName({ id, vehicle:{name, accessScope:null, modificationDate} }));
-    }
-  }
 
   useEffect(() => {
     setEditable(false);
@@ -50,12 +44,11 @@ function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
     if (isSubmitted) return;
     else setIsSubmitted(true);
 
-    setEditable(false);
-    dispatch(nameUpdateAction(vehicleId, name, currentVehicle.modificationDate!)).then(
-      () => {
+    dispatch(updateUserVehicleName({ id:vehicleId, vehicle:{name, accessScope:null, modificationDate:currentVehicle.modificationDate!} }))
+      .then(() => {
         setIsSubmitted(false);
-      }
-    )
+        setEditable(false);
+      });
   }
 
   const confirmDelete = ():void => {
@@ -72,8 +65,6 @@ function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
     dispatch(deleteVehicle(vehicleId)).then(
       () => {
         setIsSubmitted(false);
-
-        //TODO
       }
     )
   };
@@ -122,7 +113,7 @@ function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
         </Button>
         <ConfirmDialog
           title="Delete Vehicle"
-          action="delete"
+          message="All related data will be removed. Are you sure to delete this vehicle?"
           isShown={dialogOpen}
           confirmCallback={dialogConfirm}
           cancelCallback={dialogCancel}
@@ -131,4 +122,4 @@ function EditableVehicleName ({ vehicleName, vehicleId }:Prop) {
     </>)
 }
 
-export default EditableVehicleName;
+export default VehicleNameTools;

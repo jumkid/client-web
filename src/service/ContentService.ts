@@ -6,7 +6,7 @@ export interface IContentService {
   upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse>
 }
 
-export class ContentService implements IContentService{
+class ContentService implements IContentService{
 
   async upload(file:Blob, accessScope: "public" | "private") {
     const formData = new FormData();
@@ -17,4 +17,4 @@ export class ContentService implements IContentService{
 
 }
 
-export default new ContentService();
+export default ContentService;

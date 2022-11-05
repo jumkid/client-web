@@ -3,15 +3,17 @@ import { Avatar, Fade, Grid, IconButton, Stack, Typography } from '@mui/material
 import { Lock, LockOpen } from '@mui/icons-material';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import * as C from '../../../App.constants';
-import EditableVehicleName from './VehicleProfileViewer.EditableName';
+import VehicleNameTools from './VehicleProfileViewer.VehicleNameTools';
 import { Item, ItemHeader, ItemText } from '../../../layout/Layout.Theme';
+import * as _ from 'lodash';
 
 interface Props {
-  showName: true | false
+  showName?: true | false
   vehicleProfile: VehicleProfile
 }
 
 function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
+  const showEditableName = _.isUndefined(showName) ? true : showName;
   const vehicleEngine = vehicleProfile.vehicleEngine;
   const vehicleTransmission = vehicleProfile.vehicleTransmission;
 
@@ -27,8 +29,8 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
                   src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
                   sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
                 />
-                { showName &&
-                  <EditableVehicleName
+                { showEditableName &&
+                  <VehicleNameTools
                     vehicleName={vehicleProfile.name!}
                     vehicleId={vehicleProfile.id!}
                   />

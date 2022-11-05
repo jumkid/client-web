@@ -4,7 +4,7 @@ import GarageSideTabs from './GarageSideTabs';
 
 function GarageSideBar () {
   return (
-    <Stack maxHeight="70%" pt="18px" m="auto" alignItems="center">
+    <Stack maxHeight="70%" m="auto" alignItems="center">
       <GarageSideTabs/>
     </Stack>
   );

@@ -26,7 +26,7 @@ function GarageMainPanel () {
         />
       }
 
-      { currentPick > 1 && <VehicleProfileViewer showName={true} vehicleProfile={userVehicles[currentIndex]} />}
+      { currentPick > 1 && <VehicleProfileViewer vehicleProfile={userVehicles[currentIndex]} />}
     </>
   );
 }

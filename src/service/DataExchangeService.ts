@@ -3,7 +3,7 @@ import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
 import { APIResponse } from './model/Response';
 
-const buildUrlWithParams = (url: string, params?: object | string) => {
+const buildUrlWithParams = (url: string, params?: string | object | object[] | null ) => {
   let _url = url;
   if (params !== null) {
     _url = url + ((params != null) ? '?' : '');
@@ -27,8 +27,8 @@ type Callback = (data?:object | object[] | string) => void
 export interface IDataExchangeService {
   get(url: string, params?: object, callback?: Callback):void
   post(url: string, params?: object, callback?: Callback):void
-  getWithPromise(url: string, params?: object):Promise<APIResponse>
-  postWithPromise (url: string, params?: object | string):Promise<APIResponse>
+  getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse>
+  postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse>
   putWithPromise(url: string, params?: object | string):Promise<APIResponse>
 }
 
@@ -49,11 +49,13 @@ export class DataExchangeService implements IDataExchangeService {
     });
   }
 
-  async getWithPromise (url: string, params?: object | string):Promise<APIResponse> {
-    const _url = buildUrlWithParams(url, params);
+  async getWithPromise (
+    url: string,
+    params?: string | object | object[],
+  ):Promise<APIResponse> {
     const contentType = this.getContentTypeByParams(params);
-    const conf = this.getConf(contentType);
-    return await axios.get(_url, conf)
+    const conf = { params: params, ...this.getConf(contentType) };
+    return await axios.get(url, conf)
       .then(response => {
         return { status: response ? response.status : 500, data: response ? response.data : null };
       })
@@ -64,10 +66,12 @@ export class DataExchangeService implements IDataExchangeService {
       });
   }
 
-  async postWithPromise (url: string, params?: object | string):Promise<APIResponse> {
-    const contentType = this.getContentTypeByParams(params);
-    const conf = this.getConf(contentType);
-    return await axios.post(url, params, conf)
+  async postWithPromise (url: string,
+    params: string | object | object[] | null,
+    body?: string | object | object[]):Promise<APIResponse> {
+    const contentType = this.getContentTypeByParams(body);
+    const conf = { params, ...this.getConf(contentType)};
+    return await axios.post(url, body, conf)
       .then(response => {
         return { status: response ? response.status : 500, data: response ? response.data : null };
       })
@@ -92,7 +96,7 @@ export class DataExchangeService implements IDataExchangeService {
       });
   }
 
-  async deleteWithPromise(url:string, params?: object | string):Promise<APIResponse> {
+  async deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     return await axios.delete(url, conf)
@@ -115,7 +119,7 @@ export class DataExchangeService implements IDataExchangeService {
     }
   }
 
-  getContentTypeByParams (params?: object | string):string {
+  getContentTypeByParams (params?: string | object | object[] | null):string {
     if (params) {
       if (params instanceof FormData && params.has('file') && params.get('file') instanceof File) {
         return 'multipart/form-data';

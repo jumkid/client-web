@@ -6,8 +6,6 @@ import {
   CircularProgress,
   Fade,
   Grid,
-  LinearProgress,
-  Slide,
   Stack,
   TextField
 } from '@mui/material';
@@ -18,7 +16,7 @@ import { Add, ArrowBackIos } from '@mui/icons-material';
 import { RootState } from '../../../store';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setConnectorStep } from '../../../store/connectedVehicleSlice';
-import { fetchUserVehicles, saveNewVehicle } from '../../../store/userVehiclesSlice';
+import { saveNewVehicle } from '../../../store/userVehiclesSlice';
 
 interface Prop {
   connectedVehicle: VehicleProfile
@@ -41,12 +39,8 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
     const newVehicle = { ...connectedVehicle, name };
     dispatch(saveNewVehicle(newVehicle)).then(
       (success) => {
-        const pagingSearch = { keyword: '*', page: 1, size: C.DEFAULT_PAGE_SIZE }
-        dispatch(fetchUserVehicles(pagingSearch)).then(
-          () => {
-            setIsSubmitted(false);
-          }
-        )
+        setIsSubmitted(false);
+        dispatch(setConnectorStep(0));
       }
     );
   };
@@ -54,6 +48,12 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
   const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   }
+
+  const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && isValid) {
+      handleAdd();
+    }
+  };
 
   const isValid = name.length > 0;
 
@@ -86,6 +86,7 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
                   required
                   value={name}
                   onChange={handleNameChange}
+                  onKeyPress={handleEnterKeyPress}
                   placeholder={`say, ${connectedVehicle.model} ${connectedVehicle.trimLevel}`}
                   error={!isValid}
                   helperText="please name this vehicle in your garage"

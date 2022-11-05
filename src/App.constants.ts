@@ -1,6 +1,6 @@
 const _API_URL: string = process.env.REACT_APP_API_GATEWAY_HOST!;
 
-export const DEFAULT_PAGE_SIZE = 20;
+export const DEFAULT_PAGE_SIZE = 25;
 
 export const USERNAME = 'username';
 export const PASSWORD = 'password';
@@ -14,6 +14,8 @@ export const USER_TOKEN_REFRESH_API:string = _API_URL + process.env.REACT_APP_US
 export const VEHICLES_API:string = _API_URL + process.env.REACT_APP_VEHICLES_API;
 export const VEHICLES_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_SEARCH_API;
 export const VEHICLES_PUBLIC_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_PUBLIC_SEARCH_API;
+export const VEHICLES_MATCHERS_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_MATCHERS_SEARCH_API;
+export const VEHICLES_AGG_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_AGG_SEARCH_API;
 
 export const CONTENT_UPLOAD_API:string = _API_URL + process.env.REACT_APP_CONTENT_UPLOAD_API;
 export const CONTENT_THUMBNAIL_API:string = _API_URL + process.env.REACT_APP_CONTENT_THUMBNAIL_API;

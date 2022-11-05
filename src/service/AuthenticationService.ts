@@ -29,7 +29,7 @@ export class AuthenticationService implements IAuthenticationService{
     const { password, confirmPassword, phone, ...data } = userProfile;
     data.credentials![0].value = password ? password : '';
 
-    const response = await dataExchangeService.postWithPromise(C.USER_SIGNUP_API, data);
+    const response = await dataExchangeService.postWithPromise(C.USER_SIGNUP_API, null, data);
     return {
       isSuccess: response ? response.status === 201 : false,
       status: response.status,
@@ -61,8 +61,8 @@ export class AuthenticationService implements IAuthenticationService{
 
   async login (username?:string, password?:string) {
     let isSuccess = false;
-    const response = await dataExchangeService.postWithPromise(C.USER_LOGIN_API,
-      `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`);
+    const body = `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`;
+    const response = await dataExchangeService.postWithPromise(C.USER_LOGIN_API, null, body);
     if (response && response.status === 200 && response.data) {
       authenticationManager.updateToken(response.data.access_token);
       isSuccess = true;

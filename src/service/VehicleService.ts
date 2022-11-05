@@ -1,50 +1,63 @@
 import * as C from '../App.constants';
 import dataExchangeService from './DataExchangeService';
-import { APIResponse } from './model/Response';
+import { APIPagingResponse, APIResponse } from './model/Response';
 import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
+import { DEFAULT_PAGE_SIZE } from '../App.constants';
+
+export interface VehicleFieldValuePair {
+  field:string
+  value:string
+}
 
 export interface IVehicleService {
-  getByUser: (pagingSearch:PagingSearch) => Promise<APIResponse>
-  getByPublic: (pagingSearch:PagingSearch) => Promise<APIResponse>
+  getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
+  getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
+  getByMatchers: (pagingSearch:PagingSearch, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse>
+  getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse>
 }
 
 class VehicleService implements IVehicleService {
-
-  async getByUser (pagingSearch:PagingSearch) {
-    if (!pagingSearch.keyword) pagingSearch.keyword = "*";
-    if (!pagingSearch.size) pagingSearch.size = C.DEFAULT_PAGE_SIZE;
-    if (!pagingSearch.page) pagingSearch.page = 1;
-
+  async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
+    VehicleService.normalizePagingSearch(pagingSearch);
     const response = await dataExchangeService.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
-    return (response != null) && response.data.data || [];
+    return response.data || {};
   }
 
-  async getByPublic (pagingSearch:PagingSearch): Promise<APIResponse> {
-    if (!pagingSearch.keyword) pagingSearch.keyword = "*";
-    if (!pagingSearch.size) pagingSearch.size = C.DEFAULT_PAGE_SIZE;
-    if (!pagingSearch.page) pagingSearch.page = 1;
-
+  async getByPublic (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
+    VehicleService.normalizePagingSearch(pagingSearch);
     const response = await dataExchangeService.getWithPromise(C.VEHICLES_PUBLIC_SEARCH_API, pagingSearch);
-    return (response != null) && response.data || [];
+    return response.data || {};
+  }
+
+  async getByMatchers (pagingSearch:PagingSearch, matchFields: VehicleFieldValuePair[]): Promise<APIResponse> {
+    VehicleService.normalizePagingSearch(pagingSearch);
+    return await dataExchangeService.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, matchFields);
+  }
+
+  async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse> {
+    return await dataExchangeService.postWithPromise(C.VEHICLES_AGG_SEARCH_API, {field, size: DEFAULT_PAGE_SIZE}, matchFields);
   }
 
   async updateName (id:string, vehicleProfile:VehicleProfile): Promise<APIResponse> {
     const url = `${C.VEHICLES_API}/${id}`;
-    const response = await dataExchangeService.putWithPromise(url, vehicleProfile);
-    return (response != null) && response.data || [];
+    return await dataExchangeService.putWithPromise(url, vehicleProfile);
   }
 
   async saveNew (vehicleProfile:VehicleProfile): Promise<APIResponse> {
-    const response = await dataExchangeService.postWithPromise(C.VEHICLES_API, vehicleProfile);
-    return (response != null) && response.data || [];
+    return await dataExchangeService.postWithPromise(C.VEHICLES_API, vehicleProfile);
   }
 
   async delete (id:string): Promise<APIResponse> {
     const url = `${C.VEHICLES_API}/${id}`;
-    const response = await dataExchangeService.deleteWithPromise(url);
-    return (response != null) && response.data || [];
+    return await dataExchangeService.deleteWithPromise(url);
+  }
+
+  private static normalizePagingSearch(pagingSearch:PagingSearch) {
+    if (!pagingSearch.keyword) pagingSearch.keyword = "*";
+    if (!pagingSearch.size) pagingSearch.size = C.DEFAULT_PAGE_SIZE;
+    if (!pagingSearch.page) pagingSearch.page = 1;
   }
 
 }

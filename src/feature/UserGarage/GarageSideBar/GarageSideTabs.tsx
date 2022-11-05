@@ -18,11 +18,10 @@ function GarageSideTabs () {
   return (
     <Tabs
       orientation="vertical"
-      variant="scrollable"
+      variant="standard"
       value={currentPick}
       onChange={handleChange}
-      aria-label="Vertical tabs example"
-      sx={{ borderColor: 'divider', width: '100%', mt: 2, p: 0 }}
+      sx={{ borderColor: 'divider', width: '100%', p: 0 }}
     >
       <Tab
         sx={{ border: '1px solid', m: '8px 8px 8px 8px' }}
@@ -32,7 +31,7 @@ function GarageSideTabs () {
       />
       <Tab icon={<ViewList/>} iconPosition="start" label="LIST" sx={{ backgroundColor: grey[900] }}/>
       { userVehicles.map((vehicle, index) =>
-        <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }}/>
+        <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }} wrapped={true}/>
       )}
     </Tabs>
   );

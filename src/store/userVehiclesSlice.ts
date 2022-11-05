@@ -49,18 +49,41 @@ export const userVehiclesSlice = createSlice({
     }
   },
 
-  extraReducers (builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchUserVehicles.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchUserVehicles.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.vehicles = action.payload;
+        state.vehicles = action.payload.data;
       })
       .addCase(fetchUserVehicles.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(saveNewVehicle.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        if (action.payload.status === 201) {
+          state.vehicles.push(action.payload.data);
+          state.currentPick = state.vehicles.length + 1; // jump to the new vehicle as current pick
+        }
+      })
+      .addCase(updateUserVehicleName.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        if (action.payload.status === 202) {
+          // the first two index (0 and 1) of tabs are used for specific actions
+          const index = state.currentPick - 2;
+          state.vehicles[index] = action.payload.data;
+        }
+      })
+      .addCase(deleteVehicle.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        if (action.payload.status === 204) {
+          const index = state.currentPick - 2;
+          state.currentPick = 1; // set to default current pick for all pick
+          state.vehicles.splice(index, 1);
+        }
       });
   }
 });

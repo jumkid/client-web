@@ -1,9 +1,9 @@
 import { VehicleProfile } from '../../store/model/VehicleProfile';
 
 interface PagingSearch {
-  keyword:string | undefined
   page:number | undefined
   size:number | undefined
+  keyword?:string
 }
 
 interface VehicleProfileUpdate {

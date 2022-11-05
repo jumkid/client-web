@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import * as _ from 'lodash';
 
 interface Prop {
   title: string
@@ -22,7 +23,7 @@ function ConfirmDialog ({title, action, message, isShown, confirmCallback, cance
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure to perform {action}?
+          { _.isEmpty(message) ? `Are you sure to perform ${action} action?`: message }
         </DialogContentText>
       </DialogContent>
       <DialogActions>

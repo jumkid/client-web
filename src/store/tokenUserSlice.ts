@@ -64,7 +64,7 @@ export const tokenUserSlice = createSlice({
         state.status = 'succeeded';
         state.userProfile = action.payload;
       })
-      .addCase(fetchUserProfile.rejected, (state, action) => {
+      .addCase(fetchUserProfile.rejected, (state) => {
         state.status = 'failed';
       });
   }

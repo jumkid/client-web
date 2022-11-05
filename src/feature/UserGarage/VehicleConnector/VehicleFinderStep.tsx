@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tab, Tabs } from '@mui/material';
 import FastMatchPanel from './FastMatchPanel';
 import AdvanceSearchPanel from './AdvanceSearchPanel';
 
-function VehicleFinderStep () {
-  const [currentIndex, setCurrentIndex] = useState(0);
+interface Prop {
+  currentTab: number
+  handleTabChange: (event: React.SyntheticEvent, index: number) => void
+}
 
-  const handleTabChange = (event: React.SyntheticEvent, index: number) => {
-    setCurrentIndex(index);
-  };
-
+function VehicleFinderStep ({currentTab, handleTabChange}:Prop) {
   return (
     <>
       <Tabs
-        value={currentIndex}
+        value={currentTab}
         onChange={handleTabChange}
         sx={{ borderColor: 'divider', width: '100%', mt: 1, p: 0 }}
       >
         <Tab label="Fast Match" />
         <Tab label="Advance Search" />
       </Tabs>
-      { currentIndex == 0 && <FastMatchPanel/> }
-      { currentIndex == 1 && <AdvanceSearchPanel/> }
+      { currentTab == 0 && <FastMatchPanel/> }
+      { currentTab == 1 && <AdvanceSearchPanel/> }
     </>
   )
-}
+}``
 
 export default VehicleFinderStep;

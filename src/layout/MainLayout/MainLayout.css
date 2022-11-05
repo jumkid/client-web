@@ -8,8 +8,9 @@
 }
 
 .dashboard-grid {
+    height: 100%;
     padding: 0 0;
-    margin: 0 0;
+    margin: 0 0 10px 0;
     border: 0 solid #FFFFFF;
     font-size: 1.25rem;
     font-weight: 700;
@@ -21,7 +22,7 @@
 }
 .dashboard-viewer-box {
     margin: 0 0;
-    padding: 0 26px;
+    padding: 2px 26px;
 }
 
 .navigation-logo {

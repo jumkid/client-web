@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Button, CircularProgress, Fade, FormControl, IconButton, Stack, Typography } from '@mui/material';
 import * as C from '../../../App.constants';
 import { ValidationErrors } from '../model/ValidationErrors';
-import contentService from '../../../service/ContentService';
+import { contentService } from '../../../service';
 import { useAppDispatch } from '../../../App.hooks';
 import { updateAvatar, submitAvatarUpdate, UserProfileState } from '../../../store/tokenUserSlice';
 import { useSelector } from 'react-redux';
