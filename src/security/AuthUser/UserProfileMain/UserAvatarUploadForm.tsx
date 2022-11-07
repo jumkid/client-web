@@ -56,7 +56,7 @@ export default function UserAvatarUploadForm () {
       dispatch(updateAvatar(newAvatarId));
       const updatedTokenUser:UserProfileState = { ...tokenUser, userProfile: { attributes: { avatar: [newAvatarId]}} };
       dispatch(submitAvatarUpdate(updatedTokenUser)).then(
-        (success) => {
+        (response) => {
           setErrors(initValidationErrors);
         }
       );

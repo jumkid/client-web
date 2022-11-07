@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
-import { APIResponse } from './model/Response';
+import { APIPagingResponse, APIResponse } from './model/Response';
 
 const buildUrlWithParams = (url: string, params?: string | object | object[] | null ) => {
   let _url = url;
@@ -66,9 +66,11 @@ export class DataExchangeService implements IDataExchangeService {
       });
   }
 
-  async postWithPromise (url: string,
+  async postWithPromise (
+    url: string,
     params: string | object | object[] | null,
-    body?: string | object | object[]):Promise<APIResponse> {
+    body?: string | object | object[]
+  ):Promise<APIResponse> {
     const contentType = this.getContentTypeByParams(body);
     const conf = { params, ...this.getConf(contentType)};
     return await axios.post(url, body, conf)

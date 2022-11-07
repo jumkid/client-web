@@ -10,13 +10,14 @@ import {
 import styled from '@emotion/styled';
 import { Theme } from '@emotion/react';
 import { vehicleService } from '../../../service';
-import { VehicleFieldValuePair } from '../../../service/VehicleService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons/faBarcode';
 import * as _ from 'lodash';
 import * as C from '../../../App.constants';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import VehicleCardViewer from './FastMatchPanel.VehicleCardViewer';
+import { useAppSelector, useAppDispatch } from '../../../App.hooks';
+import { RootState } from '../../../store';
+import { changeMatchSelections, fetchMatchVehicles, setMatchFields } from '../../../store/searchVehiclesSlice';
 
 interface ItemProps {
   theme: Theme
@@ -32,41 +33,35 @@ const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
   margin: '10px 10px 10px 0'
 }));
 
-const initialMatchFields:VehicleFieldValuePair[] = [];
-const initialMatchVehicles:VehicleProfile[] = [];
-
 function FastMatchPanel () {
-  const [makers, setMakers] = useState([]);
-  const [models, setModels] = useState([]);
-  const [modelYears, setModelYears] = useState([]);
-  const [trimLevels, setTrimLevels] = useState([]);
-  const [matchFields, setMatchFields] = useState(initialMatchFields);
-  const [matchVehicles, setMatchVehicles] = useState(initialMatchVehicles);
   const [nextTarget, setNextTarget] = useState("make");
+
+  const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
+  const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
+  const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
+  const dispatch = useAppDispatch();
+
 
   useEffect(() => {
     if (nextTarget === "submit") {
-      console.log("search matchers");
-      vehicleService.getByMatchers({ page: 1, size: C.DEFAULT_PAGE_SIZE }, matchFields).then(
-        (response) => {
-          setMatchVehicles(response.data.data);
-        }
-      );
+      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
     } else {
       vehicleService.getForAggregation(nextTarget, matchFields).then(
         (response) => {
           switch (nextTarget) {
           case "make":
-            setMakers(response.data || []);
+            dispatch(changeMatchSelections({makers:response.data}));
             return;
           case "model":
-            setModels(response.data || []);
+            dispatch(changeMatchSelections({models:response.data}));
             return;
           case "modelYear":
-            setModelYears(response.data || []);
+            dispatch(changeMatchSelections({
+              modelYears: _.orderBy(response.data, (e) => Number(e), 'desc')
+            }));
             return;
           case "trimLevel":
-            setTrimLevels(response.data || []);
+            dispatch(changeMatchSelections({trimLevels:response.data}));
             return;
           default:
             return;
@@ -80,10 +75,7 @@ function FastMatchPanel () {
     const field = event.target.name;
     const value = event.target.value;
     setNextTarget(getNextTarget(field));
-    setMatchFields((prevState) => {
-      return _.unionWith([{field: field, value: value}], prevState,
-        (el1,el2) => {return el1.field === el2.field;});
-    });
+    dispatch(setMatchFields({field, value}));
   }
 
   const getNextTarget = (target:string) => {
@@ -99,6 +91,11 @@ function FastMatchPanel () {
     default:
       return "make";
     }
+  }
+
+  const getMatchFieldValue = (fieldName:string) => {
+    const matchField = _.find(matchFields, (el) => el.field === fieldName);
+    return matchField ? matchField.value : "";
   }
 
   return (
@@ -124,9 +121,10 @@ function FastMatchPanel () {
               label="Make"
               name="make"
               defaultValue=""
+              value={getMatchFieldValue("make")}
               onChange={handleOnChange}
             >
-              { makers.map((maker, index) => (
+              { matchSelections.makers.map((maker, index) => (
                 <MenuItem key={index} value={maker}>
                   {maker}
                 </MenuItem>
@@ -140,9 +138,10 @@ function FastMatchPanel () {
               label="Model"
               name="model"
               defaultValue=""
+              value={getMatchFieldValue("model")}
               onChange={handleOnChange}
             >
-              { models.map((model, index) => (
+              { matchSelections.models.map((model, index) => (
                 <MenuItem key={index} value={model}>
                   {model}
                 </MenuItem>
@@ -156,9 +155,10 @@ function FastMatchPanel () {
               label="modelYear"
               name="modelYear"
               defaultValue=""
+              value={getMatchFieldValue("modelYear")}
               onChange={handleOnChange}
             >
-              { modelYears.map((modelYear, index) => (
+              { matchSelections.modelYears.map((modelYear, index) => (
                 <MenuItem key={index} value={modelYear}>
                   {modelYear}
                 </MenuItem>
@@ -172,9 +172,10 @@ function FastMatchPanel () {
               label="trimLevel"
               name="trimLevel"
               defaultValue=""
+              value={getMatchFieldValue("trimLevel")}
               onChange={handleOnChange}
             >
-              { trimLevels.map((trimLevel, index) => (
+              { matchSelections.trimLevels.map((trimLevel, index) => (
                 <MenuItem key={index} value={trimLevel}>
                   {trimLevel}
                 </MenuItem>

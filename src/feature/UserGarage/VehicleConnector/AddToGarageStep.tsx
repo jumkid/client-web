@@ -38,7 +38,7 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
 
     const newVehicle = { ...connectedVehicle, name };
     dispatch(saveNewVehicle(newVehicle)).then(
-      (success) => {
+      () => {
         setIsSubmitted(false);
         dispatch(setConnectorStep(0));
       }

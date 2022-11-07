@@ -2,37 +2,43 @@ import React, { useState } from 'react';
 import { Box, FormControl, IconButton, TextField } from '@mui/material';
 import { Clear, Search } from '@mui/icons-material';
 import VehicleSearchTable from './VehicleSearchTable';
-import { vehicleService } from '../../../service';
-import * as C from '../../../App.constants';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { clearSearchKeyword, fetchSearchVehicles, setSearchKeyword } from '../../../store/searchVehiclesSlice';
+import { RootState } from '../../../store';
+import * as _ from 'lodash';
 
 function AdvanceSearchPanel () {
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [vehicles, setVehicles] = useState([]);
+
+  const searchKeyword = useAppSelector((state:RootState) => state.searchVehicles.searchKeyword);
+  const searchVehicles = useAppSelector((state:RootState) => state.searchVehicles.searchVehicles);
+  const searchPage = useAppSelector((state:RootState) => state.searchVehicles.searchPage);
+  const searchPageSize = useAppSelector((state:RootState) => state.searchVehicles.searchPageSize);
+  const dispatch = useAppDispatch();
 
   const handleClearClick = ():void => {
-    setSearchKeyword('');
+    dispatch(clearSearchKeyword());
   }
 
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>):void => {
-    const { value } = event.target;
-    setSearchKeyword(value);
+    dispatch(setSearchKeyword(event.target.value));
   }
 
   const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined) => {
-    if (isSubmitted) return;
-    setIsSubmitted(true);
-
-    vehicleService.getByPublic({ keyword: searchKeyword, page: 1, size: C.DEFAULT_PAGE_SIZE })
-      .then(response => {
-        setIsSubmitted(false);
-        setVehicles(response.data);
-      }).catch( error => {
-        setIsSubmitted(false);
-        console.error(error);
-      });
     event && event.preventDefault();
+
+    if (isValid) {
+      if (isSubmitted) return;
+      setIsSubmitted(true);
+      dispatch(fetchSearchVehicles({ keyword: searchKeyword, page: searchPage, size: searchPageSize })).then(
+        (response) => {
+          setIsSubmitted(false);
+        }
+      )
+    }
   }
+
+  const isValid = !_.isEmpty(searchKeyword);
 
   return (
     <Box className="dashboard-viewer-box">
@@ -40,25 +46,25 @@ function AdvanceSearchPanel () {
         <FormControl>
           <Box sx={{ pb: 2 }}>
             <TextField
-              sx={{ width: "60vh", mt: 2 }}
+              sx={{ width: "60vh", mt: 2, height: 50 }}
               name="search"
               placeholder="Find a vehicle by keyword. Say, toyota camry 2021"
               variant="standard"
               value={searchKeyword}
               InputProps={{
+                startAdornment: (<Search color="primary" fontSize="medium" sx={{ mr: 1 }}/>),
                 endAdornment: (<IconButton
                   sx={{visibility: searchKeyword? "visible": "hidden"}}
                   onClick={handleClearClick}><Clear/></IconButton>)
               }}
               onChange={handleChange}
+              error={!isValid}
+              helperText={!isValid && "Please type in search keyword"}
             />
-            <IconButton sx={{ mt: 2 }} type="submit" aria-label="search" disabled={isSubmitted}>
-              <Search color="primary" fontSize="medium" />
-            </IconButton>
           </Box>
         </FormControl>
       </form>
-      <VehicleSearchTable vehicles={vehicles}/>
+      <VehicleSearchTable keyword={searchKeyword} vehicles={searchVehicles}/>
     </Box>
   )
 }

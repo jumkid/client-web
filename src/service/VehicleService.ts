@@ -13,7 +13,7 @@ export interface VehicleFieldValuePair {
 export interface IVehicleService {
   getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
-  getByMatchers: (pagingSearch:PagingSearch, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse>
+  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIResponse>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse>
 }
@@ -22,22 +22,25 @@ class VehicleService implements IVehicleService {
   async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
     const response = await dataExchangeService.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
-    return response.data || {};
+    return response.data;
   }
 
   async getByPublic (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
     const response = await dataExchangeService.getWithPromise(C.VEHICLES_PUBLIC_SEARCH_API, pagingSearch);
-    return response.data || {};
+    return response.data;
   }
 
-  async getByMatchers (pagingSearch:PagingSearch, matchFields: VehicleFieldValuePair[]): Promise<APIResponse> {
+  async getByMatchers (pagingSearch:PagingSearch): Promise<APIResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    return await dataExchangeService.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, matchFields);
+    return await dataExchangeService.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
   }
 
   async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse> {
-    return await dataExchangeService.postWithPromise(C.VEHICLES_AGG_SEARCH_API, {field, size: DEFAULT_PAGE_SIZE}, matchFields);
+    return await dataExchangeService.postWithPromise(
+      C.VEHICLES_AGG_SEARCH_API,
+      {field, size: DEFAULT_PAGE_SIZE},
+      matchFields);
   }
 
   async updateName (id:string, vehicleProfile:VehicleProfile): Promise<APIResponse> {
@@ -46,7 +49,7 @@ class VehicleService implements IVehicleService {
   }
 
   async saveNew (vehicleProfile:VehicleProfile): Promise<APIResponse> {
-    return await dataExchangeService.postWithPromise(C.VEHICLES_API, vehicleProfile);
+    return await dataExchangeService.postWithPromise(C.VEHICLES_API, null, vehicleProfile);
   }
 
   async delete (id:string): Promise<APIResponse> {
