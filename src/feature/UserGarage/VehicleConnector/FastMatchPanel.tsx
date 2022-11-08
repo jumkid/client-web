@@ -139,6 +139,7 @@ function FastMatchPanel () {
               name="model"
               defaultValue=""
               value={getMatchFieldValue("model")}
+              disabled={_.isEmpty(matchSelections.models)}
               onChange={handleOnChange}
             >
               { matchSelections.models.map((model, index) => (
@@ -156,6 +157,7 @@ function FastMatchPanel () {
               name="modelYear"
               defaultValue=""
               value={getMatchFieldValue("modelYear")}
+              disabled={_.isEmpty(matchSelections.modelYears)}
               onChange={handleOnChange}
             >
               { matchSelections.modelYears.map((modelYear, index) => (
@@ -173,6 +175,7 @@ function FastMatchPanel () {
               name="trimLevel"
               defaultValue=""
               value={getMatchFieldValue("trimLevel")}
+              disabled={_.isEmpty(matchSelections.trimLevels)}
               onChange={handleOnChange}
             >
               { matchSelections.trimLevels.map((trimLevel, index) => (

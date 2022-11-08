@@ -1,6 +1,6 @@
 const _API_URL: string = process.env.REACT_APP_API_GATEWAY_HOST!;
 
-export const DEFAULT_PAGE_SIZE = 25;
+export const DEFAULT_PAGE_SIZE = 10;
 
 export const USERNAME = 'username';
 export const PASSWORD = 'password';

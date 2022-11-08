@@ -8,24 +8,47 @@ import {
   Chip,
   FormControl,
   Icon, IconButton,
-  Link,
+  Link, TablePagination,
   TextField
 } from '@mui/material';
 import * as C from '../../../App.constants';
 import { Clear, PlayArrow, Search } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { changePick, fetchUserVehicles } from '../../../store/userVehiclesSlice';
+import {
+  changePick,
+  clearKeyword,
+  fetchUserVehicles,
+  setKeyword,
+  setPage,
+  setPageSize
+} from '../../../store/userVehiclesSlice';
+import { AppDispatch, RootState } from '../../../store';
 
-interface Props {
-  searchKeyword:string
-  changeSearchKeyword: (value:string) => void
-}
-
-function VehicleListViewer ({searchKeyword, changeSearchKeyword}:Props) {
+function VehicleListViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  const keyword = useAppSelector((state:RootState) => state.userVehicles.keyword);
+  const total = useAppSelector((state:RootState) => state.userVehicles.total);
+  const page = useAppSelector((state:RootState) => state.userVehicles.page);
+  const pageSize = useAppSelector((state:RootState) => state.userVehicles.pageSize);
   const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
   const dispatch = useAppDispatch();
+
+  const changePageAction = (newPage:number) => {
+    return (dispatch:AppDispatch) => {
+      dispatch(setPage(newPage));
+      // backend page start from 1 instead of 0
+      dispatch(fetchUserVehicles({keyword, page: newPage + 1, size: pageSize}));
+    }
+  };
+
+  const changeRowsPerPageAction = (pageSize:number) => {
+    return (dispatch:AppDispatch) => {
+      dispatch(setPageSize(pageSize));
+      dispatch(setPage(0));
+      dispatch(fetchUserVehicles({keyword, page: 1, size: pageSize}));
+    }
+  };
 
   const handleClick = (index:number) => {
     // the first two index (0 and 1) of tabs are used for specific actions
@@ -36,26 +59,32 @@ function VehicleListViewer ({searchKeyword, changeSearchKeyword}:Props) {
     if (isSubmitted) return;
 
     setIsSubmitted(true);
-    const pagingSearch = { keyword: searchKeyword, page: 1, size: C.DEFAULT_PAGE_SIZE }
-    dispatch(fetchUserVehicles(pagingSearch)).then(() => {
+    dispatch(fetchUserVehicles({ keyword, page, size: pageSize })).then(() => {
       setIsSubmitted(false);
     });
     event && event.preventDefault();
-  }
+  };
 
   const handleClearClick = ():void => {
-    changeSearchKeyword('');
+    dispatch(clearKeyword());
     setIsSubmitted(true);
-    const pagingSearch = { keyword: '*', page: 1, size: C.DEFAULT_PAGE_SIZE }
-    dispatch(fetchUserVehicles(pagingSearch)).then(() => {
+    dispatch(fetchUserVehicles({ keyword: '', page, size: pageSize })).then(() => {
       setIsSubmitted(false);
     });
-  }
+  };
 
   const handleSearchChange = (event:React.ChangeEvent<HTMLInputElement>):void => {
     const { value } = event.target;
-    changeSearchKeyword(value);
-  }
+    dispatch(setKeyword(value));
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    dispatch(changePageAction(newPage));
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeRowsPerPageAction(Number(event.target.value)));
+  };
 
   return (
     <Box>
@@ -67,23 +96,32 @@ function VehicleListViewer ({searchKeyword, changeSearchKeyword}:Props) {
               name="search"
               placeholder="search vehicles in your garage"
               variant="standard"
-              value={searchKeyword}
+              value={keyword}
               onChange={handleSearchChange}
               disabled={isSubmitted}
               InputProps={{
+                startAdornment: <Search color="primary" fontSize="medium" sx={{ mr: 1 }}/>,
                 endAdornment: (<IconButton
-                  sx={{visibility: searchKeyword? "visible": "hidden"}}
+                  sx={{visibility: keyword? "visible": "hidden"}}
                   onClick={handleClearClick}><Clear/></IconButton>)
               }}
             />
-            <IconButton sx={{ mt: 2 }} type="submit" aria-label="search" disabled={isSubmitted}>
-              <Search color="primary" fontSize="medium" />
-            </IconButton>
           </Box>
         </FormControl>
       </form>
 
       <Box sx={{ p: 1 }}>
+        <TablePagination
+          component="div"
+          count={total}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          rowsPerPageOptions={[10, 15, 25]}
+          labelRowsPerPage="Vehicles per page"
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          variant="head"
+        />
         { userVehicles && userVehicles.map((vehicle, index) => (
           <Card raised key={index}>
             <CardHeader

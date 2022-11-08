@@ -16,7 +16,7 @@ function CarOwner () {
       const pagingSearch = { keyword: '*', page: 1, size: C.DEFAULT_PAGE_SIZE }
       dispatch(fetchUserVehicles(pagingSearch));
     }
-  }, [userVehiclesStatus, dispatch]);
+  }, [dispatch]);
 
   return (
     <MainLayout mode="dark" menuIndex={0}>

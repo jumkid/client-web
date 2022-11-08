@@ -15,7 +15,9 @@ import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedVehicleSlice';
 import { AppDispatch, RootState } from '../../../store';
 import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../store/searchVehiclesSlice';
+import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   keyword: string
@@ -71,7 +73,9 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
               <TableCell align="right">Model</TableCell>
               <TableCell align="right">Model Year</TableCell>
               <TableCell align="right">Trim Level</TableCell>
-              <TableCell align="right">Variant</TableCell>
+              <TableCell align="right"><FontAwesomeIcon icon={faCar} size="1x"/> Engine</TableCell>
+              <TableCell align="right"><FontAwesomeIcon icon={faGears} size="1x"/> Transmission</TableCell>
+              <TableCell align="right"><FontAwesomeIcon icon={faCarSide} size="1x"/> Drivetrain</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,11 +87,13 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 onClick={() => handleRowClick(vehicle)}
               >
-                <TableCell component="th" scope="row">{vehicle.make}</TableCell>
-                <TableCell align="right">{vehicle.model}</TableCell>
+                <TableCell component="th" scope="row" sx={{ textTransform: "uppercase" }}>{vehicle.make}</TableCell>
+                <TableCell align="right" >{vehicle.model}</TableCell>
                 <TableCell align="right">{vehicle.modelYear}</TableCell>
-                <TableCell align="right">{vehicle.trimLevel}</TableCell>
-                <TableCell align="right">...</TableCell>
+                <TableCell align="right" sx={{ textTransform: "uppercase" }}>{vehicle.trimLevel}</TableCell>
+                <TableCell align="right">{vehicle.vehicleEngine!.name}</TableCell>
+                <TableCell align="right">{vehicle.vehicleTransmission!.name}</TableCell>
+                <TableCell align="right">{vehicle.vehicleTransmission!.drivetrain}</TableCell>
               </TableRow>
             ))}
           </TableBody>

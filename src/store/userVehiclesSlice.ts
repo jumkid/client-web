@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { VehicleProfile } from './model/VehicleProfile';
 import { vehicleService } from '../service';
 import { PagingSearch, VehicleProfileUpdate } from '../service/model/Request';
+import * as C from '../App.constants';
 
 export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles',
   async (pagingSearch:PagingSearch) => { return vehicleService.getByUser(pagingSearch); }
@@ -21,6 +22,10 @@ export const deleteVehicle = createAsyncThunk('userVehicles/delete',
 
 interface UserVehicleListState {
   currentPick: number
+  keyword: string
+  total: number
+  page: number
+  pageSize: number
   vehicles: VehicleProfile[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error?: string | undefined
@@ -28,6 +33,10 @@ interface UserVehicleListState {
 
 const initialState: UserVehicleListState = {
   currentPick: 1,
+  keyword: '',
+  total: 0,
+  page: 0,
+  pageSize: C.DEFAULT_PAGE_SIZE,
   vehicles: [],
   status: 'idle',
   error: ''
@@ -42,11 +51,20 @@ export const userVehiclesSlice = createSlice({
     changePick: (state, action) => {
       state.currentPick = action.payload;
     },
-    updateCurrentName: (state, action) => {
-      // the first two index (0 and 1) of tabs are used for specific actions
-      const index = state.currentPick - 2;
-      state.vehicles[index].name = action.payload;
-    }
+    setKeyword: (state, action) => {
+      state.keyword = action.payload;
+    },
+    clearKeyword: (state) => {
+      state.keyword = '';
+      state.total = 0;
+      state.page = 0;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+    setPageSize: (state, action) => {
+      state.pageSize = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -57,6 +75,7 @@ export const userVehiclesSlice = createSlice({
       .addCase(fetchUserVehicles.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.vehicles = action.payload.data;
+        state.total = action.payload.total;
       })
       .addCase(fetchUserVehicles.rejected, (state, action) => {
         state.status = 'failed';
@@ -88,6 +107,6 @@ export const userVehiclesSlice = createSlice({
   }
 });
 
-export const { changePick, updateCurrentName } = userVehiclesSlice.actions;
+export const { changePick, setKeyword, clearKeyword, setPage, setPageSize } = userVehiclesSlice.actions;
 
 export default userVehiclesSlice.reducer;
