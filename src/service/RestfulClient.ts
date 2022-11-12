@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
-import { APIPagingResponse, APIResponse } from './model/Response';
+import { APIResponse } from './model/Response';
 
 const buildUrlWithParams = (url: string, params?: string | object | object[] | null ) => {
   let _url = url;
@@ -24,7 +24,7 @@ const buildUrlWithParams = (url: string, params?: string | object | object[] | n
 
 type Callback = (data?:object | object[] | string) => void
 
-export interface IDataExchangeService {
+export interface IRestfulClient {
   get(url: string, params?: object, callback?: Callback):void
   post(url: string, params?: object, callback?: Callback):void
   getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse>
@@ -32,7 +32,7 @@ export interface IDataExchangeService {
   putWithPromise(url: string, params?: object | string):Promise<APIResponse>
 }
 
-export class DataExchangeService implements IDataExchangeService {
+export class RestfulClient implements IRestfulClient {
   get (url: string, params: object | undefined, callback?:Callback): void {
     const _url = buildUrlWithParams(url, params);
 
@@ -142,4 +142,4 @@ export class DataExchangeService implements IDataExchangeService {
   }
 }
 
-export default new DataExchangeService();
+export default new RestfulClient();

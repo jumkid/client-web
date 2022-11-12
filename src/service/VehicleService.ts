@@ -1,5 +1,5 @@
 import * as C from '../App.constants';
-import dataExchangeService from './DataExchangeService';
+import restfulClient from './RestfulClient';
 import { APIPagingResponse, APIResponse } from './model/Response';
 import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
@@ -14,6 +14,7 @@ export interface IVehicleService {
   getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByMatchers: (pagingSearch:PagingSearch) => Promise<APIResponse>
+  getByVin: (vin:string) => Promise<APIResponse>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse>
 }
@@ -21,40 +22,45 @@ export interface IVehicleService {
 class VehicleService implements IVehicleService {
   async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    const response = await dataExchangeService.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
+    const response = await restfulClient.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
     return response.data;
   }
 
   async getByPublic (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    const response = await dataExchangeService.getWithPromise(C.VEHICLES_PUBLIC_SEARCH_API, pagingSearch);
+    const response = await restfulClient.getWithPromise(C.VEHICLES_PUBLIC_SEARCH_API, pagingSearch);
     return response.data;
   }
 
   async getByMatchers (pagingSearch:PagingSearch): Promise<APIResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    return await dataExchangeService.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
+    return await restfulClient.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
   }
 
   async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse> {
-    return await dataExchangeService.postWithPromise(
+    return await restfulClient.postWithPromise(
       C.VEHICLES_AGG_SEARCH_API,
       {field, size: DEFAULT_PAGE_SIZE},
       matchFields);
   }
 
+  async getByVin (vin:string): Promise<APIResponse> {
+    const url = `${C.VEHICLE_VIN_DECODE_API}/${vin}`;
+    return await restfulClient.getWithPromise(url);
+  }
+
   async updateName (id:string, vehicleProfile:VehicleProfile): Promise<APIResponse> {
     const url = `${C.VEHICLES_API}/${id}`;
-    return await dataExchangeService.putWithPromise(url, vehicleProfile);
+    return await restfulClient.putWithPromise(url, vehicleProfile);
   }
 
   async saveNew (vehicleProfile:VehicleProfile): Promise<APIResponse> {
-    return await dataExchangeService.postWithPromise(C.VEHICLES_API, null, vehicleProfile);
+    return await restfulClient.postWithPromise(C.VEHICLES_API, null, vehicleProfile);
   }
 
   async delete (id:string): Promise<APIResponse> {
     const url = `${C.VEHICLES_API}/${id}`;
-    return await dataExchangeService.deleteWithPromise(url);
+    return await restfulClient.deleteWithPromise(url);
   }
 
   private static normalizePagingSearch(pagingSearch:PagingSearch) {

@@ -16,9 +16,16 @@ export const VEHICLES_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHIC
 export const VEHICLES_PUBLIC_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_PUBLIC_SEARCH_API;
 export const VEHICLES_MATCHERS_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_MATCHERS_SEARCH_API;
 export const VEHICLES_AGG_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_AGG_SEARCH_API;
+export const VEHICLE_VIN_DECODE_API:string = _API_URL + process.env.REACT_APP_VEHICLE_VIN_DECODE_API;
 
 export const CONTENT_UPLOAD_API:string = _API_URL + process.env.REACT_APP_CONTENT_UPLOAD_API;
 export const CONTENT_THUMBNAIL_API:string = _API_URL + process.env.REACT_APP_CONTENT_THUMBNAIL_API;
 
 export const DOMAIN_IMAGES_API:string = _API_URL + process.env.REACT_APP_DOMAIN_IMAGE_API;
 export const DOMAIN_IMAGES_AUTO_BRAND_API:string = DOMAIN_IMAGES_API + '/automobile/brand';
+
+export const MAKE = 'make';
+export const MODEL = 'model';
+export const MODEL_YEAR = 'modelYear';
+export const TRIM_LEVEL = 'trimLevel';
+export const VIN = 'vin';

@@ -17,7 +17,14 @@ import * as C from '../../../App.constants';
 import VehicleCardViewer from './FastMatchPanel.VehicleCardViewer';
 import { useAppSelector, useAppDispatch } from '../../../App.hooks';
 import { RootState } from '../../../store';
-import { changeMatchSelections, fetchMatchVehicles, setMatchFields } from '../../../store/searchVehiclesSlice';
+import {
+  changeMatchSelections, clearMatchFields,
+  fetchMatchVehicles, fetchVehicleByVin,
+  setMatchFields, setMatchVehicles,
+  setSearchVIN
+} from '../../../store/searchVehiclesSlice';
+import { Clear } from '@mui/icons-material';
+import CardWaitSkeleton from './CardWaitSkeleton';
 
 interface ItemProps {
   theme: Theme
@@ -34,8 +41,11 @@ const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
 }));
 
 function FastMatchPanel () {
-  const [nextTarget, setNextTarget] = useState("make");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [target, setTarget] = useState(C.MAKE);
 
+  const searchVIN = useAppSelector((state:RootState) => state.searchVehicles.searchVIN);
+  const vinVehicle = useAppSelector((state:RootState) => state.searchVehicles.vinVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
@@ -43,24 +53,33 @@ function FastMatchPanel () {
 
 
   useEffect(() => {
-    if (nextTarget === "submit") {
-      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
+    if (target === C.VIN) {
+      setIsSubmitted(true);
+      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: vinVehicle })).then(
+        () => { setIsSubmitted(false); }
+      );
+    } else
+    if (target === "submit") {
+      setIsSubmitted(true);
+      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields })).then(
+        () => { setIsSubmitted(false); }
+      )
     } else {
-      vehicleService.getForAggregation(nextTarget, matchFields).then(
+      vehicleService.getForAggregation(target, matchFields).then(
         (response) => {
-          switch (nextTarget) {
-          case "make":
+          switch (target) {
+          case C.MAKE:
             dispatch(changeMatchSelections({makers:response.data}));
             return;
-          case "model":
+          case C.MODEL:
             dispatch(changeMatchSelections({models:response.data}));
             return;
-          case "modelYear":
+          case C.MODEL_YEAR:
             dispatch(changeMatchSelections({
               modelYears: _.orderBy(response.data, (e) => Number(e), 'desc')
             }));
             return;
-          case "trimLevel":
+          case C.TRIM_LEVEL:
             dispatch(changeMatchSelections({trimLevels:response.data}));
             return;
           default:
@@ -69,33 +88,59 @@ function FastMatchPanel () {
         }
       )
     }
-  },[matchFields]);
+  },[vinVehicle, matchFields]);
 
   const handleOnChange = (event:SelectChangeEvent<any>) => {
     const field = event.target.name;
     const value = event.target.value;
-    setNextTarget(getNextTarget(field));
+    setTarget(getNextTarget(field));
     dispatch(setMatchFields({field, value}));
+    dispatch(setMatchVehicles([]));
   }
+
+  const handleClearClick = () => {
+    cleanUp(C.MAKE);
+    dispatch(setSearchVIN(''));
+  }
+
+  const handleVinOnChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    cleanUp();
+    dispatch(setSearchVIN(event.target.value));
+  }
+
+  const handleVinSearch = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (isSubmitted) return;
+      else setIsSubmitted(true);
+      cleanUp(C.VIN);
+      dispatch(fetchVehicleByVin(searchVIN)).then(() => { setIsSubmitted(false); });
+    }
+  };
 
   const getNextTarget = (target:string) => {
     switch (target) {
-    case "make":
-      return "model";
-    case "model":
-      return "modelYear";
-    case "modelYear":
-      return "trimLevel";
-    case "trimLevel":
+    case C.MAKE:
+      return C.MODEL;
+    case C.MODEL:
+      return C.MODEL_YEAR;
+    case C.MODEL_YEAR:
+      return C.TRIM_LEVEL;
+    case C.TRIM_LEVEL:
       return "submit";
     default:
-      return "make";
+      return C.MAKE;
     }
   }
 
   const getMatchFieldValue = (fieldName:string) => {
     const matchField = _.find(matchFields, (el) => el.field === fieldName);
     return matchField ? matchField.value : "";
+  }
+
+  const cleanUp = (next?:string) => {
+    setTarget(next || '');
+    if (!_.isEmpty(matchFields)) dispatch(clearMatchFields());
+    if (!_.isEmpty(matchVehicles)) dispatch(setMatchVehicles([]));
   }
 
   return (
@@ -106,11 +151,19 @@ function FastMatchPanel () {
             <TextField
               sx={{ width: "60vh" }}
               name="vin"
+              value={searchVIN}
               placeholder="Find a vehicle by knowing VIN number"
               variant="outlined"
               InputProps={{
-                endAdornment: (<FontAwesomeIcon icon={faBarcode} style={{ marginLeft: 15 }}/>)
+                endAdornment: (<>
+                  <Clear
+                    sx={{ visibility: searchVIN? "visible": "hidden", cursor: 'pointer'}}
+                    onClick={handleClearClick}/>
+                  <FontAwesomeIcon icon={faBarcode} style={{ marginLeft: 15 }}/>
+                </>)
               }}
+              onChange={handleVinOnChange}
+              onKeyPress={handleVinSearch}
             />
           </S_FormControl>
           <br/>OR<br/>
@@ -121,10 +174,10 @@ function FastMatchPanel () {
               label="Make"
               name="make"
               defaultValue=""
-              value={getMatchFieldValue("make")}
+              value={getMatchFieldValue(C.MAKE)}
               onChange={handleOnChange}
             >
-              { matchSelections.makers.map((maker, index) => (
+              { !_.isEmpty(matchSelections.makers) && matchSelections.makers.map((maker, index) => (
                 <MenuItem key={index} value={maker}>
                   {maker}
                 </MenuItem>
@@ -138,11 +191,11 @@ function FastMatchPanel () {
               label="Model"
               name="model"
               defaultValue=""
-              value={getMatchFieldValue("model")}
+              value={getMatchFieldValue(C.MODEL)}
               disabled={_.isEmpty(matchSelections.models)}
               onChange={handleOnChange}
             >
-              { matchSelections.models.map((model, index) => (
+              { !_.isEmpty(matchSelections.models) && matchSelections.models.map((model, index) => (
                 <MenuItem key={index} value={model}>
                   {model}
                 </MenuItem>
@@ -156,11 +209,11 @@ function FastMatchPanel () {
               label="modelYear"
               name="modelYear"
               defaultValue=""
-              value={getMatchFieldValue("modelYear")}
+              value={getMatchFieldValue(C.MODEL_YEAR)}
               disabled={_.isEmpty(matchSelections.modelYears)}
               onChange={handleOnChange}
             >
-              { matchSelections.modelYears.map((modelYear, index) => (
+              { !_.isEmpty(matchSelections.modelYears) && matchSelections.modelYears.map((modelYear, index) => (
                 <MenuItem key={index} value={modelYear}>
                   {modelYear}
                 </MenuItem>
@@ -174,11 +227,11 @@ function FastMatchPanel () {
               label="trimLevel"
               name="trimLevel"
               defaultValue=""
-              value={getMatchFieldValue("trimLevel")}
+              value={getMatchFieldValue(C.TRIM_LEVEL)}
               disabled={_.isEmpty(matchSelections.trimLevels)}
               onChange={handleOnChange}
             >
-              { matchSelections.trimLevels.map((trimLevel, index) => (
+              { !_.isEmpty(matchSelections.trimLevels) && matchSelections.trimLevels.map((trimLevel, index) => (
                 <MenuItem key={index} value={trimLevel}>
                   {trimLevel}
                 </MenuItem>
@@ -187,6 +240,7 @@ function FastMatchPanel () {
           </S_FormControl>
         </form>
       </Box>
+      { <CardWaitSkeleton isShown={isSubmitted}/> }
       { !_.isEmpty(matchVehicles) && <VehicleCardViewer vehicles={matchVehicles}/>}
     </Box>
   )
