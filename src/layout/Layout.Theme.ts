@@ -175,7 +175,7 @@ const DesignTokens = (mode: string):object => ({
   }
 });
 
-interface ItemProps {
+type ItemProps = {
   theme: Theme
 }
 

@@ -19,10 +19,10 @@ import { Notifications } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import { HandleClick, MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { useAppSelector } from '../../App.hooks';
 
-interface Props {
+type Props = {
   menuSettings: MenuSetting[],
   userSettings: UserSetting[]
 }
@@ -32,7 +32,7 @@ const initialElement: HTMLButtonElement | null = null;
 function TopBar ({ menuSettings, userSettings }: Props) {
   const [anchorElUser, setAnchorElUser] = useState(initialElement);
 
-  const tokenUser = useSelector((state:RootState) => state.tokenUser);
+  const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
   const userProfile = tokenUser.userProfile;
   const userAvatar = userProfile.attributes?.avatar[0];
   const userName = userProfile.username;
@@ -77,7 +77,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
           <Box>
             { tokenUser && userSettings.length > 0 && <Tooltip title="Open settings">
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}${userAvatar}?size=medium`} />
+                <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />
               </IconButton>
             </Tooltip> }
 

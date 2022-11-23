@@ -4,8 +4,8 @@ import { ValidationErrors } from '../model/ValidationErrors';
 import { UserProfile } from '../model/UserProfile';
 import Validator from '../UserProfile.Validator';
 import authenticationService from '../../../service/AuthenticationService';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import { useAppSelector } from '../../../App.hooks';
 
 const initUserProfile:UserProfile = {
   credentials: [
@@ -21,7 +21,7 @@ const initValidationErrors:ValidationErrors = {
 }
 
 export default function UserPasswordResetForm () {
-  const tokenUser = useSelector((state:RootState) => state.tokenUser);
+  const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
   const [userProfile, setUserProfile] = useState(initUserProfile);
   const [errors, setErrors] = useState(initValidationErrors);
   const [isSubmitted, setIsSubmitted] = useState(false);

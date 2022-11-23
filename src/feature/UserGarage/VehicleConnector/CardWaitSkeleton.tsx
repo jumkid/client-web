@@ -1,8 +1,8 @@
 import React from 'react';
 import { Skeleton, Box } from '@mui/material';
 
-interface Props {
-  isShown: true | false
+type Props = {
+  isShown: boolean
 }
 
 function CardWaitSkeleton ({isShown}:Props) {

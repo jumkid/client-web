@@ -1,7 +1,7 @@
 import React from 'react';
 import { Step, StepLabel, Stepper, Typography } from '@mui/material';
 
-interface Props {
+type Props = {
   currentStep: number
   steps: string[]
 }

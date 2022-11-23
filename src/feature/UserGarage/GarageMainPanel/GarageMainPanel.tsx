@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import VehicleProfileViewer from './VehicleProfileViewer';
 import VehicleListViewer from './VehicleListViewer';
 import { RootState } from '../../../store';
@@ -7,9 +6,8 @@ import { useAppSelector } from '../../../App.hooks';
 import VehicleConnector from '../VehicleConnector';
 
 function GarageMainPanel () {
-  const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
-  const currentPick = useSelector((state:RootState) => state.userVehicles.currentPick);
-  const currentIndex = currentPick - 2;
+  const currentPick = useAppSelector((state:RootState) => state.userVehicles.currentPick);
+  const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
 
   return (
     <>
@@ -21,7 +19,7 @@ function GarageMainPanel () {
         <VehicleListViewer />
       }
 
-      { currentPick > 1 && <VehicleProfileViewer vehicleProfile={userVehicles[currentIndex]} />}
+      { currentPick > 1 && currentVehicle && <VehicleProfileViewer vehicleProfile={currentVehicle} />}
     </>
   );
 }

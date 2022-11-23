@@ -1,10 +1,10 @@
-export interface APIResponse {
+export interface APIResponse<T> {
   status: number
-  data: any | null
+  data: T | null
 }
 
 export interface APIPagingResponse {
-  success: true | false
+  success: boolean
   msg: string | null
   total: number
   size: number
@@ -13,7 +13,25 @@ export interface APIPagingResponse {
 }
 
 export interface AuthResponse {
-  isSuccess: true | false
+  isSuccess: boolean
   status: number
   data: any | null
+}
+
+export interface ContentMetadata {
+  uuid: string
+  mimeType: string
+  title: string
+  activated: boolean
+  module: string
+  accessScope: 'public' | 'private'
+  tags: string[]
+  children: ChildContentMetadata[]
+}
+
+export interface ChildContentMetadata {
+  uuid: string
+  mimeType: string
+  activated: boolean
+  module: string
 }

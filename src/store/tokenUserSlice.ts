@@ -8,15 +8,15 @@ export const fetchUserProfile = createAsyncThunk('tokenUser/fetchUserProfile', a
   return (response && response.isSuccess) ? response.data : {};
 });
 
-export const submitAvatarUpdate = createAsyncThunk('tokenUser/submitAvatarUpdate', async (tokenUser:UserProfileState):Promise<APIResponse>=> {
-  console.log('update user avatar');
-  return await authenticationService.updateUser(tokenUser.userId, { attributes: tokenUser.userProfile.attributes });
-});
+export const submitAvatarUpdate = createAsyncThunk('tokenUser/submitAvatarUpdate',
+  async (tokenUser:UserProfileState):Promise<APIResponse<any>> => {
+    return await authenticationService.updateUser(tokenUser.userId, { attributes: tokenUser.userProfile.attributes });
+  });
 
-export const submitUserProfile = createAsyncThunk('tokenUser/submitUserProfile', async (tokenUser:UserProfileState):Promise<APIResponse> => {
-  console.log('update user profile');
-  return await authenticationService.updateUser(tokenUser.userId, tokenUser.userProfile);
-});
+export const submitUserProfile = createAsyncThunk('tokenUser/submitUserProfile',
+  async (tokenUser:UserProfileState):Promise<APIResponse<any>> => {
+    return await authenticationService.updateUser(tokenUser.userId, tokenUser.userProfile);
+  });
 
 export interface UserProfileState {
   userId: string
@@ -52,6 +52,9 @@ export const tokenUserSlice = createSlice({
     }),
     updateAvatar: (state, action) => {
       state.userProfile.attributes = { avatar: [action.payload] };
+    },
+    setStatus: (state, action) => {
+      state.status = action.payload;
     }
   },
 
@@ -70,6 +73,6 @@ export const tokenUserSlice = createSlice({
   }
 });
 
-export const { setUserId, updateUserProfile, updateAvatar } = tokenUserSlice.actions;
+export const { setUserId, updateUserProfile, updateAvatar, setStatus } = tokenUserSlice.actions;
 
 export default tokenUserSlice.reducer;

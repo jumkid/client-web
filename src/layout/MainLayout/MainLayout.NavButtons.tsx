@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MenuSetting from './model/MenuSetting';
 import { HandleClick } from './model';
 
-interface Props {
+type Props = {
     items: MenuSetting[]
     handleClick: HandleClick
 }

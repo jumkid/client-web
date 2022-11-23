@@ -27,6 +27,7 @@ interface UserVehicleListState {
   page: number
   pageSize: number
   vehicles: VehicleProfile[]
+  currentVehicle: VehicleProfile | null
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error?: string | undefined
 }
@@ -38,6 +39,7 @@ const initialState: UserVehicleListState = {
   page: 0,
   pageSize: C.DEFAULT_PAGE_SIZE,
   vehicles: [],
+  currentVehicle: null,
   status: 'idle',
   error: ''
 };
@@ -49,7 +51,9 @@ export const userVehiclesSlice = createSlice({
 
   reducers: {
     changePick: (state, action) => {
-      state.currentPick = action.payload;
+      const pick = action.payload;
+      state.currentPick = pick;
+      if (pick > 1) state.currentVehicle = state.vehicles[pick - 2];
     },
     setKeyword: (state, action) => {
       state.keyword = action.payload;

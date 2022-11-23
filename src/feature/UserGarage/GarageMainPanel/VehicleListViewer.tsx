@@ -9,7 +9,7 @@ import {
   FormControl,
   Icon, IconButton,
   Link, TablePagination,
-  TextField
+  TextField, Typography
 } from '@mui/material';
 import * as C from '../../../App.constants';
 import { Clear, PlayArrow, Search } from '@mui/icons-material';
@@ -23,6 +23,8 @@ import {
   setPageSize
 } from '../../../store/userVehiclesSlice';
 import { AppDispatch, RootState } from '../../../store';
+import CardWaitSkeleton from '../VehicleConnector/CardWaitSkeleton';
+import * as _ from 'lodash';
 
 function VehicleListViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -32,6 +34,7 @@ function VehicleListViewer () {
   const page = useAppSelector((state:RootState) => state.userVehicles.page);
   const pageSize = useAppSelector((state:RootState) => state.userVehicles.pageSize);
   const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
+  const status = useAppSelector(state => state.userVehicles.status);
   const dispatch = useAppDispatch();
 
   const changePageAction = (newPage:number) => {
@@ -122,6 +125,9 @@ function VehicleListViewer () {
           onRowsPerPageChange={handleChangeRowsPerPage}
           variant="head"
         />
+        { <CardWaitSkeleton isShown={status === 'loading'} /> }
+        { _.isEmpty(userVehicles) && (status !== 'loading') &&
+        <Typography variant='h5'>There is no vehicle in your garage yet, click the connect button to start.</Typography>}
         { userVehicles && userVehicles.map((vehicle, index) => (
           <Card raised key={index}>
             <CardHeader

@@ -26,7 +26,7 @@ import {
 import { Clear } from '@mui/icons-material';
 import CardWaitSkeleton from './CardWaitSkeleton';
 
-interface ItemProps {
+type ItemProps = {
   theme: Theme
 }
 

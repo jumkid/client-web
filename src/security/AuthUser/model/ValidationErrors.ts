@@ -3,7 +3,7 @@ export interface ValidationErrors {
     email?: string | undefined
     password?: string | undefined
     confirmPassword?: string | undefined
-    acceptedTerms?: true | false  | undefined
-    hasUpdate?: true | false
+    acceptedTerms?: boolean  | undefined
+    hasUpdate?: boolean
     avatar?: string
 }

@@ -3,9 +3,8 @@ import { Box, Button } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import VehicleProfileViewer from '../GarageMainPanel/VehicleProfileViewer';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { useAppDispatch } from '../../../App.hooks';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setConnectorStep } from '../../../store/connectedVehicleSlice';
 
 interface Prop {
@@ -13,7 +12,7 @@ interface Prop {
 }
 
 function PreviewVehicleStep ({connectedVehicle}:Prop) {
-  const currentStep = useSelector((state:RootState) => state.connectedVehicle.connectorStep);
+  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const dispatch = useAppDispatch();
 
   const handleBackward = () => {

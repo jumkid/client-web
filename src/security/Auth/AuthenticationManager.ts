@@ -22,7 +22,7 @@ export interface IAuthenticationManager {
   getRefreshToken():string
   updateToken (token:string | null):void
   updateTokenUserAvatar(avatarId:string):void
-  isLoggedIn():true | false
+  isLoggedIn():boolean
   logout():void
 }
 
@@ -111,8 +111,7 @@ export class AuthenticationManager implements IAuthenticationManager{
     if (this.jwtUser) this.jwtUser.avatarId = avatarId;
   }
 
-  isLoggedIn(): true | false {
-    console.log(`is user logged in: ${!!this.getAccessToken()}`);
+  isLoggedIn(): boolean {
     return !!this.getAccessToken();
   }
 

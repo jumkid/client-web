@@ -3,25 +3,22 @@ import { Avatar, Button, CircularProgress, Fade, FormControl, IconButton, Stack,
 import * as C from '../../../App.constants';
 import { ValidationErrors } from '../model/ValidationErrors';
 import { contentService } from '../../../service';
-import { useAppDispatch } from '../../../App.hooks';
-import { updateAvatar, submitAvatarUpdate, UserProfileState } from '../../../store/tokenUserSlice';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { updateAvatar, submitAvatarUpdate, setStatus, UserProfileState } from '../../../store/tokenUserSlice';
 import { AppDispatch, RootState } from '../../../store';
 
 const initValidationErrors:ValidationErrors = { hasUpdate: false }
 
 export default function UserAvatarUploadForm () {
-  const tokenUser = useSelector((state:RootState) => state.tokenUser );
+  const tokenUser = useAppSelector((state:RootState) => state.tokenUser );
   const [avatarUrl, setAvatarUrl] = useState('');
   const [newAvatar, setNewAvatar] = useState(new Blob());
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState(initValidationErrors);
 
   const dispatch = useAppDispatch();
-
   const avatarId = tokenUser.userProfile.attributes?.avatar[0];
   useEffect(() => {
-    if (avatarId && avatarId.length > 0) setAvatarUrl(`${C.CONTENT_THUMBNAIL_API}${avatarId}?size=medium`);
+    if (avatarId && avatarId.length > 0) setAvatarUrl(`${C.CONTENT_THUMBNAIL_API}/${avatarId}?size=medium`);
   }, [avatarId]);
 
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +34,12 @@ export default function UserAvatarUploadForm () {
   }
 
   const handleSubmit = async () => {
-    if (isSubmitted) { return; }
-    else { setIsSubmitted(true); }
+    if (tokenUser.status === 'loading') { return; }
+    else { dispatch(setStatus('loading')); }
     // step 1: upload content and return new content id
     const firstResponse = await contentService.upload(newAvatar, "public");
     // step 2: update avatar id by the new content id
-    setIsSubmitted(false);
+    dispatch(setStatus('idle'));
     if (firstResponse.status === 202) {
       const newAvatarId = firstResponse.data.uuid;
       dispatch(updateAvatarAction(newAvatarId));
@@ -63,7 +60,7 @@ export default function UserAvatarUploadForm () {
     }
   }
 
-  const isValidForm = Object.values(errors).length === 0 && !isSubmitted;
+  const isValidForm = Object.values(errors).length === 0 && (tokenUser.status !== 'loading');
 
   return (
     <FormControl sx={{ width: '48vh', top: 30 }}>
@@ -90,7 +87,7 @@ export default function UserAvatarUploadForm () {
         >
           Upload
         </Button>
-        {isSubmitted && (
+        {tokenUser.status === 'loading' && (
           <CircularProgress
             size={24}
             sx={{

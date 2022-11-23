@@ -25,6 +25,7 @@ interface Prop {
 function AddToGarageStep ({connectedVehicle}:Prop) {
   const [name, setName] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const dispatch = useAppDispatch();
 
@@ -70,7 +71,7 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
       </Box>
       <Stack className="dashboard-viewer-box">
         <Fade in={true} mountOnEnter unmountOnExit>
-          <Grid container spacing={2} columns={16}>
+          <Grid container columns={16}>
             <Grid item xs={12}>
               <ItemHeader sx={{ mb: 3 }}>
                 <Avatar
@@ -93,14 +94,28 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
                   inputProps={{ style: {fontSize: 22} }}
                 />
               </ItemHeader>
+            </Grid>
+            <Grid item>
               <Item>
                 <Item>Make <ItemText>{connectedVehicle.make}</ItemText></Item>
                 <Item>Model <ItemText>{connectedVehicle.model}</ItemText></Item>
-              </Item>
-              <Item>
                 <Item>Trim Level <ItemText>{connectedVehicle.trimLevel}</ItemText></Item>
                 <Item>Model Year <ItemText>{connectedVehicle.modelYear}</ItemText></Item>
               </Item>
+            </Grid>
+            <Grid width="90%" height="380px">
+              <Stack alignItems="center" height="100%">
+                <Box
+                  sx={{
+                    width: '60%',
+                    height: '100%',
+                    background: `url(${C.CONTENT_STREAM_API}/${connectedVehicle.mediaGalleryId})`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center center'
+                  }}
+                />
+              </Stack>
             </Grid>
           </Grid>
         </Fade>

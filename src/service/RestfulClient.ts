@@ -27,12 +27,14 @@ type Callback = (data?:object | object[] | string) => void
 export interface IRestfulClient {
   get(url: string, params?: object, callback?: Callback):void
   post(url: string, params?: object, callback?: Callback):void
-  getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse>
-  postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse>
-  putWithPromise(url: string, params?: object | string):Promise<APIResponse>
+  getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
+  getBase64WithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
+  postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
+  putWithPromise(url: string, params?: object | string):Promise<APIResponse<any>>
 }
 
 export class RestfulClient implements IRestfulClient {
+
   get (url: string, params: object | undefined, callback?:Callback): void {
     const _url = buildUrlWithParams(url, params);
 
@@ -49,15 +51,39 @@ export class RestfulClient implements IRestfulClient {
     });
   }
 
+  async getBase64WithPromise(url: string, params?: string | object | object[] | undefined): Promise<APIResponse<any>> {
+    const contentType = this.getContentTypeByParams(params);
+    return await axios.get(url, {
+      params,
+      responseType: 'arraybuffer',
+      ...this.getConf(contentType)
+    })
+      .then(response => {
+        return {
+          status: response ? response.status : 500,
+          headers: response.headers,
+          data: response.data
+        };
+      })
+      .catch(error => {
+        const response = error.response;
+        return { status: response.status, data: response.data };
+      });
+  }
+
   async getWithPromise (
     url: string,
     params?: string | object | object[],
-  ):Promise<APIResponse> {
+  ):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = { params: params, ...this.getConf(contentType) };
     return await axios.get(url, conf)
       .then(response => {
-        return { status: response ? response.status : 500, data: response ? response.data : null };
+        return {
+          status: response ? response.status : 500,
+          headers: response.headers,
+          data: response.data
+        };
       })
       .catch(error => {
         const response = error.response;
@@ -70,7 +96,7 @@ export class RestfulClient implements IRestfulClient {
     url: string,
     params: string | object | object[] | null,
     body?: string | object | object[]
-  ):Promise<APIResponse> {
+  ):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(body);
     const conf = { params, ...this.getConf(contentType)};
     return await axios.post(url, body, conf)
@@ -84,7 +110,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  async putWithPromise(url: string, params: object | string | undefined):Promise<APIResponse> {
+  async putWithPromise(url: string, params: object | string | undefined):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     return await axios.put(url, params, conf)
@@ -98,7 +124,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  async deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse> {
+  async deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     return await axios.delete(url, conf)

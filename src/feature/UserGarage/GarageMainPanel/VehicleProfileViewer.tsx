@@ -6,9 +6,10 @@ import * as C from '../../../App.constants';
 import VehicleNameTools from './VehicleProfileViewer.VehicleNameTools';
 import { Item, ItemHeader, ItemText } from '../../../layout/Layout.Theme';
 import * as _ from 'lodash';
+import GalleryDrawBoard from './DrawBoard';
 
-interface Props {
-  showName?: true | false
+type Props = {
+  showName?: boolean
   vehicleProfile: VehicleProfile
 }
 
@@ -37,14 +38,6 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
                 }
               </h2>
             </ItemHeader>
-            <Item>
-              <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
-              <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
-            </Item>
-            <Item>
-              <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
-              <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
-            </Item>
           </Grid>
           <Grid item xs={4}>
             <IconButton sx={{ float: 'right', mt: 3.5 }} aria-label="access scope" component="label">
@@ -53,6 +46,14 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
             </IconButton>
           </Grid>
         </Grid>
+        <Item>
+          <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
+          <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
+          <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
+          <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
+        </Item>
+
+        <GalleryDrawBoard mediaGalleryId={vehicleProfile.mediaGalleryId}/>
 
         { vehicleEngine &&
           <>

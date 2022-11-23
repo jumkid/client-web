@@ -10,7 +10,7 @@ import { AppDispatch } from '../../store';
 import { fetchUserProfile, setUserId, updateUserProfile } from '../../store/tokenUserSlice';
 import { useAppDispatch } from '../../App.hooks';
 
-interface Props {
+type Props = {
   children: ReactNode
   path?: string
 }

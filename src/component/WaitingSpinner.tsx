@@ -2,7 +2,7 @@ import React from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 interface Prop {
-  isShown: true | false
+  isShown: boolean
 }
 
 function WaitingSpinner ({isShown}:Prop) {

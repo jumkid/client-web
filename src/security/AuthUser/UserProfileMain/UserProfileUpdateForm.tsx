@@ -3,15 +3,14 @@ import { Button, FormControl, TextField } from '@mui/material';
 import Validator from '../UserProfile.Validator';
 import { ValidationErrors } from '../model/ValidationErrors';
 import UserAvatarUploadForm from './UserAvatarUploadForm';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { useAppDispatch } from '../../../App.hooks';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { submitUserProfile, updateUserProfile } from '../../../store/tokenUserSlice';
 
 const initValidationErrors:ValidationErrors = { hasUpdate: false }
 
 function UserProfileUpdateForm () {
-  const tokenUser = useSelector((state:RootState) => state.tokenUser);
+  const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
   const userProfile = tokenUser.userProfile;
 
   const [errors, setErrors] = useState(initValidationErrors);

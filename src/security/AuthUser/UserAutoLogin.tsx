@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import authenticationService from '../../service/AuthenticationService';
 import SimpleLayout from '../../layout/SimpleLayout';
 
-interface Props {
+type Props = {
   username?: string
   password?: string
 }

@@ -6,7 +6,7 @@ import { ThemeProvider } from '@emotion/react';
 import { Container } from '@mui/material';
 import './SimpleLayout.css';
 
-interface Props {
+type Props = {
     children: ReactNode
 }
 

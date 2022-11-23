@@ -19,7 +19,7 @@ import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface Props {
+type Props = {
   keyword: string
   vehicles: VehicleProfile[]
 }

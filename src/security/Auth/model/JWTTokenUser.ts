@@ -20,7 +20,7 @@ export interface JWTTokenUser {
     scope: string
     sid: string
     avatarId: string
-    email_verified: true | false
+    email_verified: boolean
     name: string
     preferred_username: string
     given_name: string

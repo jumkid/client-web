@@ -6,7 +6,7 @@ interface Prop {
   title: string
   action?: string
   message?: string
-  isShown: true | false
+  isShown: boolean
   confirmCallback: () => void
   cancelCallback: () => void
 }

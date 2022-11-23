@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Box, Button, IconButton, TextField } from '@mui/material';
 import { Clear, Delete, ModeEdit, Save } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
@@ -6,71 +6,97 @@ import { deleteVehicle, updateUserVehicleName } from '../../../store/userVehicle
 import { RootState } from '../../../store';
 import ConfirmDialog from '../../../component/ConfirmDialog';
 
-interface Prop {
+type ComponentState = {
+  name: string
+  editable: boolean
+  isSubmitted: boolean
+  isDialogOpen: boolean
+}
+
+type Action =
+  | { type: 'setName', payload: string }
+  | { type: 'setEditable', payload: boolean }
+  | { type: 'setIsSubmitted', payload: boolean }
+  | { type: 'setIsDialogOpen', payload: boolean }
+
+const reducer = (state:ComponentState, action: Action):ComponentState => {
+  switch (action.type) {
+  case 'setName':
+    return {...state, name: action.payload};
+  case 'setEditable':
+    return {...state, editable: action.payload};
+  case 'setIsSubmitted':
+    return {...state, isSubmitted: action.payload};
+  case 'setIsDialogOpen':
+    return {...state, isDialogOpen: action.payload};
+  default:
+    return state;
+  }
+}
+
+type Prop = {
   vehicleName: string
   vehicleId: string
 }
 
 function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
-  const [name, setName] = useState(vehicleName);
-  const [editable, setEditable] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [state, dispatch] = useReducer(reducer,
+    {name: vehicleName, editable: false, isSubmitted: false, isDialogOpen: false});
 
   const currentPick = useAppSelector((state:RootState) => state.userVehicles.currentPick);
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.vehicles[currentPick - 2]);
 
-  const dispatch = useAppDispatch();
+  const appDispatch = useAppDispatch();
 
   useEffect(() => {
-    setEditable(false);
-    setName(vehicleName);
+    dispatch({type: 'setEditable', payload: false});
+    dispatch({type: 'setName', payload: vehicleName});
   }, [vehicleId])
 
   const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    dispatch({type: 'setName', payload: event.target.value});
   }
 
   const toggleNameEditable = () => {
-    setEditable(prevState => !prevState);
+    dispatch({type: 'setEditable', payload: !state.editable});
   }
 
   const handleCancel = ():void => {
-    setName(vehicleName);
-    setEditable(false);
+    dispatch({type: 'setName', payload: vehicleName});
+    dispatch({type: 'setEditable', payload: false});
   }
 
   const handleSave = ():void => {
-    if (isSubmitted) return;
-    else setIsSubmitted(true);
+    if (state.isSubmitted) return;
+    else dispatch({type: 'setIsSubmitted', payload: true});
 
-    dispatch(updateUserVehicleName({ id:vehicleId, vehicle:{name, accessScope:null, modificationDate:currentVehicle.modificationDate!} }))
+    appDispatch(updateUserVehicleName({ id:vehicleId, vehicle:{name: state.name, accessScope:null, modificationDate:currentVehicle.modificationDate!} }))
       .then(() => {
-        setIsSubmitted(false);
-        setEditable(false);
+        dispatch({type: 'setIsSubmitted', payload: false});
+        dispatch({type: 'setEditable', payload: false});
       });
   }
 
   const confirmDelete = ():void => {
-    setDialogOpen(true);
+    dispatch({type: 'setIsDialogOpen', payload: true});
   }
 
   const dialogConfirm = ():void => {
-    setDialogOpen(false);
+    dispatch({type: 'setIsDialogOpen', payload: false});
 
-    if (isSubmitted) return;
-    else setIsSubmitted(true);
+    if (state.isSubmitted) return;
+    else dispatch({type: 'setIsSubmitted', payload: true});
 
-    setEditable(false);
-    dispatch(deleteVehicle(vehicleId)).then(
+    dispatch({type: 'setEditable', payload: false});
+    appDispatch(deleteVehicle(vehicleId)).then(
       () => {
-        setIsSubmitted(false);
+        dispatch({type: 'setIsSubmitted', payload: false});
       }
     )
   };
 
   const dialogCancel = ():void => {
-    setDialogOpen(false);
+    dispatch({type: 'setIsDialogOpen', payload: false});
   };
 
   const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -81,7 +107,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
 
   return (
     <>
-      { editable &&
+      { state.editable &&
       <TextField
         sx={{ width: 480 }}
         variant="standard"
@@ -89,7 +115,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
         required
         onChange={handleNameChange}
         onKeyPress={handleEnterKeyPress}
-        value={name}
+        value={state.name}
         placeholder="a custom name for this vehicle"
         InputProps={{
           style: {fontSize: 22},
@@ -99,9 +125,9 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
           </>)
         }}
       />}
-      { !editable &&
+      { !state.editable &&
       <Box>
-        {name}
+        {state.name}
         <IconButton onClick={toggleNameEditable} color="primary">
           <ModeEdit/>
         </IconButton>
@@ -114,7 +140,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
         <ConfirmDialog
           title="Delete Vehicle"
           message="All related data will be removed. Are you sure to delete this vehicle?"
-          isShown={dialogOpen}
+          isShown={state.isDialogOpen}
           confirmCallback={dialogConfirm}
           cancelCallback={dialogCancel}
         />

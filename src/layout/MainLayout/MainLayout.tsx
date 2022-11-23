@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import PropTypes from 'prop-types';
 import TopBar from './MainLayout.TopBar';
 import authenticationManager from '../../security/Auth/AuthenticationManager';
 import { DesignTokens, ColorModeContext } from '../Layout.Theme';
@@ -30,7 +29,7 @@ const userSettings: UserSetting[] = [
   }
 ];
 
-interface Props {
+type Props = {
   mode: string
   menuIndex: number
   children?: React.ReactNode
@@ -73,11 +72,5 @@ function MainLayout (props: Props) {
     </ColorModeContext.Provider>
   );
 }
-
-MainLayout.propTypes = {
-  mode: PropTypes.string.isRequired,
-  menuIndex: PropTypes.number.isRequired,
-  children: PropTypes.array.isRequired
-};
 
 export default MainLayout;
