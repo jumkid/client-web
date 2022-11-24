@@ -25,7 +25,7 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
 
   return (
     <>
-      <Box mx={3} pt={2}>
+      <Box mx={3} pt={1}>
         <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>Back
         </Button>

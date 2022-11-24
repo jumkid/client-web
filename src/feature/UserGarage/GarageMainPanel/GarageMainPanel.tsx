@@ -4,6 +4,7 @@ import VehicleListViewer from './VehicleListViewer';
 import { RootState } from '../../../store';
 import { useAppSelector } from '../../../App.hooks';
 import VehicleConnector from '../VehicleConnector';
+import { Box } from '@mui/material';
 
 function GarageMainPanel () {
   const currentPick = useAppSelector((state:RootState) => state.userVehicles.currentPick);
@@ -19,7 +20,9 @@ function GarageMainPanel () {
         <VehicleListViewer />
       }
 
-      { currentPick > 1 && currentVehicle && <VehicleProfileViewer vehicleProfile={currentVehicle} />}
+      { currentPick > 1 && currentVehicle && <Box mt={3}>
+        <VehicleProfileViewer vehicleProfile={currentVehicle} />
+      </Box>}
     </>
   );
 }

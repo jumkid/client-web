@@ -1,10 +1,11 @@
 import React, { useEffect, useLayoutEffect, useReducer, useState } from 'react';
-import { Box, Button, Chip, CircularProgress, Stack } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, Paper, Stack } from '@mui/material';
 import * as C from '../../../../App.constants';
 import './DrawBoard.css';
 import { contentService } from '../../../../service';
 import { ControlCamera, Pause, PlayCircleOutline } from '@mui/icons-material';
 import { Buffer } from 'buffer';
+import * as _ from 'lodash';
 
 const showDebug= false;
 
@@ -154,8 +155,12 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
   }
 
   return (
-    <Box width="100%" height="380px" sx={{ backgroundColor: '#FFF', py: 1}}>
-      <Stack alignItems="center" height="100%">
+    <Box
+      width="100%"
+      height="380px"
+      sx={{ backgroundColor: '#FFF', py: 1, gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}
+    >
+      <Stack alignItems="center" height="100%" gridColumn="span 9">
         <Box
           className='draggable'
           onMouseMove={handleMouseMove}
@@ -196,6 +201,25 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
           </Button>
         </Box>
       </Stack>
+
+      <Box gridColumn="span 1" sx={{ float: 'right', overflowY: 'auto' }}>
+        {!_.isEmpty(state.itemsImage) && !loading && state.itemsImage.map((itemImage, idx) => (
+          <Paper key={idx}
+            sx={{
+              width: '90%',
+              height: 54,
+              mb: 1,
+              background: `#000 url('${itemImage}')`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center center',
+              cursor: 'pointer',
+            }}
+            onClick={() => setStep(idx)}
+          >
+          </Paper>
+        ))}
+      </Box>
     </Box>
   )
 }

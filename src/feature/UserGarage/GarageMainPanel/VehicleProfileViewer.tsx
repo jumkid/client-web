@@ -21,22 +21,20 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
       <Stack className="dashboard-viewer-box">
-        <Grid container spacing={2} columns={16}>
+        <Grid container spacing={1} columns={16}>
           <Grid item xs={12}>
             <ItemHeader>
-              <h2>
-                <Avatar
-                  variant="rounded"
-                  src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
-                  sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
+              <Avatar
+                variant="rounded"
+                src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
+                sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
+              />
+              { showEditableName &&
+                <VehicleNameTools
+                  vehicleName={vehicleProfile.name!}
+                  vehicleId={vehicleProfile.id!}
                 />
-                { showEditableName &&
-                  <VehicleNameTools
-                    vehicleName={vehicleProfile.name!}
-                    vehicleId={vehicleProfile.id!}
-                  />
-                }
-              </h2>
+              }
             </ItemHeader>
           </Grid>
           <Grid item xs={4}>

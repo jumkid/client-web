@@ -61,7 +61,7 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
   return (
     <>
       { isSubmitted && <CircularProgress size="1.5rem" sx={{ position: "absolute", mt: 3, ml: 20 }}/> }
-      <Box mx={3} py={2}>
+      <Box mx={3} py={1}>
         <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>Back
         </Button>
