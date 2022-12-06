@@ -5,12 +5,17 @@ import restfulClient from './RestfulClient';
 
 export interface IContentService {
   getContentMetadata(id:string):Promise<APIResponse<ContentMetadata>>
+  getContentThumbnail(id:string, thumbnailSize:'large' | 'medium' | 'small'):Promise<any>
   getContentSteam(id:string):Promise<any>
   getGalleryItemIds(galleryId:string):Promise<string[]>
   upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<any>>
 }
 
 class ContentService implements IContentService{
+  async getContentThumbnail(id: string, thumbnailSize: string): Promise<any> {
+    return await restfulClient.getBase64WithPromise(`${C.CONTENT_THUMBNAIL_API}/${id}?size=${thumbnailSize}`);
+  }
+
   async getContentSteam(id: string): Promise<any> {
     return await restfulClient.getBase64WithPromise(`${C.CONTENT_STREAM_API}/${id}`);
   }

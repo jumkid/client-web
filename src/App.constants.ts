@@ -15,6 +15,7 @@ export const USER_SIGNUP_API:string = _API_URL + process.env.REACT_APP_USER_SIGN
 export const USER_TOKEN_REFRESH_API:string = _API_URL + process.env.REACT_APP_USER_TOKEN_REFRESH_API;
 
 export const VEHICLES_API:string = _API_URL + process.env.REACT_APP_VEHICLES_API;
+export const VEHICLES_SAVE_AS_NEW_API:string = _API_URL + process.env.REACT_APP_VEHICLES_SAVE_AS_NEW_API;
 export const VEHICLES_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_SEARCH_API;
 export const VEHICLES_PUBLIC_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_PUBLIC_SEARCH_API;
 export const VEHICLES_MATCHERS_SEARCH_API:string = _API_URL + process.env.REACT_APP_VEHICLES_MATCHERS_SEARCH_API;

@@ -3,7 +3,7 @@ import restfulClient from './RestfulClient';
 import { APIPagingResponse, APIResponse } from './model/Response';
 import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
-import { DEFAULT_PAGE_SIZE } from '../App.constants';
+import { DEFAULT_PAGE_SIZE, VEHICLES_SAVE_AS_NEW_API } from '../App.constants';
 
 export interface VehicleFieldValuePair {
   field:string
@@ -54,7 +54,11 @@ class VehicleService implements IVehicleService {
     return await restfulClient.putWithPromise(url, vehicleProfile);
   }
 
-  async saveNew (vehicleProfile:VehicleProfile): Promise<APIResponse<any>> {
+  async saveAsNew (vehicleProfile:VehicleProfile): Promise<APIResponse<any>> {
+    return await restfulClient.postWithPromise(C.VEHICLES_SAVE_AS_NEW_API, null, vehicleProfile);
+  }
+
+  async save (vehicleProfile:VehicleProfile): Promise<APIResponse<any>> {
     return await restfulClient.postWithPromise(C.VEHICLES_API, null, vehicleProfile);
   }
 

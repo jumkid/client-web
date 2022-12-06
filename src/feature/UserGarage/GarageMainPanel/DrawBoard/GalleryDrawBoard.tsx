@@ -74,6 +74,7 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
 
   useLayoutEffect(() => {
     clearInterval(state.intervalEvent);
+    setStep(0);
     setLoading(true);
     contentService.getGalleryItemIds(mediaGalleryId!).then(
       (items) => {
@@ -96,10 +97,10 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
     else clearInterval(state.intervalEvent);
   }, [state.autoplay]);
 
-  const preloadImages = (items:string[], callback:()=>void) => {
+  const preloadImages = (itemsId:string[], callback:()=>void) => {
     const imagesBase64:string[] = [];
-    items.map((item, i, {length}) => {
-      contentService.getContentSteam(item).then((response) => {
+    itemsId.map((itemId, i, {length}) => {
+      contentService.getContentThumbnail(itemId, 'large').then((response) => {
         const base64 = Buffer.from(response.data, 'binary').toString('base64');
         const data = `data:${response.headers['content-type']};base64,${base64}`;
         imagesBase64.push(data);

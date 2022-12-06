@@ -13,7 +13,7 @@ export const updateUserVehicleName = createAsyncThunk('userVehicles/updateName',
 );
 
 export const saveNewVehicle = createAsyncThunk('userVehicles/saveNew',
-  async (vehicleProfile:VehicleProfile) => { return vehicleService.saveNew(vehicleProfile); }
+  async (vehicleProfile:VehicleProfile) => { return vehicleService.saveAsNew(vehicleProfile); }
 );
 
 export const deleteVehicle = createAsyncThunk('userVehicles/delete',
