@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useReducer, useState } from 'react';
 import { Box, Button, Chip, CircularProgress, Paper, Stack } from '@mui/material';
 import * as C from '../../../../App.constants';
-import './DrawBoard.css';
+import './Gallery.css';
 import { contentService } from '../../../../service';
 import { ControlCamera, Pause, PlayCircleOutline } from '@mui/icons-material';
 import { Buffer } from 'buffer';
@@ -67,7 +67,7 @@ type Props = {
   mediaGalleryId?:string | null
 }
 
-function GalleryDrawBoard ({mediaGalleryId}:Props) {
+function GalleryPanel ({mediaGalleryId}:Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -159,7 +159,8 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
     <Box
       width="100%"
       height="380px"
-      sx={{ backgroundColor: '#FFF', py: 1, gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}
+      className="drawboard"
+      sx={{ py: 1, gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}
     >
       <Stack alignItems="center" height="100%" gridColumn="span 9">
         <Box
@@ -225,4 +226,4 @@ function GalleryDrawBoard ({mediaGalleryId}:Props) {
   )
 }
 
-export default GalleryDrawBoard;
+export default GalleryPanel;

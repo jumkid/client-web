@@ -1,3 +1,8 @@
+.drawboard {
+    background-color: #FFFFFF;
+    margin-bottom: 1px;
+}
+
 .cursor {
     width: 16px;
     height: 16px;

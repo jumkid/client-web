@@ -1,9 +1,8 @@
-import * as C from '../App.constants';
 import restfulClient from './RestfulClient';
 import { APIPagingResponse, APIResponse } from './model/Response';
 import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
-import { DEFAULT_PAGE_SIZE, VEHICLES_SAVE_AS_NEW_API } from '../App.constants';
+import * as C from '../App.constants';
 
 export interface VehicleFieldValuePair {
   field:string
@@ -13,7 +12,7 @@ export interface VehicleFieldValuePair {
 export interface IVehicleService {
   getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
-  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIResponse<any>>
+  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByVin: (vin:string) => Promise<APIResponse<any>>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse<any>>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
@@ -32,15 +31,16 @@ class VehicleService implements IVehicleService {
     return response.data;
   }
 
-  async getByMatchers (pagingSearch:PagingSearch): Promise<APIResponse<any>> {
+  async getByMatchers (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    return await restfulClient.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
+    const response = await restfulClient.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
+    return response.data;
   }
 
   async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse<any>> {
     return await restfulClient.postWithPromise(
       C.VEHICLES_AGG_SEARCH_API,
-      {field, size: DEFAULT_PAGE_SIZE},
+      {field, size: C.DEFAULT_PAGE_SIZE},
       matchFields);
   }
 

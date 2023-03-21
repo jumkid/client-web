@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './DrawBoard.css';
+import './Gallery.css';
 import { Box, Chip } from '@mui/material';
 
 type Props = {

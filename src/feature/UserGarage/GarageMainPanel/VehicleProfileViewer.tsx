@@ -1,12 +1,14 @@
 import React from 'react';
-import { Avatar, Fade, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Fade, Grid, IconButton, Stack } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import * as C from '../../../App.constants';
 import VehicleNameTools from './VehicleProfileViewer.VehicleNameTools';
 import { Item, ItemHeader, ItemText } from '../../../layout/Layout.Theme';
 import * as _ from 'lodash';
-import GalleryDrawBoard from './DrawBoard';
+import GalleryAccordion from './VehicleProfileViewer.GalleryAccordion';
+import DetailsAccordion from './VehicleProfileViewer.DetailsAccordion';
+import ActivityAccordion from './VehicleProfileViewer.ActivityAccordion';
 
 type Props = {
   showName?: boolean
@@ -15,8 +17,6 @@ type Props = {
 
 function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
   const showEditableName = _.isUndefined(showName) ? true : showName;
-  const vehicleEngine = vehicleProfile.vehicleEngine;
-  const vehicleTransmission = vehicleProfile.vehicleTransmission;
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
@@ -51,42 +51,11 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
           <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
         </Item>
 
-        <GalleryDrawBoard mediaGalleryId={vehicleProfile.mediaGalleryId}/>
+        <GalleryAccordion mediaGalleryId={vehicleProfile.mediaGalleryId}/>
 
-        { vehicleEngine &&
-          <>
-            <Item>
-              <h2>Engine</h2>
-              <Typography variant="h5" color="primary">{vehicleEngine.name}</Typography>
-            </Item>
-            <Item>
-              <Item>Type <ItemText>{vehicleEngine.type}</ItemText></Item>
-              <Item>Number of Cylinder <ItemText>{vehicleEngine.cylinder}</ItemText></Item>
-              <Item>Displacement <ItemText>{vehicleEngine.displacement}L</ItemText></Item>
-              <Item>Fuel Type <ItemText>{vehicleEngine.fuelType}</ItemText></Item>
-            </Item>
-            <Item>
-              <Item>Horsepower <ItemText>{vehicleEngine.horsepower} @ {vehicleEngine.horsepowerRpm}</ItemText></Item>
-              <Item>Torque <ItemText>{vehicleEngine.torque} @ {vehicleEngine.torqueRpm}</ItemText></Item>
-              <Item>Engine Code <ItemText>{vehicleEngine.manufacturerEngineCode}</ItemText></Item>
-            </Item>
-          </>
-        }
+        { vehicleProfile.id && <ActivityAccordion vehicleId={vehicleProfile.id}/> }
+        <DetailsAccordion vehicleProfile={vehicleProfile} />
 
-        { vehicleTransmission &&
-          <>
-            <Item>
-              <h2>Transmission</h2>
-              <Typography variant="h5" color="primary">{vehicleTransmission.name}</Typography>
-            </Item>
-            <Item>
-              <Item>Type <ItemText>{vehicleTransmission.type}</ItemText></Item>
-              <Item>Automatic Type <ItemText>{vehicleTransmission.automaticType}</ItemText></Item>
-              <Item>Number of Speeds <ItemText>{vehicleTransmission.numberOfSpeeds}</ItemText></Item>
-              <Item>Drivetrain <ItemText>{vehicleTransmission.drivetrain}</ItemText></Item>
-            </Item>
-          </>
-        }
       </Stack>
     </Fade>
   );

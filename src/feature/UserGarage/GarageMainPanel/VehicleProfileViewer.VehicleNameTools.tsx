@@ -120,8 +120,9 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
         InputProps={{
           style: {fontSize: 22},
           endAdornment: (<>
-            <Button sx={{ mr: 2 }} onClick={handleSave} variant="text"><Save/>save</Button>
-            <Button variant="text" onClick={handleCancel}><Clear/>cancel</Button>
+            <Button onClick={handleSave} variant="text">save</Button>
+            &#160;
+            <Button onClick={handleCancel} variant="text">cancel</Button>
           </>)
         }}
       />}

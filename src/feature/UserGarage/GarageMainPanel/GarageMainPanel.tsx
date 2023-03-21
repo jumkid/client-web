@@ -12,17 +12,15 @@ function GarageMainPanel () {
 
   return (
     <>
-      { currentPick === 0 &&
-        <VehicleConnector/>
-      }
+      { currentPick === 0 && <VehicleConnector/> }
 
-      { currentPick === 1 &&
-        <VehicleListViewer />
-      }
+      { currentPick === 1 && <VehicleListViewer /> }
 
-      { currentPick > 1 && currentVehicle && <Box mt={3}>
+      { currentPick > 1 && currentVehicle &&
+      <Box mt={3}>
         <VehicleProfileViewer vehicleProfile={currentVehicle} />
-      </Box>}
+      </Box>
+      }
     </>
   );
 }

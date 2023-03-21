@@ -1,0 +1,23 @@
+.activity-main {
+    margin: 1px 8px;
+    width: 710px;
+}
+
+.activity-icon {
+    height: 21px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.date-chip {
+    margin-right: 0 !important;
+    background-color: #FFFFFF !important;
+    height: 23px !important;
+}
+
+.time-chip {
+    margin-right: 8px !important;
+    background-color: #343434 !important;
+    color: #FFFFFF !important;
+    height: 23px !important;
+}

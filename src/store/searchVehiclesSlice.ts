@@ -126,7 +126,7 @@ export const searchVehiclesSlice = createSlice({
       })
       .addCase(fetchMatchVehicles.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.matchVehicles = action.payload.data.data;
+        state.matchVehicles = action.payload.data;
       })
       .addCase(fetchSearchVehicles.pending, (state) => {
         state.status = "loading";

@@ -48,9 +48,47 @@ const DesignTokens = (mode: string):object => ({
         })
   },
   shape: {
-    borderRadius: 4
+    borderRadius: 0
   },
   components: {
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          border: '1px solid',
+          borderColor: JK_RED,
+          margin: "1px 0",
+          "&.Mui-expanded": {
+            margin: "1px 0"
+          }
+        }
+      }
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          backgroundColor: JK_RED,
+          padding: '6px 8px',
+          minHeight: 0,
+          "&.Mui-expanded": {
+            minHeight: 1,
+            margin: "0 0"
+          }
+        },
+        content: {
+          margin: '0 0',
+          "&.Mui-expanded": {
+            margin: "0 0"
+          }
+        }
+      }
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          padding: "0 0"
+        }
+      }
+    },
     MuiTableHead: {
       styleOverrides: {
         root: {
@@ -138,7 +176,8 @@ const DesignTokens = (mode: string):object => ({
           color: grey[900],
           backgroundColor: grey[500],
           padding: '0 0',
-          margin: '2px 2px'
+          margin: '2px 2px',
+          height: '28px'
         }
       }
     },
