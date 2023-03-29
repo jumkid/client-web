@@ -25,16 +25,23 @@ type ActivityAssignee = {
   assigneeEmail?: string | null
 }
 
+export type ContentResource = {
+  id?: number
+  activityId?: number | null
+  contentResourceId: string
+}
+
 export interface Activity {
   id: number
-  name: string
+  name?: string
   description?: string | null
-  status: string
-  priority: Priority
-  startDate: string
+  status?: string
+  priority?: Priority
+  startDate?: string
   endDate?: string | null
-  autoNotify: boolean
+  autoNotify?: boolean
   activityNotification?: ActivityNotification
   activityEntityLinks?: ActivityEntityLink[]
   activityAssignees?: ActivityAssignee[]
+  contentResources?: ContentResource[]
 }

@@ -1,7 +1,7 @@
 import { Activity, Priority } from './model/Activity';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { activityService } from '../service';
-import { IDLE, LOADING, SUCCEEDED, FAILED } from '../App.constants';
+import { activityService, contentService } from '../service';
+import { FAILED, IDLE, LOADING, SUCCEEDED } from '../App.constants';
 
 export const fetchVehicleActivities = createAsyncThunk('vehicleActivities/fetch',
   async (entityId: string) => activityService.getByEntityId(entityId)
@@ -29,6 +29,10 @@ export const saveUpdate = createAsyncThunk('vehicleActivity/update',
 
 export const deleteActivity = createAsyncThunk('vehicleActivity/delete',
   async (activityId: number) => activityService.deleteActivity(activityId)
+);
+
+export const uploadActivityContent = createAsyncThunk('vehicleActivity/upload',
+  async (file: Blob) => contentService.upload(file, 'private')
 );
 
 type VehicleActivitiesState = {
@@ -84,6 +88,9 @@ export const vehicleActivitiesSlice = createSlice({
     changeDescription: (state, action) => {
       state.currentActivity.description = action.payload;
     },
+    changeContentResources: (state, action) => {
+      state.currentActivity.contentResources = action.payload;
+    },
     resetCurrentActivity: (state, action) => {
       state.currentActivity = {
         ...initialState.currentActivity,
@@ -132,6 +139,7 @@ export const {
   changeStartDate,
   changeEndDate,
   changeDescription,
+  changeContentResources,
   resetCurrentActivity
 } = vehicleActivitiesSlice.actions;
 

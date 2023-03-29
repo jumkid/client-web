@@ -21,13 +21,14 @@ function ActivitiesList ({entityId}:Props) {
     dispatch(fetchVehicleActivities(entityId));
   },[entityId]);
 
-  const handleClick = (activityId: number) => {
+  const handleClick = (activityId: number):void => {
     dispatch(fetchActivity(activityId)).then(() => {
       setErrors({hasUpdate: false});
     });
   }
 
-  const dateFormatter = (datetime: string):string => {
+  const dateFormatter = (datetime: string | undefined):string => {
+    if (!datetime) { return '' }
     const now = new Date();
     const parts = datetime.split("T");
     if (parts[0].startsWith(now.getFullYear().toString())) {
@@ -37,7 +38,8 @@ function ActivitiesList ({entityId}:Props) {
     }
   }
 
-  const timeFormatter = (datetime: string):string => {
+  const timeFormatter = (datetime: string | undefined):string => {
+    if (!datetime) { return '' }
     const parts = datetime.split("T");
     return parts[1];
   }

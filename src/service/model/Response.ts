@@ -20,6 +20,7 @@ export interface AuthResponse {
 
 export interface ContentMetadata {
   uuid: string
+  filename: string
   mimeType: string
   title: string
   activated: boolean

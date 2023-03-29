@@ -44,13 +44,16 @@ class Validator {
     this.setHasUpdate();
   }
 
-  validateStartDate (startDate: Dayjs | null) {
+  validateStartDate (startDate: Dayjs | null, endDate: Dayjs | null) {
     if (_.isNull(startDate)){
       this.errors.startDate = "start date is required";
     } else if (startDate <= dayjs(Date.now())) {
       this.errors.startDate = "start date must be a future date";
+    } else if (!_.isNull(endDate) && endDate <= startDate) {
+      this.errors.startDate = "start date must be earlier then end date";
     } else {
       delete this.errors.startDate;
+      delete this.errors.endDate;
     }
 
     this.setHasUpdate();
@@ -61,6 +64,7 @@ class Validator {
       this.errors.endDate = "end date must be later then start date";
     } else {
       delete this.errors.endDate;
+      delete this.errors.startDate;
     }
 
     this.setHasUpdate();

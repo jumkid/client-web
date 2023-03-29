@@ -185,7 +185,14 @@ const DesignTokens = (mode: string):object => ({
       styleOverrides: {
         root: {
           marginLeft: 0,
-          width: '348px'
+          width: '328px'
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          width: '328px'
         }
       }
     },

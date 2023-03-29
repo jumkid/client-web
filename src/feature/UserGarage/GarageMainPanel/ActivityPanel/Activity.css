@@ -1,6 +1,6 @@
 .activity-main {
     margin: 1px 8px;
-    width: 710px;
+    width: 1006px;
 }
 
 .activity-icon {
@@ -20,4 +20,13 @@
     background-color: #343434 !important;
     color: #FFFFFF !important;
     height: 23px !important;
+}
+
+.activity-attachment {
+    margin-bottom: 8px;
+}
+
+.activity-attachment, img {
+    height: 36px;
+    vertical-align: middle;
 }

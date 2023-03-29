@@ -65,7 +65,7 @@ export class AuthenticationManager implements IAuthenticationManager{
     try {
       this.jwtUser = JwtDecode(token);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.logout();
     }
   }

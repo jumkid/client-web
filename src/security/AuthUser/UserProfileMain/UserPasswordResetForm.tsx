@@ -6,6 +6,7 @@ import Validator from '../UserProfile.Validator';
 import authenticationService from '../../../service/AuthenticationService';
 import { RootState } from '../../../store';
 import { useAppSelector } from '../../../App.hooks';
+import * as _ from 'lodash';
 
 const initUserProfile:UserProfile = {
   credentials: [
@@ -30,22 +31,17 @@ export default function UserPasswordResetForm () {
 
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>):void => {
     const { value, name } = event.target;
-    setErrors((prevErrors) => {
-      const { hasUpdate, ...rest } = prevErrors;
-      return rest;
-    });
-    setUserProfile(() => ({
-      ...userProfile,
+    setErrors((prevErrors) => ({ ..._.omit(prevErrors, 'hasUpdate') }));
+    setUserProfile((prevUserProfile) => ({
+      ...prevUserProfile,
       [name]: value
     }));
   };
 
   const handleBlur = (event:React.FocusEvent<HTMLInputElement>):void => {
     const { value, name } = event.target;
-    const _errors = validator.validate(value, name);
-    setErrors(() => ({
-      ..._errors
-    }));
+    const errors = validator.validate(value, name);
+    setErrors(() => ({...errors}));
   };
 
   const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {

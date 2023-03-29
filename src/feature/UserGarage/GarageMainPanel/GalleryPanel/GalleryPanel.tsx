@@ -6,6 +6,7 @@ import { contentService } from '../../../../service';
 import { ControlCamera, Pause, PlayCircleOutline } from '@mui/icons-material';
 import { Buffer } from 'buffer';
 import * as _ from 'lodash';
+import { preloadContentThumbnails } from '../../../../App.utils';
 
 const showDebug= false;
 
@@ -84,33 +85,21 @@ function GalleryPanel ({mediaGalleryId}:Props) {
   }, [mediaGalleryId]);
 
   useLayoutEffect(() => {
-    preloadImages(state.itemsId, () => {
-      setLoading(false);
-    });
+    preloadContentThumbnails(state.itemsId, 'large')
+      .then((response) => {
+        dispatch({ type: 'setItemsImage', payload: response });
+        setLoading(false);
+      })
   }, [state.itemsId]);
 
   useEffect(() => {
     if (state.autoplay) {
       const intervalEvent = runAutoplay();
       dispatch({ type: 'setIntervalEvent', payload: intervalEvent });
+    } else {
+      clearInterval(state.intervalEvent);
     }
-    else clearInterval(state.intervalEvent);
   }, [state.autoplay]);
-
-  const preloadImages = (itemsId:string[], callback:()=>void) => {
-    const imagesBase64:string[] = [];
-    itemsId.map((itemId, i, {length}) => {
-      contentService.getContentThumbnail(itemId, 'large').then((response) => {
-        const base64 = Buffer.from(response.data, 'binary').toString('base64');
-        const data = `data:${response.headers['content-type']};base64,${base64}`;
-        imagesBase64.push(data);
-        if (i === length - 1) {
-          dispatch({ type: 'setItemsImage', payload: imagesBase64 });
-          callback();
-        }
-      })
-    });
-  }
 
   const handleMouseMove = (event:React.MouseEvent) => {
     if (state.axisX > event.clientX ) {

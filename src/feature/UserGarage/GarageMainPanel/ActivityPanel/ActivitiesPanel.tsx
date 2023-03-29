@@ -66,24 +66,17 @@ function ActivitiesPanel ({vehicleId}:Props) {
 
   const handleAddClick = () => {
     dispatch(resetCurrentActivity(vehicleId));
+    setErrors(initValidationErrors);
     setNewActivity(true);
   }
 
   const handleSaveClick = async () => {
-    let response;
-    let actionFulfilled;
-    if (currentActivity.id > 0) {
-      response = await dispatch(saveUpdate(currentActivity));
-      actionFulfilled = saveUpdate.fulfilled.type;
-    } else {
-      if (_.isNil(currentActivity.activityEntityLinks)) {
-        currentActivity.activityEntityLinks = [];
-      }
-      response = await dispatch(saveNew(currentActivity));
-      actionFulfilled = saveNew.fulfilled.type;
-    }
+    const action = currentActivity.id > 0 ? saveUpdate(currentActivity) : saveNew(currentActivity);
+    if (!currentActivity.activityEntityLinks) {currentActivity.activityEntityLinks = [];}
 
-    if (!_.isNull(response) && response.type === actionFulfilled) {
+    const response = await dispatch(action);
+
+    if (response.type.endsWith('/fulfilled')) {
       setNewActivity(false);
       setErrors({hasUpdate: false});
       dispatch(fetchVehicleActivities(vehicleId));
@@ -110,6 +103,7 @@ function ActivitiesPanel ({vehicleId}:Props) {
 
   const handleCancelClick = () => {
     dispatch(resetCurrentActivity(vehicleId));
+    setErrors(initValidationErrors);
     setNewActivity(false);
   }
 
@@ -161,7 +155,7 @@ function ActivitiesPanel ({vehicleId}:Props) {
             <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
             <ConfirmDialog
               title="Delete Activity"
-              message="Are you sure to delete this activity?"
+              message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
               isShown={isConfirmOpen}
               confirmCallback={deleteConfirm}
               cancelCallback={deleteCancel}

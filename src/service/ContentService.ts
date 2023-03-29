@@ -1,14 +1,16 @@
 import * as C from '../App.constants';
-import * as _ from 'lodash';
 import { APIResponse, ContentMetadata } from './model/Response';
 import restfulClient from './RestfulClient';
+import { ContentResource } from '../store/model/Activity';
 
 export interface IContentService {
   getContentMetadata(id:string):Promise<APIResponse<ContentMetadata>>
+  getContentMetadataList(contentIdList: ContentResource[]): Promise<(ContentMetadata | null)[]>
   getContentThumbnail(id:string, thumbnailSize:'large' | 'medium' | 'small'):Promise<any>
   getContentSteam(id:string):Promise<any>
   getGalleryItemIds(galleryId:string):Promise<string[]>
-  upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<any>>
+
+  upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<ContentMetadata>>
 }
 
 class ContentService implements IContentService{
@@ -20,20 +22,37 @@ class ContentService implements IContentService{
     return await restfulClient.getBase64WithPromise(`${C.CONTENT_STREAM_API}/${id}`);
   }
 
-  async getContentMetadata(id:string):Promise<APIResponse<ContentMetadata>> {
+  async getContentMetadata(id: string):Promise<APIResponse<ContentMetadata>> {
     return await restfulClient.getWithPromise(`${C.CONTENT_METADATA_API}/${id}`);
   }
 
-  async getGalleryItemIds(galleryId:string) {
-    const response = await this.getContentMetadata(galleryId);
-    if (response.status === 200 && !_.isNull(response.data)) {
-      return response.data.children.map(metadata => metadata.uuid);
-    } else {
+  async getContentMetadataList(contentResources: ContentResource[]): Promise<(ContentMetadata | null)[]> {
+    const promises:Promise<ContentMetadata | null>[] = [];
+    contentResources.forEach(contentResource => {
+      const promise = this.getContentMetadata(contentResource.contentResourceId).then(
+        (response) => {
+          return response.data;
+        }
+      );
+      promises.push(promise);
+    });
+
+    return Promise.all(promises);
+
+  }
+
+  async getGalleryItemIds(galleryId:string):Promise<string[]> {
+    try {
+      const response = await this.getContentMetadata(galleryId);
+      const data = response?.data;
+      return data?.children.map(metadata => metadata.uuid) || [];
+    } catch (error) {
+      console.error(`Error getting gallery item IDs: ${error}`);
       return [];
     }
   }
 
-  async upload(file:Blob, accessScope: "public" | "private") {
+  async upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<ContentMetadata>> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("accessScope", accessScope);

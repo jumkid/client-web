@@ -37,11 +37,12 @@ export default function UserAvatarUploadForm () {
     if (tokenUser.status === 'loading') { return; }
     else { dispatch(setStatus('loading')); }
     // step 1: upload content and return new content id
-    const firstResponse = await contentService.upload(newAvatar, "public");
+    const {status, data} = await contentService.upload(newAvatar, "public");
     // step 2: update avatar id by the new content id
     dispatch(setStatus('idle'));
-    if (firstResponse.status === 202) {
-      const newAvatarId = firstResponse.data.uuid;
+
+    if (status === 202 && data) {
+      const newAvatarId = data.uuid;
       dispatch(updateAvatarAction(newAvatarId));
     } else {
       setErrors(prevState => ({ ...prevState, hasUpdate: false, avatar: "Oops! Something goes wrong"}))
@@ -53,7 +54,7 @@ export default function UserAvatarUploadForm () {
       dispatch(updateAvatar(newAvatarId));
       const updatedTokenUser:UserProfileState = { ...tokenUser, userProfile: { attributes: { avatar: [newAvatarId]}} };
       dispatch(submitAvatarUpdate(updatedTokenUser)).then(
-        (response) => {
+        () => {
           setErrors(initValidationErrors);
         }
       );
