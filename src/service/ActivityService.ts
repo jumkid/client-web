@@ -69,7 +69,7 @@ class ActivityService implements IActivityService {
     return await restfulClient.postWithPromise(url, null, contentResource);
   }
 
-  async deleteActivityContent (id: number): Promise<APIResponse<any>> {
+  async deleteActivityContent (id: number): Promise<APIResponse<ContentResource>> {
     const url = `${ACTIVITY_CONTENT_API}/${id}`;
     return await restfulClient.deleteWithPromise(url);
   }

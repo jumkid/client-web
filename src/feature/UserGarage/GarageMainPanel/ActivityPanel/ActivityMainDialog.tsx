@@ -102,7 +102,7 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
 
       <DialogContent sx={{width:1024, height:320}}>
         { currentTab == 0 && <ActivityMainForm vehicleId={vehicleId}/> }
-        { currentTab == 1 && <ActivityAttachmentsPanel activity={currentActivity}/> }
+        { currentTab == 1 && <ActivityAttachmentsPanel/> }
       </DialogContent>
 
       <DialogActions>

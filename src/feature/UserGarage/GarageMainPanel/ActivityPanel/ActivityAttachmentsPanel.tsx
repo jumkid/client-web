@@ -1,8 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
-  CircularProgress,
-  IconButton,
+  IconButton, LinearProgress,
   Link, Table,
   TableBody, TableCell,
   TableContainer, TableRow,
@@ -11,59 +10,61 @@ import {
 import { Delete, Download, Upload } from '@mui/icons-material';
 import {
   changeContentResources,
-  deleteActivityContent, saveActivityContent,
-  uploadActivityContent
+  deleteActivityContent, saveActivityContent
 } from '../../../../store/vehicleActivitiesSlice';
 import { APIResponse, ContentMetadata } from '../../../../service/model/Response';
-import { Activity, ContentResource } from '../../../../store/model/Activity';
-import { useAppDispatch } from '../../../../App.hooks';
+import { ContentResource } from '../../../../store/model/Activity';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { contentService } from '../../../../service';
 import AuthThumbnail from '../../../../component/AuthThumbnail';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
+import { RootState } from '../../../../store';
 
 const initialState:{contents:(ContentMetadata | null)[], contentThumbnails:string[]} = {
   contents: [],
   contentThumbnails: []
 };
 
-interface Props {
-  activity: Activity
-}
-
-function ActivityAttachmentsPanel ({activity}:Props) {
+function ActivityAttachmentsPanel () {
   const [contentMetadataList, setContentMetadataList] = useState(initialState.contents);
+  const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [currentUuid, setCurrentUuid] = useState('');
 
+  const currentActivity = useAppSelector((state:RootState) => state.vehicleActivities.currentActivity);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (activity?.contentResources) {
-      contentService.getContentMetadataList(activity.contentResources)
+    if (currentActivity?.contentResources) {
+      contentService.getContentMetadataList(currentActivity.contentResources)
         .then((contentMetadataList) => {
           setContentMetadataList(contentMetadataList);
         });
     }
-  }, [activity]);
+  }, [currentActivity]);
 
   const handleUpload = async (event:ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file || isUploading) { return; }
 
     setIsUploading(true);
+
     try {
-      const { payload } = await dispatch(uploadActivityContent(file));
-      const { data } = payload as APIResponse<ContentMetadata>;
-      if (data) {
-        const newContentResource:ContentResource = {contentResourceId: data.uuid};
-        if (activity.id > 0) {
-          newContentResource.activityId = activity.id;
-          dispatch(saveActivityContent(newContentResource));
-        }
-        const updateContentResources = [...(activity.contentResources ?? []), newContentResource];
-        dispatch(changeContentResources(updateContentResources));
+      const { data } = await contentService.upload(file, 'private', setProgress);
+
+      if (!data) { return; }
+
+      const newContentResource:ContentResource = {contentResourceId: data.uuid};
+      if (currentActivity.id > 0) {
+        newContentResource.activityId = currentActivity.id;
+        const { payload } = await dispatch(saveActivityContent(newContentResource));
+        const { data } = payload as APIResponse<ContentResource>;
+        newContentResource.id = data?.id;
       }
+      const updateContentResources = [...(currentActivity.contentResources ?? []), newContentResource];
+      dispatch(changeContentResources(updateContentResources));
     } catch (error) {
       console.error(error);
     } finally {
@@ -85,9 +86,11 @@ function ActivityAttachmentsPanel ({activity}:Props) {
 
   const deleteConfirm = async () => {
     try {
-      if (!activity.contentResources) { return; }
+      setIsConfirmOpen(false);
 
-      const contentResource = activity.contentResources
+      if (!currentActivity.contentResources) { return; }
+
+      const contentResource = currentActivity.contentResources
         .find(contentResource => contentResource.contentResourceId === currentUuid);
 
       if (!contentResource || !contentResource.id) { return; }
@@ -96,13 +99,11 @@ function ActivityAttachmentsPanel ({activity}:Props) {
       const { status } = payload as APIResponse<any>
 
       if (status === 204) {
-        const updateContentResources = activity.contentResources
+        const updateContentResources = currentActivity.contentResources
           .filter(contentMetadata => contentMetadata.contentResourceId !== currentUuid);
 
         dispatch(changeContentResources(updateContentResources));
       }
-
-      setIsConfirmOpen(false);
     } catch (error) {
       console.error(error);
     }
@@ -116,19 +117,16 @@ function ActivityAttachmentsPanel ({activity}:Props) {
     <>
       <Toolbar>
         <Box>
-          { isUploading && <CircularProgress size={"small"} sx={{position: 'absolute', bottom: 88, right: 48}}/> }
-          {!isUploading &&
-          <IconButton
-            component="label"
-            aria-label="upload"
-            color="primary"
-          >
+          { !isUploading &&
+          <IconButton component="label" aria-label="upload">
             <input onChange={handleUpload} hidden accept="*/*" type="file"/>
-            <Upload/>
+            <Upload fontSize={"large"}/>
           </IconButton>
           }
         </Box>
-        <Box>show upload progress here</Box>
+        <Box width={"90%"}>
+          { isUploading && <LinearProgress variant={"determinate"} value={progress} color={"secondary"}/> }
+        </Box>
       </Toolbar>
 
       <TableContainer sx={{ overflowX: 'hidden' }}>

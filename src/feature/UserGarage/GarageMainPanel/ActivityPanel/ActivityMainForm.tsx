@@ -21,7 +21,7 @@ import {
   changeDescription,
   changeEndDate, changeName, changePriority,
   changeStartDate, changeStatus,
-  fetchActivityPriorities, fetchActivityStatuses, uploadActivityContent
+  fetchActivityPriorities, fetchActivityStatuses
 } from '../../../../store/vehicleActivitiesSlice';
 import * as _ from 'lodash';
 import Validator  from './ActivityMainForm.Validator';

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
 import { APIResponse } from './model/Response';
@@ -32,10 +32,34 @@ export interface IRestfulClient {
   postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
   putWithPromise(url: string, params?: object | string):Promise<APIResponse<any>>
 
+  upload(url:string,
+         formData:FormData,
+         setProgress?:(progress:number) => void):Promise<APIResponse<any>>
   download(url:string, fileName:string | undefined):void
 }
 
 export class RestfulClient implements IRestfulClient {
+
+  async upload(url: string,
+    formData: FormData,
+    setProgress?:(progress:number) => void ): Promise<APIResponse<any>> {
+
+    const { headers } = this.getConf('');
+    return await axios
+      .post(url, formData, {
+        headers,
+        onUploadProgress: (progressEvent) => {
+          progressEvent?.total && setProgress && setProgress(
+            Math.round((progressEvent.loaded / progressEvent.total) * 100)
+          );
+        }
+      }).then((response) => {
+        return { status: response ? response.status : 500, data: response ? response.data : null };
+      }).catch(error => {
+        const response = error.response;
+        return { status: response ? response.status : 500, data: response ? response.data : null };
+      });
+  }
 
   download(url: string, fileName:string | undefined): void {
     axios.get(url, {...this.getConf('application/octet-stream'), responseType: 'blob'})
@@ -49,7 +73,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  get (url: string, params: object | undefined, callback?:Callback): void {
+  get(url: string, params: object | undefined, callback?:Callback): void {
     const _url = buildUrlWithParams(url, params);
 
     axios.get(_url).then(response => {
@@ -57,7 +81,7 @@ export class RestfulClient implements IRestfulClient {
     });
   }
 
-  post (url: string, params?: object | string, callback?: Callback):void {
+  post(url: string, params?: object | string, callback?: Callback):void {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     axios.post(url, params, conf).then(res => {
@@ -85,7 +109,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  async getWithPromise (
+  async getWithPromise(
     url: string,
     params?: string | object | object[],
   ):Promise<APIResponse<any>> {
@@ -106,7 +130,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  async postWithPromise (
+  async postWithPromise(
     url: string,
     params: string | object | object[] | null,
     body?: string | object | object[]
@@ -152,7 +176,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  getConf(contentType:string):object {
+  getConf(contentType:string):AxiosRequestConfig {
     return {
       headers: {
         'Content-Type': contentType,
@@ -161,7 +185,7 @@ export class RestfulClient implements IRestfulClient {
     }
   }
 
-  getContentTypeByParams (params?: string | object | object[] | null):string {
+  getContentTypeByParams(params?: string | object | object[] | null):string {
     if (params) {
       if (params instanceof FormData && params.has('file') && params.get('file') instanceof File) {
         return 'multipart/form-data';

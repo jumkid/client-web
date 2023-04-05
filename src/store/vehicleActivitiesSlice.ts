@@ -1,6 +1,6 @@
 import { Activity, ContentResource, Priority } from './model/Activity';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { activityService, contentService } from '../service';
+import { activityService } from '../service';
 import { FAILED, IDLE, LOADING, SUCCEEDED } from '../App.constants';
 
 export const fetchVehicleActivities = createAsyncThunk('vehicleActivities/fetch',
@@ -33,10 +33,6 @@ export const deleteActivity = createAsyncThunk('vehicleActivity/delete',
 
 export const saveActivityContent = createAsyncThunk('vehicleActivity/content/update',
   async (contentResource: ContentResource) => activityService.saveActivityContent(contentResource)
-);
-
-export const uploadActivityContent = createAsyncThunk('vehicleActivity/upload',
-  async (file: Blob) => contentService.upload(file, 'private')
 );
 
 export const deleteActivityContent = createAsyncThunk('vehicleActivity/content/delete',

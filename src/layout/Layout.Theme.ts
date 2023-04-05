@@ -51,6 +51,13 @@ const DesignTokens = (mode: string):object => ({
     borderRadius: 0
   },
   components: {
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          padding: "12px 14px 3px 24px"
+        }
+      }
+    },
     MuiAccordion: {
       styleOverrides: {
         root: {

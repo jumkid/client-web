@@ -10,7 +10,7 @@ export interface IContentService {
   getContentSteam(uuid:string):Promise<any>
   getGalleryItemIds(galleryId:string):Promise<string[]>
 
-  upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<ContentMetadata>>
+  upload(file:Blob, accessScope: "public" | "private", setProgress:(progress:number) => void):Promise<APIResponse<ContentMetadata>>
   download(uuid:string, fileName:string | undefined):void
 
   deleteContentMetadata(id:string):Promise<APIResponse<any>>
@@ -55,11 +55,14 @@ class ContentService implements IContentService{
     }
   }
 
-  async upload(file:Blob, accessScope: "public" | "private"):Promise<APIResponse<ContentMetadata>> {
+  async upload(file:Blob,
+    accessScope: "public" | "private",
+    setProgress?:(progress:number) => void):Promise<APIResponse<ContentMetadata>> {
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("accessScope", accessScope);
-    return await restfulClient.postWithPromise(C.CONTENT_UPLOAD_API, null, formData);
+    return await restfulClient.upload(C.CONTENT_UPLOAD_API, formData, setProgress);
   }
 
   download(uuid: string, fileName:string | undefined): void {
