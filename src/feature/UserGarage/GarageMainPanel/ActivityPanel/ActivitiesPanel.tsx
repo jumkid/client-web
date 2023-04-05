@@ -1,33 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   AppBar,
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Fab,
-  IconButton,
   Tab,
   Tabs
 } from '@mui/material';
-import { List, CalendarViewWeek, Add, Close } from '@mui/icons-material';
+import { List, CalendarViewWeek, Add } from '@mui/icons-material';
 import ActivitiesList from './ActivitiesList';
-import ActivityMainForm from './ActivityMainForm';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
-import {
-  fetchVehicleActivities,
-  resetCurrentActivity,
-  saveUpdate,
-  saveNew,
-  deleteActivity
-} from '../../../../store/vehicleActivitiesSlice';
-import * as _ from 'lodash';
-import ConfirmDialog from '../../../../component/ConfirmDialog';
+import { resetCurrentActivity } from '../../../../store/vehicleActivitiesSlice';
 import { ErrorsContext } from './ActivityContext';
 import { initValidationErrors } from './ActivityMainForm.Validator';
+import ActivityMainDialog from './ActivityMainDialog';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -51,8 +37,7 @@ interface Props {
 
 function ActivitiesPanel ({vehicleId}:Props) {
   const [tab, setTab] = useState(0);
-  const [newActivity, setNewActivity] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   const [errors, setErrors] = useState(initValidationErrors);
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
@@ -64,52 +49,17 @@ function ActivitiesPanel ({vehicleId}:Props) {
     setTab(tabNum);
   };
 
+  useEffect(() => {
+    if (currentActivity.id > 0) {
+      setShowDialog(true);
+    }
+  }, [currentActivity]);
+
   const handleAddClick = () => {
     dispatch(resetCurrentActivity(vehicleId));
     setErrors(initValidationErrors);
-    setNewActivity(true);
+    setShowDialog(true);
   }
-
-  const handleSaveClick = async () => {
-    const action = currentActivity.id > 0 ? saveUpdate(currentActivity) : saveNew(currentActivity);
-    if (!currentActivity.activityEntityLinks) {currentActivity.activityEntityLinks = [];}
-
-    const response = await dispatch(action);
-
-    if (response.type.endsWith('/fulfilled')) {
-      setNewActivity(false);
-      setErrors({hasUpdate: false});
-      dispatch(fetchVehicleActivities(vehicleId));
-    }
-  }
-
-  const handleDeleteClick = () => {
-    setIsConfirmOpen(true);
-  }
-
-  const deleteConfirm = () => {
-    dispatch(deleteActivity(currentActivity.id)).then(
-      () => {
-        dispatch(fetchVehicleActivities(vehicleId));
-      }
-    );
-    handleCancelClick();
-    setIsConfirmOpen(false);
-  }
-
-  const deleteCancel = () => {
-    setIsConfirmOpen(false);
-  }
-
-  const handleCancelClick = () => {
-    dispatch(resetCurrentActivity(vehicleId));
-    setErrors(initValidationErrors);
-    setNewActivity(false);
-  }
-
-  const showDialog = newActivity || currentActivity.id > 0;
-  const showDeleteButton = currentActivity.id > 0;
-  const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
 
   return (
     <Box>
@@ -131,37 +81,7 @@ function ActivitiesPanel ({vehicleId}:Props) {
       </AppBar>
 
       <ErrorsContext.Provider value={errorsProvider}>
-        <Dialog open={showDialog} maxWidth={false}>
-          <DialogTitle>
-            Activity Details
-            <IconButton
-              aria-label="close"
-              onClick={handleCancelClick}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <Close/>
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <ActivityMainForm vehicleId={vehicleId}/>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleSaveClick} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
-            <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
-            <ConfirmDialog
-              title="Delete Activity"
-              message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
-              isShown={isConfirmOpen}
-              confirmCallback={deleteConfirm}
-              cancelCallback={deleteCancel}
-            />
-          </DialogActions>
-        </Dialog>
+        <ActivityMainDialog vehicleId={vehicleId} showDialog={showDialog} setShowDialog={setShowDialog}/>
 
         <TabPanel value={tab} index={0}>
           <ActivitiesList entityId={vehicleId}/>

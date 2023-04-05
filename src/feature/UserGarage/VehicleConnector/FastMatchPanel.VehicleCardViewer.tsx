@@ -21,7 +21,7 @@ function VehicleCardViewer ({vehicles}:Prop) {
   return (
     <Fade in={true}>
       <Box>
-        { vehicles && vehicles.map((vehicle, index) => (
+        { vehicles?.map((vehicle, index) => (
           <Card sx={{ width: 236, height: 168 }} raised key={index}>
             <CardActionArea sx={{ height: '100%' }} onClick={() => handleClick(vehicle)}>
               <CardContent sx={{ verticalAlign: "top" }}>

@@ -99,7 +99,6 @@ const DesignTokens = (mode: string):object => ({
     MuiTableRow: {
       styleOverrides: {
         root: {
-          cursor: 'pointer',
           backgroundColor: grey[900],
           '&.MuiTableRow-hover:hover': {
             backgroundColor: grey[700]

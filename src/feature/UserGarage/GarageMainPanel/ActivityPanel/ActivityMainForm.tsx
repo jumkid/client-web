@@ -26,7 +26,6 @@ import {
 import * as _ from 'lodash';
 import Validator  from './ActivityMainForm.Validator';
 import { ErrorsContext } from './ActivityContext';
-import ContentResourcesList from './ContentResourcesList';
 
 type ItemProps = {
   theme: Theme
@@ -205,7 +204,10 @@ function ActivityMainForm ({vehicleId}:Props) {
 
           {/** RIGHT AREA **/}
           <Grid item xs={2}>
-            <ContentResourcesList activity={activity}/>
+            <fieldset style={{height: '93%'}}>
+              <legend>Assignee</legend>
+              Assign this activity to someone
+            </fieldset>
           </Grid>
         </Grid>
       </form>

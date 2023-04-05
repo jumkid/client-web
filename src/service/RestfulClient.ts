@@ -31,9 +31,23 @@ export interface IRestfulClient {
   getBase64WithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
   putWithPromise(url: string, params?: object | string):Promise<APIResponse<any>>
+
+  download(url:string, fileName:string | undefined):void
 }
 
 export class RestfulClient implements IRestfulClient {
+
+  download(url: string, fileName:string | undefined): void {
+    axios.get(url, {...this.getConf('application/octet-stream'), responseType: 'blob'})
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName || 'unknown';
+        document.body.appendChild(link);
+        link.click();
+      });
+  }
 
   get (url: string, params: object | undefined, callback?:Callback): void {
     const _url = buildUrlWithParams(url, params);

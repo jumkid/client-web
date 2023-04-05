@@ -1,8 +1,8 @@
 import { APIResponse } from './model/Response';
 import restfulClient from './RestfulClient';
-import { VEHICLE, ACTIVITIES_API, ACTIVITY_API } from '../App.constants';
+import { VEHICLE, ACTIVITIES_API, ACTIVITY_API, ACTIVITY_CONTENT_API } from '../App.constants';
 import * as _ from 'lodash';
-import { Activity, Priority } from '../store/model/Activity';
+import { Activity, ContentResource, Priority } from '../store/model/Activity';
 
 interface IActivityService {
   getById: (id: number) => Promise<APIResponse<object>>
@@ -14,6 +14,9 @@ interface IActivityService {
   saveNewActivity: (activity: Activity) => Promise<APIResponse<object>>
   updateActivity: (activity: Activity) => Promise<APIResponse<object>>
   deleteActivity: (activityId: number) => Promise<APIResponse<any>>
+
+  saveActivityContent: (contentResource: ContentResource) => Promise<APIResponse<ContentResource>>
+  deleteActivityContent: (id: number) => Promise<APIResponse<any>>
 }
 
 class ActivityService implements IActivityService {
@@ -58,6 +61,16 @@ class ActivityService implements IActivityService {
 
   async deleteActivity (activityId: number): Promise<APIResponse<any>>{
     const url = `${ACTIVITIES_API}/${activityId}`;
+    return await restfulClient.deleteWithPromise(url);
+  }
+
+  async saveActivityContent (contentResource: ContentResource): Promise<APIResponse<ContentResource>> {
+    const url = `${ACTIVITY_CONTENT_API}`;
+    return await restfulClient.postWithPromise(url, null, contentResource);
+  }
+
+  async deleteActivityContent (id: number): Promise<APIResponse<any>> {
+    const url = `${ACTIVITY_CONTENT_API}/${id}`;
     return await restfulClient.deleteWithPromise(url);
   }
 

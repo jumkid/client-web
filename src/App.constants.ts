@@ -34,11 +34,13 @@ export const VEHICLE_VIN_DECODE_API:string = _API_URL + process.env.REACT_APP_VE
 
 export const CONTENT_METADATA_API:string = _API_URL + process.env.REACT_APP_CONTENT_METADATA_API;
 export const CONTENT_UPLOAD_API:string = _API_URL + process.env.REACT_APP_CONTENT_UPLOAD_API;
+export const CONTENT_DOWNLOAD_API:string = _API_URL + process.env.REACT_APP_CONTENT_DOWNLOAD_API;
 export const CONTENT_THUMBNAIL_API:string = _API_URL + process.env.REACT_APP_CONTENT_THUMBNAIL_API;
 export const CONTENT_STREAM_API:string = _API_URL + process.env.REACT_APP_CONTENT_STREAM_API;
 
 export const ACTIVITY_API:string = _API_URL + process.env.REACT_APP_ACTIVITY_API;
 export const ACTIVITIES_API:string = _API_URL + process.env.REACT_APP_ACTIVITIES_API;
+export const ACTIVITY_CONTENT_API:string = _API_URL + process.env.REACT_APP_ACTIVITY_CONTENT_API;
 
 export const DOMAIN_IMAGES_API:string = _API_URL + process.env.REACT_APP_DOMAIN_IMAGE_API;
 export const DOMAIN_IMAGES_AUTO_BRAND_API:string = DOMAIN_IMAGES_API + '/automobile/brand';

@@ -46,7 +46,7 @@ function ActivitiesList ({entityId}:Props) {
 
   return (
     <Box padding={1}>
-      { activities && activities.map((activity, index) =>
+      { activities?.map((activity, index) =>
         <div key={index}>
           <Event className="activity-icon" />
           <Chip className="date-chip" label={dateFormatter(activity.startDate)}/>

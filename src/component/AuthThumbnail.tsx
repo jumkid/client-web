@@ -24,7 +24,6 @@ function AuthThumbnail ({contentId, idx, sx}:Props) {
       sx={{
         ...sx,
         float: 'left',
-        mr: 1,
         background: `url('${preLoadImage}')`,
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
