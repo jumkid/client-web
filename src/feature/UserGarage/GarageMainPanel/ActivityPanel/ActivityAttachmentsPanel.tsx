@@ -52,23 +52,25 @@ function ActivityAttachmentsPanel () {
     setIsUploading(true);
 
     try {
-      const { data } = await contentService.upload(file, 'private', setProgress);
+      const response = await contentService.upload(file, 'private', setProgress);
 
-      if (!data) { return; }
+      if (!response.data) { return; }
 
-      const newContentResource:ContentResource = {contentResourceId: data.uuid};
+      const newContentResource:ContentResource = {contentResourceId: response.data.uuid};
       if (currentActivity.id > 0) {
         newContentResource.activityId = currentActivity.id;
-        const { payload } = await dispatch(saveActivityContent(newContentResource));
-        const { data } = payload as APIResponse<ContentResource>;
-        newContentResource.id = data?.id;
       }
+      const { payload } = await dispatch(saveActivityContent(newContentResource));
+      const { data } = payload as APIResponse<ContentResource>;
+      newContentResource.id = data?.id;
+
       const updateContentResources = [...(currentActivity.contentResources ?? []), newContentResource];
       dispatch(changeContentResources(updateContentResources));
     } catch (error) {
       console.error(error);
     } finally {
       setIsUploading(false);
+      event.target.value = "";
     }
   }
 
@@ -116,13 +118,11 @@ function ActivityAttachmentsPanel () {
   return (
     <>
       <Toolbar>
-        <Box>
-          { !isUploading &&
+        <Box mr={2}>
           <IconButton component="label" aria-label="upload">
             <input onChange={handleUpload} hidden accept="*/*" type="file"/>
             <Upload fontSize={"large"}/>
           </IconButton>
-          }
         </Box>
         <Box width={"90%"}>
           { isUploading && <LinearProgress variant={"determinate"} value={progress} color={"secondary"}/> }

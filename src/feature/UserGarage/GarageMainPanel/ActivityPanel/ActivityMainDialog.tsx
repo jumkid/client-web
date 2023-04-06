@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import { ErrorsContext } from './ActivityContext';
 import ActivityAttachmentsPanel from './ActivityAttachmentsPanel';
+import { contentService } from '../../../../service';
 
 interface Props {
   vehicleId: string
@@ -58,7 +59,7 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
         dispatch(fetchVehicleActivities(vehicleId));
       }
     );
-    handleCancelClick();
+    handleClose();
     setIsConfirmOpen(false);
   }
 
@@ -66,17 +67,26 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
     setIsConfirmOpen(false);
   }
 
-  const handleCancelClick = () => {
+  const handleClose = () => {
     dispatch(resetCurrentActivity(vehicleId));
     setErrors(initValidationErrors);
+    cleanUpNewUploads();
     setShowDialog(false);
+    setCurrentTab(0);
+  }
+
+  const cleanUpNewUploads = () => {
+    if (currentActivity.id > 0) { return; }
+    currentActivity.contentResources?.forEach(async contentResource =>
+      await contentService.deleteContentMetadata(contentResource.contentResourceId)
+    );
   }
 
   const showDeleteButton = currentActivity.id > 0;
   const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
 
   return (
-    <Dialog  open={showDialog} maxWidth={false}>
+    <Dialog open={showDialog} maxWidth={false}>
       <DialogTitle>
         <Tabs
           value={currentTab}
@@ -88,7 +98,7 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
         </Tabs>
         <IconButton
           aria-label="close"
-          onClick={handleCancelClick}
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
