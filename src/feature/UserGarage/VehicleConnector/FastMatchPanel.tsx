@@ -50,8 +50,7 @@ function FastMatchPanel () {
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
   const dispatch = useAppDispatch();
-
-
+  
   useEffect(() => {
     if (target === C.VIN) {
       setIsSubmitted(true);

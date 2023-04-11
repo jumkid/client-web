@@ -29,30 +29,36 @@ function AddToGarageStep ({connectedVehicle}:Prop) {
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const dispatch = useAppDispatch();
 
-  const handleBackward = () => {
+  const handleBackward = (): void => {
     dispatch(setConnectorStep(currentStep - 1));
   };
 
-  const handleAdd = () => {
-    if (isSubmitted) return;
-    else setIsSubmitted(true);
+  const handleAdd = async (): Promise<void> => {
+    if (isSubmitted) {
+      return;
+    }
 
-    const newVehicle = { ...connectedVehicle, name };
-    dispatch(saveNewVehicle(newVehicle)).then(
-      () => {
-        setIsSubmitted(false);
-        dispatch(setConnectorStep(0));
-      }
-    );
+    setIsSubmitted(true);
+
+    const newVehicle = {...connectedVehicle, name};
+    try {
+      await dispatch(saveNewVehicle(newVehicle));
+      dispatch(setConnectorStep(0));
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsSubmitted(false);
+    }
+
   };
 
   const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   }
 
-  const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnterKeyPress = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && isValid) {
-      handleAdd();
+      await handleAdd();
     }
   };
 

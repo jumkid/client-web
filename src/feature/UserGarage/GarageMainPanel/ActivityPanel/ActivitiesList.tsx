@@ -21,27 +21,29 @@ function ActivitiesList ({entityId}:Props) {
     dispatch(fetchVehicleActivities(entityId));
   },[entityId]);
 
-  const handleClick = (activityId: number):void => {
-    dispatch(fetchActivity(activityId)).then(() => {
+  const handleClick = async (activityId: number): Promise<void> => {
+    try {
+      await dispatch(fetchActivity(activityId));
       setErrors({hasUpdate: false});
-    });
-  }
-
-  const dateFormatter = (datetime: string | undefined):string => {
-    if (!datetime) { return '' }
-    const now = new Date();
-    const parts = datetime.split("T");
-    if (parts[0].startsWith(now.getFullYear().toString())) {
-      return parts[0].substring(5);
-    } else {
-      return parts[0];
+    } catch (error) {
+      console.error(error);
     }
   }
 
+  const dateFormatter = (datetime: string | undefined):string => {
+    const [dateString] = getDatetimeParts(datetime);
+    const currentYear = new Date().getFullYear().toString();
+    return dateString.startsWith(currentYear) ? dateString.substring(5) : dateString;
+  }
+
   const timeFormatter = (datetime: string | undefined):string => {
-    if (!datetime) { return '' }
-    const parts = datetime.split("T");
-    return parts[1];
+    const parts = getDatetimeParts(datetime);
+    return !parts ? '' : parts[1];
+  }
+
+  const getDatetimeParts = (datetime: string | undefined):string[] => {
+    if (!datetime) { return [] }
+    return datetime.split("T");
   }
 
   return (

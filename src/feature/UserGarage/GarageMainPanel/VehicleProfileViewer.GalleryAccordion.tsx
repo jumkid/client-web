@@ -21,7 +21,6 @@ function GalleryAccordion ({mediaGalleryId}:Props) {
       </AccordionDetails>
     </Accordion>
   )
-
 }
 
 export default GalleryAccordion;

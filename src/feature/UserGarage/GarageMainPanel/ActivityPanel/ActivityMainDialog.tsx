@@ -37,8 +37,8 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
   };
 
   const handleSaveClick = async () => {
-    const action = currentActivity.id > 0 ? saveUpdate(currentActivity) : saveNew(currentActivity);
-    if (!currentActivity.activityEntityLinks) {currentActivity.activityEntityLinks = [];}
+    const activity = { ...currentActivity, activityEntityLinks: currentActivity.activityEntityLinks || []}
+    const action = currentActivity.id > 0 ? saveUpdate(activity) : saveNew(activity);
 
     const response = await dispatch(action);
 

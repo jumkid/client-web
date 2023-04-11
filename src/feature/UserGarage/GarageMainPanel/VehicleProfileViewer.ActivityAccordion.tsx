@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, AppBar, Button, Toolbar, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ActivitiesPanel from './ActivityPanel';

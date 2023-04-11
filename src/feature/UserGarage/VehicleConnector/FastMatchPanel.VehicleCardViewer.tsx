@@ -13,7 +13,7 @@ interface Prop {
 function VehicleCardViewer ({vehicles}:Prop) {
   const dispatch = useAppDispatch();
 
-  const handleClick = (vehicle:VehicleProfile) => {
+  const handleClick = (vehicle:VehicleProfile): void => {
     dispatch(setConnectedVehicle(vehicle));
     dispatch(setConnectorStep(1));
   }

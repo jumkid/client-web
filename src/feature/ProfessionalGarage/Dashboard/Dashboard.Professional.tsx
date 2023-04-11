@@ -8,6 +8,7 @@ function Professional () {
       <Box sx={{ height: '100%', maxHeight: '1024px' }} className="dashboard-grid" gridColumn="span 2">
 
       </Box>
+
       <Box className="dashboard-grid" gridColumn="span 8">
         Some cool thing is coming up ...
       </Box>

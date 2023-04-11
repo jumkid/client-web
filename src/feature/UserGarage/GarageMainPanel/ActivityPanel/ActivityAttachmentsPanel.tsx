@@ -86,7 +86,7 @@ function ActivityAttachmentsPanel () {
     setIsConfirmOpen(false);
   }
 
-  const deleteConfirm = async () => {
+  const deleteConfirm = async ():Promise<void> => {
     try {
       setIsConfirmOpen(false);
 

@@ -13,7 +13,7 @@ function GarageSideTabs () {
   const status = useAppSelector((state: RootState) => state.userVehicles.status);
   const dispatch = useAppDispatch();
 
-  const handleChange = (event: React.SyntheticEvent, index: number) => {
+  const handleChange = (event: React.SyntheticEvent, index: number):void => {
     dispatch(changePick(index));
   };
 

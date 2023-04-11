@@ -43,22 +43,21 @@ function UserProfileUpdateForm () {
     }
   };
 
-  const handleSubmit = () => {
-    if (isSubmitted) { return; }
-    else{
+  const handleSubmit = async () => {
+    if (isSubmitted) {
+      return;
+    } else {
       setIsSubmitted(true);
     }
 
-    dispatch(submitUserProfile(tokenUser)).then(
-      (success) => {
-        setIsSubmitted(false);
-        setErrors(initValidationErrors);
-      },
-      (error) => {
-        setIsSubmitted(false);
-        setErrors(error);
-      }
-    );
+    try {
+      await dispatch(submitUserProfile(tokenUser));
+      setErrors(initValidationErrors);
+    } catch (error) {
+      setErrors({hasUpdate: true});
+    } finally {
+      setIsSubmitted(false);
+    }
   };
 
   const isValidForm = Object.values(errors).length === 0;

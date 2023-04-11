@@ -37,7 +37,7 @@ function VehicleListViewer () {
   const status = useAppSelector(state => state.userVehicles.status);
   const dispatch = useAppDispatch();
 
-  const changePageAction = (newPage:number) => {
+  const changePageAction = (newPage:number):(dispatch: AppDispatch) => void => {
     return (dispatch:AppDispatch) => {
       dispatch(setPage(newPage));
       // backend page start from 1 instead of 0
@@ -45,7 +45,7 @@ function VehicleListViewer () {
     }
   };
 
-  const changeRowsPerPageAction = (pageSize:number) => {
+  const changeRowsPerPageAction = (pageSize:number):(dispatch: AppDispatch) => void => {
     return (dispatch:AppDispatch) => {
       dispatch(setPageSize(pageSize));
       dispatch(setPage(0));
@@ -53,27 +53,29 @@ function VehicleListViewer () {
     }
   };
 
-  const handleClick = (index:number) => {
+  const handleClick = (index:number):void => {
     // the first two index (0 and 1) of tabs are used for specific actions
     dispatch(changePick(index + 2));
   };
 
-  const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined) => {
-    if (isSubmitted) return;
+  const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined):void => {
+    if (isSubmitted) { return; }
 
     setIsSubmitted(true);
-    dispatch(fetchUserVehicles({ keyword, page, size: pageSize })).then(() => {
-      setIsSubmitted(false);
-    });
+    dispatch(fetchUserVehicles({ keyword, page, size: pageSize }))
+      .then(() => {
+        setIsSubmitted(false);
+      }, () => {setIsSubmitted(false);});
     event && event.preventDefault();
   };
 
   const handleClearClick = ():void => {
     dispatch(clearKeyword());
     setIsSubmitted(true);
-    dispatch(fetchUserVehicles({ keyword: '', page, size: pageSize })).then(() => {
-      setIsSubmitted(false);
-    });
+    dispatch(fetchUserVehicles({ keyword: '', page, size: pageSize }))
+      .then(() => {
+        setIsSubmitted(false);
+      });
   };
 
   const handleSearchChange = (event:React.ChangeEvent<HTMLInputElement>):void => {

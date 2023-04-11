@@ -143,7 +143,7 @@ function ActivityMainForm ({vehicleId}:Props) {
                     label="Status"
                     name="status"
                     error={!_.isNil(errors.status)}
-                    value={activity?.status}
+                    value={(!_.isEmpty(activityStatuses) && activity?.status) || ''}
                     onChange={handleOnStatusChange}
                   >
                     { activityStatuses && activityStatuses.map((status, index) => (
@@ -175,7 +175,7 @@ function ActivityMainForm ({vehicleId}:Props) {
                     name="priority"
                     required={true}
                     error={!_.isNil(errors.priority)}
-                    defaultValue={activity.priority?.id ? activity.priority.id  : ''}
+                    value={(!_.isEmpty(activityPriorities) && activity.priority?.id) || ''}
                     onChange={handleOnPriorityChange}
                   >
                     { activityPriorities && activityPriorities.map((priority, index) => (
@@ -196,7 +196,7 @@ function ActivityMainForm ({vehicleId}:Props) {
                 multiline={true}
                 minRows={3}
                 maxRows={3}
-                value={activity?.description}
+                value={activity?.description || ''}
                 onChange={handleDescriptionChange}
               />
             </S_FormControl>

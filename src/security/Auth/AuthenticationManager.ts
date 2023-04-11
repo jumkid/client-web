@@ -32,7 +32,9 @@ export class AuthenticationManager implements IAuthenticationManager{
 
   constructor () {
     let token = localStoredToken.get();
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     token = JSON.parse(token);
     this.#processToken(token!);
@@ -47,14 +49,13 @@ export class AuthenticationManager implements IAuthenticationManager{
     if (self.jwtUser && self.jwtUser.exp) {
       const expired = self.jwtUser.exp < (Date.now() - 1000 * 60 * 5) / 1000;
       if (expired) {
-        authenticationService.refresh(self.getRefreshToken())
-          .then(
-            (response) => { self.updateToken(response.data.access_token); }
-          )
-          .catch(() => {
-            self.updateToken(null);
-            window.location.href = '/login';
-          });
+        try {
+          const {data: {access_token}} = await authenticationService.refresh(self.getRefreshToken());
+          self.updateToken(access_token);
+        } catch (error) {
+          self.updateToken(null);
+          window.location.href = '/login';
+        }
       }
     }
     return await Promise.resolve();

@@ -21,11 +21,13 @@ function ConfirmDialog ({title, action, message, isShown, confirmCallback, cance
       <DialogTitle id="responsive-dialog-title">
         {title}
       </DialogTitle>
+
       <DialogContent>
         <DialogContentText>
           { _.isEmpty(message) ? `Are you sure to perform ${action} action?`: message }
         </DialogContentText>
       </DialogContent>
+
       <DialogActions>
         <Button autoFocus onClick={cancelCallback}>
           Cancel

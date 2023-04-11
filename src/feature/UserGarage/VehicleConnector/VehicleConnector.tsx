@@ -13,11 +13,11 @@ function VehicleConnector () {
   const connectedVehicle =useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
 
-  const handleTabChange = (event: React.SyntheticEvent, index: number) => {
+  const handleTabChange = (event: React.SyntheticEvent, index: number): void => {
     setCurrentTab(index);
   };
 
-  const getStepComponents = (currentStep:number) => {
+  const getStepComponents = (currentStep:number): JSX.Element => {
     switch (currentStep) {
     case 1:
       return <PreviewVehicleStep connectedVehicle={connectedVehicle!}/>

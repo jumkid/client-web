@@ -17,9 +17,9 @@ function GarageMainPanel () {
       { currentPick === 1 && <VehicleListViewer /> }
 
       { currentPick > 1 && currentVehicle &&
-      <Box mt={3}>
-        <VehicleProfileViewer vehicleProfile={currentVehicle} />
-      </Box>
+        <Box mt={3}>
+          <VehicleProfileViewer vehicleProfile={currentVehicle} />
+        </Box>
       }
     </>
   );

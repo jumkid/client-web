@@ -50,7 +50,6 @@ class ContentService implements IContentService{
       const {data} = await this.getContentMetadata(galleryId);
       return data?.children.map(metadata => metadata.uuid) || [];
     } catch (error) {
-      console.error(`Error getting gallery item IDs: ${error}`);
       return [];
     }
   }

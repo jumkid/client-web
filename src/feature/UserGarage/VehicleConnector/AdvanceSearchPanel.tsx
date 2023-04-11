@@ -24,17 +24,17 @@ function AdvanceSearchPanel () {
     dispatch(setSearchKeyword(event.target.value));
   }
 
-  const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined) => {
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement> | undefined): Promise<void> => {
     event && event.preventDefault();
 
+    if (isSubmitted) {
+      return;
+    }
+
     if (isValid) {
-      if (isSubmitted) return;
       setIsSubmitted(true);
-      dispatch(fetchSearchVehicles({ keyword: searchKeyword, page: searchPage, size: searchPageSize })).then(
-        (response) => {
-          setIsSubmitted(false);
-        }
-      )
+      await dispatch(fetchSearchVehicles({keyword: searchKeyword, page: searchPage, size: searchPageSize}));
+      setIsSubmitted(false);
     }
   }
 

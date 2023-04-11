@@ -1,10 +1,9 @@
-import React, { useEffect, useLayoutEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { Box, Button, Chip, CircularProgress, Paper, Stack } from '@mui/material';
 import * as C from '../../../../App.constants';
 import './Gallery.css';
 import { contentService } from '../../../../service';
 import { ControlCamera, Pause, PlayCircleOutline } from '@mui/icons-material';
-import { Buffer } from 'buffer';
 import * as _ from 'lodash';
 import { preloadContentThumbnails } from '../../../../App.utils';
 
@@ -73,18 +72,18 @@ function GalleryPanel ({mediaGalleryId}:Props) {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     clearInterval(state.intervalEvent);
     setStep(0);
     setLoading(true);
-    contentService.getGalleryItemIds(mediaGalleryId!).then(
-      (items) => {
-        dispatch({ type: 'setItemsId', payload: items });
-      }
-    )
+    if (!mediaGalleryId) { return; }
+
+    contentService.getGalleryItemIds(mediaGalleryId)
+      .then((items) => { dispatch({ type: 'setItemsId', payload: items });});
+
   }, [mediaGalleryId]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     preloadContentThumbnails(state.itemsId, 'large')
       .then((response) => {
         dispatch({ type: 'setItemsImage', payload: response });
@@ -114,7 +113,7 @@ function GalleryPanel ({mediaGalleryId}:Props) {
     }
   }
 
-  const oneStepChange = () => {
+  const oneStepChange = useCallback(() => {
     const max = state.itemsId.length - 1;
     state.direction === C.RIGHT
       ?
@@ -122,7 +121,7 @@ function GalleryPanel ({mediaGalleryId}:Props) {
       :
       setStep(prevStep => (prevStep < max) ? prevStep + 1 : 0)
 
-  }
+  }, [state.itemsId, state.direction]);
 
   const handleMouseDown = (event:React.MouseEvent) => {
     dispatch({ type: 'setIsDragging', payload: true });

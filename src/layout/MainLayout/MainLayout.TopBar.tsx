@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   AppBar,
   Avatar,
@@ -16,8 +16,7 @@ import {
 } from '@mui/material';
 import NavButtons from './MainLayout.NavButtons';
 import { Notifications } from '@mui/icons-material';
-import PropTypes from 'prop-types';
-import { HandleClick, MenuSetting, UserSetting } from './model';
+import { MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
 import { RootState } from '../../store';
 import { useAppSelector } from '../../App.hooks';
@@ -38,14 +37,12 @@ function TopBar ({ menuSettings, userSettings }: Props) {
   const userName = userProfile.username;
 
   const [items, setItems] = useState(menuSettings);
-  const menuOnClickHandler:HandleClick = (index:number) => {
-    setItems(prevItems => prevItems.map((item, _index) => {
-      return {
-        ...item,
-        isCurrent: _index === index
-      };
-    }));
-  };
+  const menuOnClickHandler = useCallback((index:number) => {
+    setItems(prevItems => prevItems.map((item, _index) => ({
+      ...item,
+      isCurrent: _index === index
+    })));
+  }, []);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -77,7 +74,8 @@ function TopBar ({ menuSettings, userSettings }: Props) {
           <Box>
             { tokenUser && userSettings.length > 0 && <Tooltip title="Open settings">
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />
+                {!userAvatar && <Avatar alt={userName} />}
+                {userAvatar && <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />}
               </IconButton>
             </Tooltip> }
 
@@ -105,10 +103,5 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     </AppBar>
   );
 }
-
-TopBar.propTypes = {
-  menuSettings: PropTypes.array.isRequired,
-  userSettings: PropTypes.array.isRequired
-};
 
 export default TopBar;

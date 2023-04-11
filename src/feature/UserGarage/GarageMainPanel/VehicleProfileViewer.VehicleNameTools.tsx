@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { Box, Button, IconButton, TextField } from '@mui/material';
-import { Clear, Delete, ModeEdit, Save } from '@mui/icons-material';
+import { Delete, ModeEdit } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { deleteVehicle, updateUserVehicleName } from '../../../store/userVehiclesSlice';
 import { RootState } from '../../../store';
@@ -81,18 +81,15 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
     dispatch({type: 'setIsDialogOpen', payload: true});
   }
 
-  const dialogConfirm = ():void => {
+  const dialogConfirm = async (): Promise<void> => {
     dispatch({type: 'setIsDialogOpen', payload: false});
 
     if (state.isSubmitted) return;
     else dispatch({type: 'setIsSubmitted', payload: true});
 
     dispatch({type: 'setEditable', payload: false});
-    appDispatch(deleteVehicle(vehicleId)).then(
-      () => {
-        dispatch({type: 'setIsSubmitted', payload: false});
-      }
-    )
+    await appDispatch(deleteVehicle(vehicleId));
+    dispatch({type: 'setIsSubmitted', payload: false});
   };
 
   const dialogCancel = ():void => {

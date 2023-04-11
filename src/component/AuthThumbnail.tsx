@@ -13,10 +13,14 @@ function AuthThumbnail ({contentId, idx, sx}:Props) {
   const [preLoadImage, setPreLoadImage] = useState('');
 
   useEffect(() => {
-    preloadContentThumbnail(contentId, 'small').then((imageBase64) => {
-      setPreLoadImage(imageBase64);
-    });
-  }, [contentId])
+    try {
+      preloadContentThumbnail(contentId, 'small').then((imageBase64) => {
+        setPreLoadImage(imageBase64);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [contentId]);
 
   return (
     <Paper

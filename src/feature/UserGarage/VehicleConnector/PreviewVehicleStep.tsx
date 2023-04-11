@@ -15,11 +15,11 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const dispatch = useAppDispatch();
 
-  const handleBackward = () => {
+  const handleBackward = (): void => {
     dispatch(setConnectorStep(currentStep - 1));
   };
 
-  const handleForward = () => {
+  const handleForward = (): void => {
     dispatch(setConnectorStep(currentStep + 1));
   };
 

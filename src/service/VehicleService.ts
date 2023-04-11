@@ -72,7 +72,6 @@ class VehicleService implements IVehicleService {
     if (!pagingSearch.size) pagingSearch.size = C.DEFAULT_PAGE_SIZE;
     if (!pagingSearch.page) pagingSearch.page = 1;
   }
-
 }
 
 export default VehicleService;

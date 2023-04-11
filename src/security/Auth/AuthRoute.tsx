@@ -22,13 +22,10 @@ function AuthRoute (props:React.PropsWithChildren<Props>) {
   const userId = authenticationManager.getTokenUserId();
 
   const initiateUserProfileAction = (userId:string) => {
-    return (dispatch:AppDispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(setUserId(userId));
-      dispatch(fetchUserProfile(userId)).then(
-        (data) => {
-          dispatch(updateUserProfile(data));
-        }
-      )
+      const payload = await dispatch(fetchUserProfile(userId));
+      dispatch(updateUserProfile(payload));
     }
   }
 

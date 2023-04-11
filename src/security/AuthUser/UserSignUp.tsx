@@ -89,24 +89,22 @@ function UserSignUp () {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (): Promise<void> => {
     setIsSubmitted(true);
     setSignUpMessage('');
 
-    authenticationService.signUp(userProfile)
-      .then(({ isSuccess, data }) => {
-        if (!isSuccess) {
-          setIsSubmitted(false);
-          setSignUpMessage('Something goes wrong. Sign Up failed.');
-          if (data && /\busername\b/i.test(data.errorMessage)) {
-            setErrors((errors) => ({ ...errors, username: 'username is not available' }));
-          } else if (data && /\bemail\b/i.test(data.errorMessage)) {
-            setErrors((errors) => ({ ...errors, email: 'email is not available' }));
-          }
-        } else {
-          setIsAutoLogin(true);
-        }
-      });
+    const {isSuccess, data} = await authenticationService.signUp(userProfile);
+    if (!isSuccess) {
+      setIsSubmitted(false);
+      setSignUpMessage('Something goes wrong. Sign Up failed.');
+      if (data && /\busername\b/i.test(data.errorMessage)) {
+        setErrors((errors) => ({...errors, username: 'username is not available'}));
+      } else if (data && /\bemail\b/i.test(data.errorMessage)) {
+        setErrors((errors) => ({...errors, email: 'email is not available'}));
+      }
+    } else {
+      setIsAutoLogin(true);
+    }
   };
 
   const isValidForm = Object.values(errors).filter(error => typeof error !== 'undefined').length === 0;
