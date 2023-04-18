@@ -17,7 +17,7 @@ describe(TopBar, () => {
       }
     }]
 
-  it('render top bar component', () => {
+  it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>

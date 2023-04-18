@@ -1,20 +1,18 @@
 import React from 'react';
-import MainLayout from './MainLayout';
+import ActivitiesPanel from './ActivitiesPanel';
 import ReactTestRenderer from 'react-test-renderer';
-import { store } from '../../store';
 import { Provider } from 'react-redux';
+import { store } from '../../../../store';
 
-describe(MainLayout, () => {
+describe(ActivitiesPanel, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>
-          <MainLayout mode="dark" menuIndex={0}>
-            <h1>Hello world!</h1>
-          </MainLayout>
+          <ActivitiesPanel vehicleId='abed-1234'/>
         </Provider>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
-  })
+  });
 });

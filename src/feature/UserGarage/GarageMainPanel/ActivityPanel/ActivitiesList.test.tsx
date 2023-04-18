@@ -1,17 +1,15 @@
 import React from 'react';
-import MainLayout from './MainLayout';
-import ReactTestRenderer from 'react-test-renderer';
-import { store } from '../../store';
+import ActivitiesList from './ActivitiesList';
+import ReactTestRenderer, { act } from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import { store } from '../../../../store';
 
-describe(MainLayout, () => {
+describe(ActivitiesList, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>
-          <MainLayout mode="dark" menuIndex={0}>
-            <h1>Hello world!</h1>
-          </MainLayout>
+          <ActivitiesList entityId='abed-1234'/>
         </Provider>
       )
       .toJSON();

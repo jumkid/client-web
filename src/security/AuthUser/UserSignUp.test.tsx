@@ -1,17 +1,15 @@
 import React from 'react';
-import SimpleLayout from './SimpleLayout';
-import ReactTestRenderer from 'react-test-renderer';
-import { store } from '../../store';
+import ReactTestRenderer, { act } from 'react-test-renderer';
+import UserSignUp from './UserSignUp';
 import { Provider } from 'react-redux';
+import { store } from '../../store';
 
-describe(SimpleLayout, () => {
+describe(UserSignUp, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>
-          <SimpleLayout>
-            <h1>Hello world!</h1>
-          </SimpleLayout>
+          <UserSignUp/>
         </Provider>
       )
       .toJSON();

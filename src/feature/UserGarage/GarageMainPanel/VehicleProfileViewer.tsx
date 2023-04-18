@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Fade, Grid, IconButton, Stack } from '@mui/material';
+import { Avatar, Grid, IconButton, Stack } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import * as C from '../../../App.constants';
@@ -19,45 +19,43 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
   const showEditableName = _.isUndefined(showName) ? true : showName;
 
   return (
-    <Fade in={true} mountOnEnter unmountOnExit>
-      <Stack className="dashboard-viewer-box">
-        <Grid container spacing={1} columns={16}>
-          <Grid item xs={12}>
-            <ItemHeader>
-              <Avatar
-                variant="rounded"
-                src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
-                sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
+    <Stack className="dashboard-viewer-box">
+      <Grid container spacing={1} columns={16}>
+        <Grid item xs={12}>
+          <ItemHeader>
+            <Avatar
+              variant="rounded"
+              src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile.make}.png`}
+              sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
+            />
+            { showEditableName &&
+              <VehicleNameTools
+                vehicleName={vehicleProfile.name!}
+                vehicleId={vehicleProfile.id!}
               />
-              { showEditableName &&
-                <VehicleNameTools
-                  vehicleName={vehicleProfile.name!}
-                  vehicleId={vehicleProfile.id!}
-                />
-              }
-            </ItemHeader>
-          </Grid>
-          <Grid item xs={4}>
-            <IconButton sx={{ float: 'right', mt: 3.5 }} aria-label="access scope" component="label">
-              { vehicleProfile.accessScope === "private" && <Lock fontSize="large"/> }
-              { vehicleProfile.accessScope === "public" && <LockOpen fontSize="large"/> }
-            </IconButton>
-          </Grid>
+            }
+          </ItemHeader>
         </Grid>
-        <Item>
-          <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
-          <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
-          <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
-          <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
-        </Item>
+        <Grid item xs={4}>
+          <IconButton sx={{ float: 'right', mt: 3.5 }} aria-label="access scope" component="label">
+            { vehicleProfile.accessScope === "private" && <Lock fontSize="large"/> }
+            { vehicleProfile.accessScope === "public" && <LockOpen fontSize="large"/> }
+          </IconButton>
+        </Grid>
+      </Grid>
+      <Item>
+        <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
+        <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
+        <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
+        <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
+      </Item>
 
-        <GalleryAccordion mediaGalleryId={vehicleProfile.mediaGalleryId}/>
+      <GalleryAccordion mediaGalleryId={vehicleProfile.mediaGalleryId}/>
 
-        { vehicleProfile.id && <ActivityAccordion vehicleId={vehicleProfile.id}/> }
-        <DetailsAccordion vehicleProfile={vehicleProfile} />
+      { vehicleProfile.id && <ActivityAccordion vehicleId={vehicleProfile.id}/> }
+      <DetailsAccordion vehicleProfile={vehicleProfile} />
 
-      </Stack>
-    </Fade>
+    </Stack>
   );
 }
 

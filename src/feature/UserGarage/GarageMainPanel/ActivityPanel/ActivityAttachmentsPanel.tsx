@@ -130,7 +130,7 @@ function ActivityAttachmentsPanel () {
       </Toolbar>
 
       <TableContainer sx={{ overflowX: 'hidden' }}>
-        <Table aria-label="activity attachments table">
+        <Table aria-label="activity attachments">
           <TableBody>
             {contentMetadataList?.map( (contentMetadata, index) =>
               <TableRow

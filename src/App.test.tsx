@@ -5,12 +5,11 @@ import App from './App'
 import authenticationManager from './security/Auth/AuthenticationManager';
 import jwt from 'jsonwebtoken';
 import { act } from 'react-dom/test-utils';
+import { VehicleProfile } from './store/model/VehicleProfile';
 
 describe(App, () => {
   beforeAll(() => {});
   beforeEach(() => {});
-  afterAll(() => {});
-  afterEach(() => {});
 
   it('renders user login screen', () => {
     renderWithRouter(<App />, {});
@@ -33,6 +32,9 @@ describe(App, () => {
     await act( async () => renderWithRouter(<App />, {}));
     expect(screen.getByText(/My Garage/i)).toBeDefined();
   });
+
+  afterAll(() => {});
+  afterEach(() => {});
 });
 
 export const renderWithRouter = (ui:React.ReactElement, {route = '/'} = {}) => {
@@ -60,4 +62,36 @@ export const generateTestJwtToken = ():string => {
     }
   };
   return jwt.sign(payload, secret);
+}
+
+export const testVehicleProfile:VehicleProfile = {
+  accessScope: 'public',
+  id: undefined,
+  make: 'Porsche',
+  mediaGalleryId: undefined,
+  model: '911',
+  modelYear: 1974,
+  modificationDate: '',
+  name: 'Porsche 911',
+  trimLevel: 'turbo',
+  vehicleEngine: {
+    name: '4.8l v8',
+    type: 'v8',
+    cylinder: 8,
+    displacement: 4.8,
+    fuelType: 'gasoline',
+    horsepower: 500,
+    horsepowerRpm: 3600,
+    torque: 700,
+    torqueRpm: 4000,
+    manufacturerEngineCode: 'M515'
+  },
+  vehicleTransmission: {
+    name: '8 speed tiptronic',
+    type: 'AT',
+    drivetrain: '',
+    availability: '',
+    automaticType: 'AMT',
+    numberOfSpeeds: 8
+  }
 }

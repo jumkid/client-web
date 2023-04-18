@@ -11,7 +11,7 @@ import { Route } from '@mui/icons-material';
 describe(AuthRoute, () => {
   const token = generateTestJwtToken();
 
-  it('render child component with jwt', async () => {
+  it('Should render correctly render child component with jwt', async () => {
     authenticationManager.updateToken(generateTestJwtToken());
 
     await act(async () => {
@@ -27,7 +27,7 @@ describe(AuthRoute, () => {
     });
   });
 
-  it('render navigation to login without jwt', () => {
+  it('Should render navigation to login without jwt', () => {
     authenticationManager.updateToken(null);
     const tree = ReactTestRenderer
       .create(

@@ -1,17 +1,15 @@
 import React from 'react';
-import MainLayout from './MainLayout';
+import VehicleNameTools from './VehicleProfileViewer.VehicleNameTools';
 import ReactTestRenderer from 'react-test-renderer';
-import { store } from '../../store';
 import { Provider } from 'react-redux';
+import { store } from '../../../store';
 
-describe(MainLayout, () => {
+describe(VehicleNameTools, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>
-          <MainLayout mode="dark" menuIndex={0}>
-            <h1>Hello world!</h1>
-          </MainLayout>
+          <VehicleNameTools vehicleName='test vehicle name' vehicleId='abed-1234'/>
         </Provider>
       )
       .toJSON();
