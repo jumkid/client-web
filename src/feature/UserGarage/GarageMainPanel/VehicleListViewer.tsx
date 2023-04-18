@@ -27,7 +27,7 @@ import CardWaitSkeleton from '../VehicleConnector/CardWaitSkeleton';
 import * as _ from 'lodash';
 
 function VehicleListViewer () {
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const keyword = useAppSelector((state:RootState) => state.userVehicles.keyword);
   const total = useAppSelector((state:RootState) => state.userVehicles.total);
