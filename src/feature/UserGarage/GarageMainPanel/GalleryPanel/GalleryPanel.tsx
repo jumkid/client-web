@@ -3,7 +3,7 @@ import { Box, Button, Chip, CircularProgress, Paper, Stack } from '@mui/material
 import * as C from '../../../../App.constants';
 import './Gallery.css';
 import { contentService } from '../../../../service';
-import { ControlCamera, Pause, PlayCircleOutline } from '@mui/icons-material';
+import { Pause, PlayCircleOutline } from '@mui/icons-material';
 import * as _ from 'lodash';
 import { preloadContentThumbnails } from '../../../../App.utils';
 
@@ -184,7 +184,6 @@ function GalleryPanel ({mediaGalleryId}:Props) {
         </Box>
         }
         <Box>
-          <Chip icon={<ControlCamera/>} label="drag to change" />
           <Button color="primary" onClick={toggleAutoplay}>
             { !state.autoplay ? <PlayCircleOutline/> : <Pause/> }
             Autoplay

@@ -51,3 +51,5 @@ export const MODEL = 'model';
 export const MODEL_YEAR = 'modelYear';
 export const TRIM_LEVEL = 'trimLevel';
 export const VIN = 'vin';
+
+export const DATE_FORMAT = 'YYYY-MM-DD';

@@ -253,7 +253,8 @@ const ItemHeader = styled(Box)(({ theme }:ItemProps) => ({
   width: '100%',
   textTransform: 'uppercase',
   fontWeight: '500',
-  fontSize: '26px'
+  fontSize: '26px',
+  marginTop: '21px'
 }));
 
 export {

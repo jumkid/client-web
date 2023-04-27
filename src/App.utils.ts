@@ -3,6 +3,22 @@ import { VehicleFieldValuePair } from './service/VehicleService';
 import { contentService } from './service';
 import { Buffer } from 'buffer';
 
+function dateFormatter (datetime: string | undefined):string {
+  const [dateString] = getDatetimeParts(datetime);
+  const currentYear = new Date().getFullYear().toString();
+  return dateString.startsWith(currentYear) ? dateString.substring(5) : dateString;
+}
+
+function timeFormatter (datetime: string | undefined, hideSecond?:boolean):string {
+  const parts = getDatetimeParts(datetime);
+  return !parts ? '' : hideSecond ? parts[1].substring(0, 5) : parts[1];
+}
+
+const getDatetimeParts = (datetime: string | undefined):string[] => {
+  if (!datetime) { return [] }
+  return datetime.split("T");
+}
+
 function isJson (item: string | object) {
   item = typeof item !== 'string' ? JSON.stringify(item) : item;
 
@@ -66,6 +82,8 @@ function vinVehicleToFieldValuePairs(vinVehicle: Record<string, unknown>): Vehic
 
 export {
   isJson,
+  dateFormatter,
+  timeFormatter,
   preloadContentThumbnails,
   preloadContentThumbnail,
   preloadImage,

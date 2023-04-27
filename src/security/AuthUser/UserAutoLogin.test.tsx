@@ -8,7 +8,7 @@ describe(UserAutoLogin, () => {
     const tree = ReactTestRenderer
       .create(
         <Route>
-          <UserAutoLogin/>
+          <UserAutoLogin username='test' password='pass'/>
         </Route>
       )
       .toJSON();

@@ -10,10 +10,11 @@ import { List, CalendarViewWeek, Add } from '@mui/icons-material';
 import ActivitiesList from './ActivitiesList';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
-import { resetCurrentActivity } from '../../../../store/vehicleActivitiesSlice';
+import { fetchVehicleActivities, resetCurrentActivity } from '../../../../store/vehicleActivitiesSlice';
 import { ErrorsContext } from './ActivityContext';
 import { initValidationErrors } from './ActivityMainForm.Validator';
 import ActivityMainDialog from './ActivityMainDialog';
+import ActivityCalendar from './ActivityCalendar';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,7 +44,12 @@ function ActivitiesPanel ({vehicleId}:Props) {
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
 
   const currentActivity = useAppSelector((state:RootState) => state.vehicleActivities.currentActivity);
+  const activities = useAppSelector((state:RootState) => state.vehicleActivities.activities);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchVehicleActivities(vehicleId));
+  },[vehicleId]);
 
   const handleTabChange = (event: React.SyntheticEvent, tabNum: number) => {
     setTab(tabNum);
@@ -84,10 +90,10 @@ function ActivitiesPanel ({vehicleId}:Props) {
         <ActivityMainDialog vehicleId={vehicleId} showDialog={showDialog} setShowDialog={setShowDialog}/>
 
         <TabPanel value={tab} index={0}>
-          <ActivitiesList entityId={vehicleId}/>
+          <ActivitiesList activities={activities || []}/>
         </TabPanel>
         <TabPanel value={tab} index={1}>
-          week view
+          <ActivityCalendar mode='WEEK' activities={activities || []}/>
         </TabPanel>
       </ErrorsContext.Provider>
     </Box>
