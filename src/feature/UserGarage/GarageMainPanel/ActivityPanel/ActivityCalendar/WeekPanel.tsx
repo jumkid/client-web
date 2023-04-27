@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Box, Chip, Fab, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, Fab, Grid, Link, Stack, Typography } from '@mui/material';
 import { Activity } from '../../../../../store/model/Activity';
 import dayjs from 'dayjs';
 import { grey } from '@mui/material/colors';
@@ -63,6 +63,10 @@ function WeekPanel ({activities}:Props) {
     setDateOfSun(prevDate => prevDate.add(7, 'day'));
   }
 
+  const handleTodayClick = () => {
+    setDateOfSun(dayjs().subtract(dayjs().day(), 'day'));
+  }
+
   return (
     <Box mb={1} mt={1}>
       <Stack alignItems='center'>
@@ -75,16 +79,25 @@ function WeekPanel ({activities}:Props) {
                 size={'small'}
                 sx={{position: 'absolute', top: 90, left: 6}}
                 aria-label="previous"
-                variant="circular"
+                variant="extended"
                 onClick={handlePreviousClick}
               >
                 <NavigateBefore/>
               </Fab>
               <Fab
                 size={'small'}
+                sx={{position: 'absolute', top: 90, left: 52}}
+                aria-label="previous"
+                variant="extended"
+                onClick={handleTodayClick}
+              >
+                Today
+              </Fab>
+              <Fab
+                size={'small'}
                 sx={{position: 'absolute', top: 90, right: 6}}
                 aria-label="next"
-                variant="circular"
+                variant="extended"
                 onClick={handleNextClick}
               >
                 <NavigateNext/>
@@ -98,13 +111,14 @@ function WeekPanel ({activities}:Props) {
                 <Typography
                   fontSize={isToday(idx) ? '22px' : '16px'}
                   fontWeight={isToday(idx) ? 'bold' : 'normal'}
+                  color={getColorName(idx)}
                   textTransform='uppercase'
                   align="center"
                 >
                   {day}
                 </Typography>
               </Box>
-              <Box pl={0.5} ml={0.2} height='100%' sx={{backgroundColor: isToday(idx) ? grey[700] : grey[900]}}>
+              <Box pl={0.5} ml={0.2} height='83%' sx={{backgroundColor: isToday(idx) ? grey[700] : grey[900]}}>
                 <Typography fontWeight={getFontWeight(idx)} variant='h6'>
                   {getWeekDate(idx)}
                 </Typography>
