@@ -26,6 +26,7 @@ import {
 import * as _ from 'lodash';
 import Validator  from './ActivityMainForm.Validator';
 import { ErrorsContext } from './ActivityContext';
+import { DATETIME_FORMAT } from '../../../../App.constants';
 
 type ItemProps = {
   theme: Theme
@@ -71,13 +72,13 @@ function ActivityMainForm ({vehicleId}:Props) {
   };
 
   const handleStartDateChange = (newValue: Dayjs | null) => {
-    dispatch(changeStartDate(newValue));
+    dispatch(changeStartDate(newValue?.format(DATETIME_FORMAT)));
     validator.validateStartDate(newValue, dayjs(activity.endDate));
     validateForm();
   };
 
   const handleEndDateChange = (newValue: Dayjs | null) => {
-    dispatch(changeEndDate(newValue));
+    dispatch(changeEndDate(newValue?.format(DATETIME_FORMAT)));
     validator.validateEndDate(newValue, dayjs(activity.startDate));
     validateForm();
   };
@@ -116,32 +117,19 @@ function ActivityMainForm ({vehicleId}:Props) {
                 variant="outlined"
                 value={activity?.name}
                 error={!_.isNil(errors.name)}
+                helperText={!_.isNil(errors.name) ? errors.name : ' '}
               />
             </S_FormControl>
 
             <Grid container spacing={1} columns={4}>
               <Grid item xs={2}>
                 <S_FormControl>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Start Time"
-                      inputFormat="YYYY/MM/DDTHH:mm:00"
-                      ampm={true}
-                      disablePast={true}
-                      value={dayjs(activity.startDate)}
-                      onChange={handleStartDateChange}
-                      renderInput={
-                        (params) =>
-                          <TextField {...params} required={true} error={!_.isNil(errors.startDate)}/>}
-                    />
-                  </LocalizationProvider>
-                </S_FormControl>
-                <S_FormControl>
                   <InputLabel id="status-label">Status</InputLabel>
                   <Select
                     labelId="status-label"
                     label="Status"
                     name="status"
+                    required={true}
                     error={!_.isNil(errors.status)}
                     value={(!_.isEmpty(activityStatuses) && activity?.status) || ''}
                     onChange={handleOnStatusChange}
@@ -151,23 +139,29 @@ function ActivityMainForm ({vehicleId}:Props) {
                     ))}
                   </Select>
                 </S_FormControl>
-              </Grid>
-
-              <Grid item xs={2}>
                 <S_FormControl>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
-                      label="End Time"
-                      inputFormat="YYYY/MM/DDTHH:mm:00"
+                      label="Start Time"
+                      inputFormat={DATETIME_FORMAT}
                       ampm={true}
                       disablePast={true}
-                      value={activity.endDate}
-                      onChange={handleEndDateChange}
-                      renderInput={(params) =>
-                        <TextField {...params} error={!_.isNil(errors.endDate)}/>}
+                      value={dayjs(activity.startDate)}
+                      onChange={handleStartDateChange}
+                      renderInput={
+                        (params) =>
+                          <TextField
+                            {...params}
+                            required={true}
+                            error={!_.isNil(errors.startDate)}
+                            helperText={!_.isNil(errors.startDate) ? errors.startDate : ' '}
+                          />}
                     />
                   </LocalizationProvider>
                 </S_FormControl>
+              </Grid>
+
+              <Grid item xs={2}>
                 <S_FormControl>
                   <InputLabel>Priority</InputLabel>
                   <Select
@@ -185,12 +179,30 @@ function ActivityMainForm ({vehicleId}:Props) {
                     ))}
                   </Select>
                 </S_FormControl>
+                <S_FormControl>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="End Time"
+                      inputFormat={DATETIME_FORMAT}
+                      ampm={true}
+                      disablePast={true}
+                      value={activity.endDate}
+                      onChange={handleEndDateChange}
+                      renderInput={(params) =>
+                        <TextField
+                          {...params}
+                          error={!_.isNil(errors.endDate)}
+                          helperText={!_.isNil(errors.endDate) ? errors.endDate : ' '}
+                        />}
+                    />
+                  </LocalizationProvider>
+                </S_FormControl>
               </Grid>
             </Grid>
 
             <S_FormControl>
               <TextField
-                sx={{width:"666px"}}
+                sx={{width:"672px"}}
                 label="Description"
                 name="description"
                 multiline={true}
@@ -204,7 +216,7 @@ function ActivityMainForm ({vehicleId}:Props) {
 
           {/** RIGHT AREA **/}
           <Grid item xs={2}>
-            <fieldset style={{height: '93%'}}>
+            <fieldset style={{height: '94%'}}>
               <legend>Assignee</legend>
               Assign this activity to someone
             </fieldset>

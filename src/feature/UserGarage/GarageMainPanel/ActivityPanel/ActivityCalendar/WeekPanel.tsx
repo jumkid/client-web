@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Box, Button, Chip, Fab, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Chip, Fab, Grid, Link, Stack, Typography } from '@mui/material';
 import { Activity } from '../../../../../store/model/Activity';
 import dayjs from 'dayjs';
 import { grey } from '@mui/material/colors';
@@ -74,7 +74,7 @@ function WeekPanel ({activities}:Props) {
 
         <Grid container spacing={0}>
           {daysOfWeek.map((day, idx) => (
-            <Grid {...{ lg: 1.7143 }}>
+            <Grid {...{ lg: 1.7143 }} item={true}>
               <Fab
                 size={'small'}
                 sx={{position: 'absolute', top: 90, left: 6}}

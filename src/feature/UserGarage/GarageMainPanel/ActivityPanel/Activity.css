@@ -1,6 +1,5 @@
 .activity-main {
-    margin: 1px 8px;
-    width: 1006px;
+    margin: 0 0;
 }
 
 .activity-icon {
@@ -12,14 +11,12 @@
 .date-chip {
     margin-right: 0 !important;
     background-color: #FFFFFF !important;
-    height: 23px !important;
 }
 
 .time-chip {
-    margin-right: 8px !important;
+    margin-right: 4px !important;
     background-color: #343434 !important;
     color: #FFFFFF !important;
-    height: 23px !important;
 }
 
 .activity-attachment {

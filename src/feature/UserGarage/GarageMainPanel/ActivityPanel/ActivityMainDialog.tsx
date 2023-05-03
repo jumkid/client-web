@@ -1,5 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tab, Tabs } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Tab,
+  Tabs
+} from '@mui/material';
 import { Close } from '@mui/icons-material';
 import ActivityMainForm from './ActivityMainForm';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
@@ -110,21 +121,25 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{width:1024, height:320}}>
+      <DialogContent sx={{width:1024, height:340}}>
         { currentTab == 0 && <ActivityMainForm vehicleId={vehicleId}/> }
         { currentTab == 1 && <ActivityAttachmentsPanel/> }
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleSaveClick} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
-        <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
-        <ConfirmDialog
-          title="Delete Activity"
-          message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
-          isShown={isConfirmOpen}
-          confirmCallback={deleteConfirm}
-          cancelCallback={deleteCancel}
-        />
+        <Box m={2} width='100%' textAlign='right'>
+          <Divider sx={{ mb: 2, height: '1px'}} color='white'/>
+          <Button onClick={handleSaveClick} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
+          &nbsp;
+          <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
+          <ConfirmDialog
+            title="Delete Activity"
+            message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
+            isShown={isConfirmOpen}
+            confirmCallback={deleteConfirm}
+            cancelCallback={deleteCancel}
+          />
+        </Box>
       </DialogActions>
     </Dialog>
   )
