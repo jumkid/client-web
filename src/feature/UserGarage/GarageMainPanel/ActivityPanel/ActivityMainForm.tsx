@@ -26,7 +26,7 @@ import {
 import * as _ from 'lodash';
 import Validator  from './ActivityMainForm.Validator';
 import { ErrorsContext } from './ActivityContext';
-import { DATETIME_FORMAT } from '../../../../App.constants';
+import { DATETIME_FORMAT, DATETIME_FORMAT_NO_SECOND } from '../../../../App.constants';
 
 type ItemProps = {
   theme: Theme
@@ -100,7 +100,7 @@ function ActivityMainForm ({vehicleId}:Props) {
 
   const validateForm = () => {
     setErrors({ ...validator.errors });
-  }
+  };
 
   return (
     <Box className="activity-main">
@@ -143,7 +143,7 @@ function ActivityMainForm ({vehicleId}:Props) {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
                       label="Start Time"
-                      inputFormat={DATETIME_FORMAT}
+                      inputFormat={DATETIME_FORMAT_NO_SECOND}
                       ampm={true}
                       disablePast={true}
                       value={dayjs(activity.startDate)}
@@ -183,7 +183,7 @@ function ActivityMainForm ({vehicleId}:Props) {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
                       label="End Time"
-                      inputFormat={DATETIME_FORMAT}
+                      inputFormat={DATETIME_FORMAT_NO_SECOND}
                       ampm={true}
                       disablePast={true}
                       value={activity.endDate}

@@ -12,7 +12,7 @@ export interface VehicleFieldValuePair {
 export interface IVehicleService {
   getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
   getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
-  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
+  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse | null>
   getByVin: (vin:string) => Promise<APIResponse<any>>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse<any>>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
@@ -33,8 +33,7 @@ class VehicleService implements IVehicleService {
 
   async getByMatchers (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
-    const response = await restfulClient.postWithPromise(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
-    return response.data;
+    return await restfulClient.postWithPaging(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
   }
 
   async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse<any>> {

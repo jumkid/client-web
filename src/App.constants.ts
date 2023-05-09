@@ -52,5 +52,6 @@ export const MODEL_YEAR = 'modelYear';
 export const TRIM_LEVEL = 'trimLevel';
 export const VIN = 'vin';
 
-export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm';
+export const DATETIME_FORMAT_NO_SECOND = 'YYYY-MM-DDTHH:mm';
+export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 export const DATE_FORMAT = 'YYYY-MM-DD';

@@ -6,12 +6,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
   Tab,
-  Tabs
+  Tabs, Typography
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Warning } from '@mui/icons-material';
 import ActivityMainForm from './ActivityMainForm';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
 import {
@@ -27,6 +26,7 @@ import { RootState } from '../../../../store';
 import { ErrorsContext } from './ActivityContext';
 import ActivityAttachmentsPanel from './ActivityAttachmentsPanel';
 import { contentService } from '../../../../service';
+import * as _ from 'lodash';
 
 interface Props {
   vehicleId: string
@@ -39,6 +39,7 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const {errors, setErrors} = useContext(ErrorsContext);
+  const [serverError, setServerError] = useState('');
 
   const currentActivity = useAppSelector((state:RootState) => state.vehicleActivities.currentActivity);
   const dispatch = useAppDispatch();
@@ -51,13 +52,19 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
     const activity = { ...currentActivity, activityEntityLinks: currentActivity.activityEntityLinks || []}
     const action = currentActivity.id > 0 ? saveUpdate(activity) : saveNew(activity);
 
-    const response = await dispatch(action);
-
-    if (response.type.endsWith('/fulfilled')) {
-      setShowDialog(false);
-      setErrors({hasUpdate: false});
-      dispatch(fetchVehicleActivities(vehicleId));
+    try {
+      const response = await dispatch(action);
+      if (response.type.endsWith('/fulfilled')) {
+        setShowDialog(false);
+        setErrors({hasUpdate: false});
+        dispatch(fetchVehicleActivities(vehicleId));
+      } else {
+        setServerError(response.payload as string);
+      }
+    } catch (e:any) {
+      setServerError(e.response.data);
     }
+
   }
 
   const handleDeleteClick = () => {
@@ -121,14 +128,16 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{width:1024, height:340}}>
+      <DialogContent sx={{width:1024, height:364}}>
         { currentTab == 0 && <ActivityMainForm vehicleId={vehicleId}/> }
         { currentTab == 1 && <ActivityAttachmentsPanel/> }
       </DialogContent>
 
       <DialogActions>
-        <Box m={2} width='100%' textAlign='right'>
-          <Divider sx={{ mb: 2, height: '1px'}} color='white'/>
+        <Box mr={2} mb={2} width='100%' textAlign='right'>
+          { !_.isEmpty(serverError) && <Typography ml={2} color="red" sx={{float: 'left'}}>
+            <Warning sx={{verticalAlign: 'middle'}} fontSize='small'/> {serverError}</Typography>
+          }
           <Button onClick={handleSaveClick} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
           &nbsp;
           <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>

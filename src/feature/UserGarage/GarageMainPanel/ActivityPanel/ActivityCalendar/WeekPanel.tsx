@@ -74,7 +74,7 @@ function WeekPanel ({activities}:Props) {
 
         <Grid container spacing={0}>
           {daysOfWeek.map((day, idx) => (
-            <Grid {...{ lg: 1.7143 }} item={true}>
+            <Grid key={idx} {...{ lg: 1.7143 }} item={true}>
               <Fab
                 size={'small'}
                 sx={{position: 'absolute', top: 90, left: 6}}
@@ -123,13 +123,13 @@ function WeekPanel ({activities}:Props) {
                   {getWeekDate(idx)}
                 </Typography>
                 <Box key={idx} minHeight={129}>
-                  { filterActivitiesByDate(activities, idx).map(activity => (
-                    <>
+                  { filterActivitiesByDate(activities, idx).map((activity, index) => (
+                    <Box key={index}>
                       <Chip className="time-chip" label={timeFormatter(activity.startDate, true)}/>
                       <Link onClick={ ()=> handleClick(activity.id) } color="secondary" variant="body2">
                         {activity.name}
                       </Link>
-                    </>
+                    </Box>
                   ))}
                 </Box>
               </Box>

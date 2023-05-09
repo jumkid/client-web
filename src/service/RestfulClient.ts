@@ -1,26 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
-import { APIResponse } from './model/Response';
-
-const buildUrlWithParams = (url: string, params?: string | object | object[] | null ) => {
-  let _url = url;
-  if (params !== null) {
-    _url = url + ((params != null) ? '?' : '');
-    if (typeof params === "string") {
-      _url += `params`;
-    } else {
-      for (const param in params) {
-        if (Object.prototype.hasOwnProperty.call(params, param)) {
-          type ObjectKey = keyof typeof params
-          const key = param as ObjectKey;
-          _url += `${param}=${params[key]}&`;
-        }
-      }
-    }
-  }
-  return _url;
-};
+import { APIPagingResponse, APIResponse } from './model/Response';
 
 type Callback = (data?:object | object[] | string) => void
 
@@ -30,7 +11,8 @@ export interface IRestfulClient {
   getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   getBase64WithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
-  putWithPromise(url: string, params?: object | string):Promise<APIResponse<any>>
+  postWithPaging (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIPagingResponse>
+  putWithPromise(url: string, params?: object | string):Promise<APIResponse<object>>
 
   upload(url:string,
          formData:FormData,
@@ -45,20 +27,23 @@ export class RestfulClient implements IRestfulClient {
     setProgress?:(progress:number) => void ): Promise<APIResponse<any>> {
 
     const { headers } = this.getConf('');
-    return await axios
-      .post(url, formData, {
+    try {
+      const response = await axios.post(url, formData, {
         headers,
         onUploadProgress: (progressEvent) => {
           progressEvent?.total && setProgress && setProgress(
             Math.round((progressEvent.loaded / progressEvent.total) * 100)
           );
         }
-      }).then((response) => {
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      }).catch(error => {
-        const response = error.response;
-        return { status: response ? response.status : 500, data: response ? response.data : null };
       });
+      return {
+        status: response ? response.status : 500,
+        data: response ? response.data : null
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
   download(url: string, fileName:string | undefined): void {
@@ -74,14 +59,14 @@ export class RestfulClient implements IRestfulClient {
   }
 
   get(url: string, params: object | undefined, callback?:Callback): void {
-    const _url = buildUrlWithParams(url, params);
+    const _url = this.buildUrlWithParams(url, params);
 
     axios.get(_url).then(response => {
       (callback != null) && callback(JSON.parse(response.data));
     });
   }
 
-  post(url: string, params?: object | string, callback?: Callback):void {
+  post(url: string, params?: object | string, callback?: Callback): void {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     axios.post(url, params, conf).then(res => {
@@ -91,43 +76,35 @@ export class RestfulClient implements IRestfulClient {
 
   async getBase64WithPromise(url: string, params?: string | object | object[] | undefined): Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
-    return await axios.get(url, {
-      params,
-      responseType: 'arraybuffer',
-      ...this.getConf(contentType)
-    })
-      .then(response => {
-        return {
-          status: response ? response.status : 500,
-          headers: response.headers,
-          data: response.data
-        };
-      })
-      .catch(error => {
-        const response = error.response;
-        return { status: response.status, data: response.data };
+    try {
+      const response = await axios.get(url, {
+        params,
+        responseType: 'arraybuffer',
+        ...this.getConf(contentType)
       });
+      return {
+        status: response ? response.status : 500,
+        data: response.data
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
-  async getWithPromise(
-    url: string,
-    params?: string | object | object[],
-  ):Promise<APIResponse<any>> {
+  async getWithPromise(url: string, params?: string | object | object[],):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = { params: params, ...this.getConf(contentType) };
-    return await axios.get(url, conf)
-      .then(response => {
-        return {
-          status: response ? response.status : 500,
-          headers: response.headers,
-          data: response.data
-        };
-      })
-      .catch(error => {
-        const response = error.response;
-        this.if403Logout(response);
-        return { status: response.status, data: response.data };
-      });
+    try {
+      const response = await axios.get(url, conf);
+      return {
+        status: response ? response.status : 500,
+        data: response.data
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
   async postWithPromise(
@@ -137,43 +114,67 @@ export class RestfulClient implements IRestfulClient {
   ):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(body);
     const conf = { params, ...this.getConf(contentType)};
-    return await axios.post(url, body, conf)
-      .then(response => {
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      })
-      .catch(error => {
-        const response = error.response;
-        this.if403Logout(response);
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      });
+    try {
+      const response = await axios.post(url, body, conf);
+      return { status: response ? response.status : 500, data: response ? response.data : null };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
+  }
+
+  async postWithPaging(
+    url: string,
+    params: string | object | object[] | null,
+    body?: string | object | object[]
+  ):Promise<APIPagingResponse> {
+    const contentType = this.getContentTypeByParams(body);
+    const conf = { params, ...this.getConf(contentType)};
+    try {
+      const response = await axios.post(url, body, conf);
+      const data = response.data;
+      return {
+        success: response.status === 200,
+        msg: data.msg,
+        total: data.total,
+        size: data.size,
+        page: data.page,
+        data: data.data
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
   async putWithPromise(url: string, params: object | string | undefined):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
-    return await axios.put(url, params, conf)
-      .then(response => {
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      })
-      .catch(error => {
-        const response = error.response;
-        this.if403Logout(response);
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      });
+    try {
+      const response = await axios.put(url, params, conf);
+      return {
+        status: response ? response.status : 500,
+        data: response ? response.data : null
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
   async deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
-    return await axios.delete(url, conf)
-      .then(response => {
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      })
-      .catch(error => {
-        const response = error.response;
-        this.if403Logout(response);
-        return { status: response ? response.status : 500, data: response ? response.data : null };
-      });
+    try {
+      const response = await axios.delete(url, conf);
+      return {
+        status: response ? response.status : 500,
+        data: response ? response.data : null
+      };
+    } catch (e:any) {
+      this.if403Logout(e.response);
+      throw e;
+    }
   }
 
   getConf(contentType:string):AxiosRequestConfig {
@@ -203,6 +204,25 @@ export class RestfulClient implements IRestfulClient {
       window.location.assign('/login');
     }
     return;
+  }
+
+  buildUrlWithParams(url: string, params?: string | object | object[] | null ): string {
+    let _url = url;
+    if (params !== null) {
+      _url = url + ((params != null) ? '?' : '');
+      if (typeof params === "string") {
+        _url += `params`;
+      } else {
+        for (const param in params) {
+          if (Object.prototype.hasOwnProperty.call(params, param)) {
+            type ObjectKey = keyof typeof params
+            const key = param as ObjectKey;
+            _url += `${param}=${params[key]}&`;
+          }
+        }
+      }
+    }
+    return _url;
   }
 }
 

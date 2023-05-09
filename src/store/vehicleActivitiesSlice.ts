@@ -20,7 +20,14 @@ export const fetchActivityPriorities = createAsyncThunk('activityPriorities/fetc
 );
 
 export const saveNew = createAsyncThunk('vehicleActivity/new',
-  async (activity: Activity) => activityService.saveNewActivity(activity)
+  async (activity: Activity, {rejectWithValue}) => {
+    try {
+      return await activityService.saveNewActivity(activity);
+    } catch (e:any) {
+      if (!e.response) { throw e; }
+      return rejectWithValue(e.response.data.details);
+    }
+  }
 );
 
 export const saveUpdate = createAsyncThunk('vehicleActivity/update',
