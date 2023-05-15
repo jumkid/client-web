@@ -74,10 +74,10 @@ function ActivityMainDialog ({vehicleId, showDialog, setShowDialog}:Props) {
   const deleteConfirm = () => {
     dispatch(deleteActivity(currentActivity.id)).then(
       () => {
+        handleClose();
         dispatch(fetchVehicleActivities(vehicleId));
       }
     );
-    handleClose();
     setIsConfirmOpen(false);
   }
 

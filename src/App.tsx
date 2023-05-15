@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { CarOwner } from './feature/UserGarage/Dashboard';
+import { CarOwner } from './feature/CustomerGarage/Dashboard';
 import { Professional } from './feature/ProfessionalGarage/Dashboard';
 import { UserLogin, UserSignUp } from './security/AuthUser';
 import NotFound from './NotFound';

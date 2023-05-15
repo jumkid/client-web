@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { DesignTokens } from '../Layout.Theme';
-import TopBar from '../MainLayout/MainLayout.TopBar';
 import { ThemeProvider } from '@emotion/react';
 import { Container } from '@mui/material';
 import './SimpleLayout.css';
+import TopBar from './SimpleLayout.TopBar';
 
 type Props = {
     children: ReactNode
@@ -16,7 +16,7 @@ function SimpleLayout (props: Props) {
 
   return (
     <ThemeProvider theme={jkTheme}>
-      <TopBar menuSettings={[]} userSettings={[]}/>
+      <TopBar />
 
       <Container maxWidth='md' sx={{ height: '90vh' }}>
         { props.children }

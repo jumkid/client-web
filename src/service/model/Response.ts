@@ -3,6 +3,12 @@ export interface APIResponse<T> {
   data: T | null
 }
 
+export interface APIResponseWithHeaders<T> {
+  status: number
+  headers: any
+  data: T | null
+}
+
 export interface APIPagingResponse {
   success: boolean
   msg: string | null

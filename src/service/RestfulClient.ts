@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
-import { APIPagingResponse, APIResponse } from './model/Response';
+import { APIPagingResponse, APIResponse, APIResponseWithHeaders } from './model/Response';
 
 type Callback = (data?:object | object[] | string) => void
 
@@ -74,7 +74,7 @@ export class RestfulClient implements IRestfulClient {
     });
   }
 
-  async getBase64WithPromise(url: string, params?: string | object | object[] | undefined): Promise<APIResponse<any>> {
+  async getBase64WithPromise(url: string, params?: string | object | object[] | undefined): Promise<APIResponseWithHeaders<any>> {
     const contentType = this.getContentTypeByParams(params);
     try {
       const response = await axios.get(url, {
@@ -84,6 +84,7 @@ export class RestfulClient implements IRestfulClient {
       });
       return {
         status: response ? response.status : 500,
+        headers: response.headers,
         data: response.data
       };
     } catch (e:any) {
@@ -147,7 +148,7 @@ export class RestfulClient implements IRestfulClient {
     }
   }
 
-  async putWithPromise(url: string, params: object | string | undefined):Promise<APIResponse<any>> {
+  async putWithPromise(url: string, params?: object | string):Promise<APIResponse<any>> {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     try {
@@ -198,12 +199,13 @@ export class RestfulClient implements IRestfulClient {
     return 'application/x-www-form-urlencoded';
   }
 
-  if403Logout(response:AxiosResponse):void {
+  if403Logout(response:AxiosResponse):boolean {
     if (response && response.status === 403) {
       authenticationManager.logout();
       window.location.assign('/login');
+      return true;
     }
-    return;
+    return false;
   }
 
   buildUrlWithParams(url: string, params?: string | object | object[] | null ): string {

@@ -1,5 +1,5 @@
 import * as C from '../App.constants';
-import { APIResponse, ContentMetadata } from './model/Response';
+import { APIResponse, APIResponseWithHeaders, ContentMetadata } from './model/Response';
 import restfulClient from './RestfulClient';
 import { ContentResource } from '../store/model/Activity';
 
@@ -18,7 +18,7 @@ export interface IContentService {
 
 class ContentService implements IContentService{
 
-  async getContentThumbnail(uuid: string, thumbnailSize: string): Promise<any> {
+  async getContentThumbnail(uuid: string, thumbnailSize: string): Promise<APIResponseWithHeaders<any>> {
     return await restfulClient.getBase64WithPromise(`${C.CONTENT_THUMBNAIL_API}/${uuid}?size=${thumbnailSize}`);
   }
 
@@ -26,7 +26,7 @@ class ContentService implements IContentService{
     return await restfulClient.getBase64WithPromise(`${C.CONTENT_STREAM_API}/${uuid}`);
   }
 
-  async getContentMetadata(uuid: string):Promise<APIResponse<ContentMetadata>> {
+  async getContentMetadata(uuid: string): Promise<APIResponse<ContentMetadata>> {
     return await restfulClient.getWithPromise(`${C.CONTENT_METADATA_API}/${uuid}`);
   }
 
@@ -45,7 +45,7 @@ class ContentService implements IContentService{
 
   }
 
-  async getGalleryItemIds(galleryId:string):Promise<string[]> {
+  async getGalleryItemIds(galleryId:string): Promise<string[]> {
     try {
       const {data} = await this.getContentMetadata(galleryId);
       return data?.children.map(metadata => metadata.uuid) || [];
@@ -54,13 +54,15 @@ class ContentService implements IContentService{
     }
   }
 
-  async upload(file:Blob,
+  async upload(
+    file:Blob,
     accessScope: "public" | "private",
-    setProgress?:(progress:number) => void):Promise<APIResponse<ContentMetadata>> {
+    setProgress?:(progress:number) => void): Promise<APIResponse<ContentMetadata>> {
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("accessScope", accessScope);
+
     return await restfulClient.upload(C.CONTENT_UPLOAD_API, formData, setProgress);
   }
 

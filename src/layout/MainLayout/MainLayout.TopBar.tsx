@@ -1,25 +1,27 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   AppBar,
   Avatar,
   Badge,
   Box,
   Container,
-  Divider,
+  Divider, Drawer,
   Icon,
-  IconButton,
+  IconButton, ListItem, ListItemText,
   Menu,
-  MenuItem,
+  MenuItem, Paper,
   Toolbar,
   Tooltip,
   Typography
 } from '@mui/material';
 import NavButtons from './MainLayout.NavButtons';
-import { Notifications } from '@mui/icons-material';
+import { Notifications, Event, Close } from '@mui/icons-material';
 import { MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
 import { RootState } from '../../store';
 import { useAppSelector } from '../../App.hooks';
+import { userService } from '../../service';
+import UserActivity from './model/UserActivity';
 
 type Props = {
   menuSettings: MenuSetting[],
@@ -27,9 +29,12 @@ type Props = {
 }
 
 const initialElement: HTMLButtonElement | null = null;
+const initialUserActivities: UserActivity[] = [];
 
 function TopBar ({ menuSettings, userSettings }: Props) {
   const [anchorElUser, setAnchorElUser] = useState(initialElement);
+  const [userActivities, setUserActivities] = useState(initialUserActivities);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
   const userProfile = tokenUser.userProfile;
@@ -44,17 +49,37 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     })));
   }, []);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  useEffect(() => {
+    userService.getUserActivities()
+      .then(response => {
+        setUserActivities(response.data || []);
+      });
+  },[]);
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>):void => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = ():void => {
     setAnchorElUser(null);
   };
 
-  const handleNotification = () => {
-    console.log('click notification');
+  const toggleDrawer = ():void => {
+    setDrawerOpen(prevState => !prevState);
   };
+
+  const handleActivityClick = (userActivity:UserActivity):void => {
+    console.log(userActivity.id);
+    toggleDrawer();
+  }
+
+  const closeActivity = async (id: number): Promise<any> => {
+    console.log(id);
+    const response = await userService.closeUserActivity(id);
+    if (response.status === 202) {
+      setUserActivities(prevState => prevState.filter(userActivity => userActivity.id !== id));
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -65,21 +90,44 @@ function TopBar ({ menuSettings, userSettings }: Props) {
 
           <Box sx={{ flex: 1 }}/>
 
-          { tokenUser && userSettings.length > 0 && <IconButton onClick={handleNotification} aria-label="check notification">
-            <Badge sx={{ mr: 2 }} badgeContent={1} overlap="circular" color="success">
+          { tokenUser &&
+          <IconButton onClick={toggleDrawer} aria-label="check notification" disabled={userActivities.length < 1}>
+            <Badge sx={{ mr: 2 }} badgeContent={userActivities.length} overlap="circular" color="success">
               <Notifications fontSize='large'/>
             </Badge>
           </IconButton> }
 
+          <Drawer
+            open={drawerOpen}
+            anchor='right'
+            sx={{width: '230px', px: 2, opacity: '96%'}}
+            onClose={toggleDrawer}
+          >
+            <Paper sx={{ m: 2, borderRadius: '13px' }}>
+              { userActivities.map((userActivity, idx) => (
+                <ListItem key={idx}>
+                  <Event sx={{ mr:1 }} fontSize={'small'}/>
+                  <ListItemText
+                    sx={{cursor: 'pointer', textDecoration: 'underline', mr: 2}}
+                    primary={userActivity.title}
+                    onClick={() => handleActivityClick(userActivity)}
+                  />
+                  <IconButton onClick={() => closeActivity(userActivity.id)}><Close fontSize={'small'}/></IconButton>
+                </ListItem>
+              ))}
+            </Paper>
+          </Drawer>
+
           <Box>
-            { tokenUser && userSettings.length > 0 && <Tooltip title="Open settings">
+            { tokenUser && <Tooltip title="Open settings">
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
                 {!userAvatar && <Avatar alt={userName} />}
                 {userAvatar && <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />}
               </IconButton>
             </Tooltip> }
 
-            <Menu id="menu-appbar"
+            <Menu
+              id="menu-appbar"
               sx={{ mt: '8px' }}
               anchorEl={anchorElUser}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -87,7 +135,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {userSettings.map((setting, index) => (
+              { userSettings.map((setting, index) => (
                 setting.title === '-'
                   ? <Divider key={index}/>
                   : <MenuItem sx={{ minWidth: '148px' }}
