@@ -1,23 +1,29 @@
-import { APIResponse } from './model/Response';
-import { USER_ACTIVITY_API } from '../App.constants';
+import { APIResponse, CommonResponse } from './model/Response';
+import { USER_ACTIVITY_NOTIFICATION_API } from '../App.constants';
 import restfulClient from './RestfulClient';
-import UserActivity from '../layout/MainLayout/model/UserActivity';
+import ActivityNotification from '../layout/MainLayout/model/ActivityNotification';
 
 interface IUserService {
-  getUserActivities():Promise<APIResponse<any>>
-  closeUserActivity(id:number):Promise<APIResponse<any>>
+  getActivityNotifications():Promise<APIResponse<any>>
+  readActivityNotification(id:number):Promise<APIResponse<CommonResponse>>
+  deleteActivityNotification(id:number):Promise<APIResponse<any>>
 }
 
 class UserService implements IUserService {
-  async getUserActivities(): Promise<APIResponse<UserActivity[]>> {
-    return await restfulClient.getWithPromise(USER_ACTIVITY_API);
+
+  async getActivityNotifications(): Promise<APIResponse<ActivityNotification[]>> {
+    return await restfulClient.getWithPromise(USER_ACTIVITY_NOTIFICATION_API);
   }
 
-  async closeUserActivity (id:number): Promise<APIResponse<any>> {
-    const url = `${USER_ACTIVITY_API}/${id}/unread`;
+  async readActivityNotification (id:number): Promise<APIResponse<CommonResponse>> {
+    const url = `${USER_ACTIVITY_NOTIFICATION_API}/${id}/unread`;
     return await restfulClient.putWithPromise(url);
   }
 
+  async deleteActivityNotification (id:number): Promise<APIResponse<CommonResponse>> {
+    const url = `${USER_ACTIVITY_NOTIFICATION_API}/${id}`;
+    return await restfulClient.deleteWithPromise(url);
+  }
 }
 
 export default UserService;

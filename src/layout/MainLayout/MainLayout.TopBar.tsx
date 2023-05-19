@@ -5,23 +5,23 @@ import {
   Badge,
   Box,
   Container,
-  Divider, Drawer,
+  Divider,
   Icon,
-  IconButton, ListItem, ListItemText,
+  IconButton,
   Menu,
-  MenuItem, Paper,
+  MenuItem,
   Toolbar,
   Tooltip,
   Typography
 } from '@mui/material';
 import NavButtons from './MainLayout.NavButtons';
-import { Notifications, Event, Close } from '@mui/icons-material';
+import { Notifications } from '@mui/icons-material';
 import { MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
 import { RootState } from '../../store';
-import { useAppSelector } from '../../App.hooks';
-import { userService } from '../../service';
-import UserActivity from './model/UserActivity';
+import { useAppDispatch, useAppSelector } from '../../App.hooks';
+import NotificationDrawer from '../../feature/UserOriented/NotificationDrawer';
+import { fetchUserActivityNotifications } from '../../store/userNotificationsSlice';
 
 type Props = {
   menuSettings: MenuSetting[],
@@ -29,11 +29,9 @@ type Props = {
 }
 
 const initialElement: HTMLButtonElement | null = null;
-const initialUserActivities: UserActivity[] = [];
 
 function TopBar ({ menuSettings, userSettings }: Props) {
   const [anchorElUser, setAnchorElUser] = useState(initialElement);
-  const [userActivities, setUserActivities] = useState(initialUserActivities);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
@@ -49,11 +47,11 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     })));
   }, []);
 
+  const userNotificationsCount = useAppSelector((state:RootState) => state.userNotifications.count);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    userService.getUserActivities()
-      .then(response => {
-        setUserActivities(response.data || []);
-      });
+    dispatch(fetchUserActivityNotifications())
   },[]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>):void => {
@@ -68,19 +66,6 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     setDrawerOpen(prevState => !prevState);
   };
 
-  const handleActivityClick = (userActivity:UserActivity):void => {
-    console.log(userActivity.id);
-    toggleDrawer();
-  }
-
-  const closeActivity = async (id: number): Promise<any> => {
-    console.log(id);
-    const response = await userService.closeUserActivity(id);
-    if (response.status === 202) {
-      setUserActivities(prevState => prevState.filter(userActivity => userActivity.id !== id));
-    }
-  }
-
   return (
     <AppBar position="static">
       <Container maxWidth={false} disableGutters={true}>
@@ -91,32 +76,13 @@ function TopBar ({ menuSettings, userSettings }: Props) {
           <Box sx={{ flex: 1 }}/>
 
           { tokenUser &&
-          <IconButton onClick={toggleDrawer} aria-label="check notification" disabled={userActivities.length < 1}>
-            <Badge sx={{ mr: 2 }} badgeContent={userActivities.length} overlap="circular" color="success">
+          <IconButton onClick={toggleDrawer} aria-label="check notification" disabled={userNotificationsCount < 1}>
+            <Badge sx={{ mr: 2 }} badgeContent={userNotificationsCount} overlap="circular" color="success">
               <Notifications fontSize='large'/>
             </Badge>
           </IconButton> }
 
-          <Drawer
-            open={drawerOpen}
-            anchor='right'
-            sx={{width: '230px', px: 2, opacity: '96%'}}
-            onClose={toggleDrawer}
-          >
-            <Paper sx={{ m: 2, borderRadius: '13px' }}>
-              { userActivities.map((userActivity, idx) => (
-                <ListItem key={idx}>
-                  <Event sx={{ mr:1 }} fontSize={'small'}/>
-                  <ListItemText
-                    sx={{cursor: 'pointer', textDecoration: 'underline', mr: 2}}
-                    primary={userActivity.title}
-                    onClick={() => handleActivityClick(userActivity)}
-                  />
-                  <IconButton onClick={() => closeActivity(userActivity.id)}><Close fontSize={'small'}/></IconButton>
-                </ListItem>
-              ))}
-            </Paper>
-          </Drawer>
+          <NotificationDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
 
           <Box>
             { tokenUser && <Tooltip title="Open settings">

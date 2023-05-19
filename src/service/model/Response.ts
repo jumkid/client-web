@@ -24,6 +24,13 @@ export interface AuthResponse {
   data: any | null
 }
 
+export interface CommonResponse {
+  success: boolean
+  errorCode: string
+  msg: string
+  data: object | []
+}
+
 export interface ContentMetadata {
   uuid: string
   filename: string

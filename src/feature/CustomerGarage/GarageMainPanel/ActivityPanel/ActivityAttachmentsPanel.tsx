@@ -59,10 +59,10 @@ function ActivityAttachmentsPanel () {
       const newContentResource:ContentResource = {contentResourceId: response.data.uuid};
       if (currentActivity.id > 0) {
         newContentResource.activityId = currentActivity.id;
+        const { payload } = await dispatch(saveActivityContent(newContentResource));
+        const { data } = payload as APIResponse<ContentResource>;
+        newContentResource.id = data?.id;
       }
-      const { payload } = await dispatch(saveActivityContent(newContentResource));
-      const { data } = payload as APIResponse<ContentResource>;
-      newContentResource.id = data?.id;
 
       const updateContentResources = [...(currentActivity.contentResources ?? []), newContentResource];
       dispatch(changeContentResources(updateContentResources));

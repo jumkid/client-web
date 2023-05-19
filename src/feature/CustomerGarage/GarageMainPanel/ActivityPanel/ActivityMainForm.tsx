@@ -73,7 +73,7 @@ function ActivityMainForm ({vehicleId}:Props) {
 
   const handleStartDateChange = (newValue: Dayjs | null) => {
     dispatch(changeStartDate(newValue?.format(DATETIME_FORMAT)));
-    validator.validateStartDate(newValue, dayjs(activity.endDate));
+    validator.validateStartDate(newValue, _.isNil(activity.endDate) ? null : dayjs(activity.endDate));
     validateForm();
   };
 

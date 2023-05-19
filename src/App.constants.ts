@@ -42,7 +42,7 @@ export const ACTIVITY_API:string = _API_URL + process.env.REACT_APP_ACTIVITY_API
 export const ACTIVITIES_API:string = _API_URL + process.env.REACT_APP_ACTIVITIES_API;
 export const ACTIVITY_CONTENT_API:string = _API_URL + process.env.REACT_APP_ACTIVITY_CONTENT_API;
 
-export const USER_ACTIVITY_API:string = _API_URL + process.env.REACT_APP_USER_ACTIVITIES_API;
+export const USER_ACTIVITY_NOTIFICATION_API:string = _API_URL + process.env.REACT_APP_USER_ACTIVITY_NOTIFICATION_API;
 
 export const DOMAIN_IMAGES_API:string = _API_URL + process.env.REACT_APP_DOMAIN_IMAGE_API;
 export const DOMAIN_IMAGES_AUTO_BRAND_API:string = DOMAIN_IMAGES_API + '/automobile/brand';

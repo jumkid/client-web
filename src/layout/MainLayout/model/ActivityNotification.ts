@@ -1,4 +1,4 @@
-export default interface UserActivity {
+export default interface ActivityNotification {
   id: number,
   userId: string,
   entityId: string,
