@@ -6,6 +6,13 @@ import { userService } from '../../../service';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { RootState } from '../../../store';
 import { readActivityNotification, removeActivityNotification } from '../../../store/userNotificationsSlice';
+import { fetchActivity } from '../../../store/vehicleActivitiesSlice';
+import { APIResponse } from '../../../service/model/Response';
+import { Activity } from '../../../store/model/Activity';
+import { VEHICLE } from '../../../App.constants';
+import * as _ from 'lodash';
+import { changePick } from '../../../store/userVehiclesSlice';
+import { SIDE_TABS_OFFSET } from '../../CustomerGarage/GarageSideBar/GarageSideTabs';
 
 interface Props {
   drawerOpen: boolean
@@ -14,16 +21,32 @@ interface Props {
 
 function NotificationDrawer ({drawerOpen, toggleDrawer}:Props) {
   const activityNotifications = useAppSelector((state:RootState) => state.userNotifications.activityNotifications);
+  const userVehicles = useAppSelector((state:RootState) => state.userVehicles.vehicles);
   const dispatch = useAppDispatch();
 
   const handleClick = async (activityNotification:ActivityNotification):Promise<any> => {
     const activityNotificationId = activityNotification.id;
+    const activityId = parseInt(activityNotification.entityId);
     if (activityNotification.unread) {
       const response = await userService.readActivityNotification(activityNotificationId);
       if (response.data?.success) {
         dispatch(readActivityNotification(activityNotificationId));
       }
     }
+
+    dispatch(fetchActivity(activityId)).then(
+      (response) => {
+        //locate vehicle profile
+        const payload = response.payload as APIResponse<Activity>;
+        const activity = payload.data;
+        const entityLinks = activity?.activityEntityLinks || []
+        const first = entityLinks.findIndex(entityLink => entityLink.entityName === VEHICLE);
+        const vehicleId = _.isUndefined(first) ? null : entityLinks[first].entityId;
+        const vehicleIdx = userVehicles.findIndex(vehicle => vehicle.id === vehicleId);
+        dispatch(changePick(vehicleIdx + SIDE_TABS_OFFSET));
+      }
+    );
+
     toggleDrawer();
   }
 

@@ -22,12 +22,12 @@ export const deleteVehicle = createAsyncThunk('userVehicles/delete',
 
 interface UserVehicleListState {
   currentPick: number
+  currentVehicle: VehicleProfile | null
+  vehicles: VehicleProfile[]
   keyword: string
   total: number
   page: number
   pageSize: number
-  vehicles: VehicleProfile[]
-  currentVehicle: VehicleProfile | null
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error?: string | undefined
 }

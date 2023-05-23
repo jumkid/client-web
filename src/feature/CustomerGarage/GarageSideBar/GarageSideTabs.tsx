@@ -7,6 +7,8 @@ import { grey } from '@mui/material/colors';
 import { changePick } from '../../../store/userVehiclesSlice';
 import SideTabWaitSkeleton from './SideTabWaitSkeleton';
 
+export const SIDE_TABS_OFFSET = 2;
+
 function GarageSideTabs () {
   const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);

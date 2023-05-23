@@ -25,6 +25,7 @@ import {
 import { AppDispatch, RootState } from '../../../store';
 import CardWaitSkeleton from '../VehicleConnector/CardWaitSkeleton';
 import * as _ from 'lodash';
+import { SIDE_TABS_OFFSET } from '../GarageSideBar/GarageSideTabs';
 
 function VehicleListViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -55,7 +56,7 @@ function VehicleListViewer () {
 
   const handleClick = (index:number):void => {
     // the first two index (0 and 1) of tabs are used for specific actions
-    dispatch(changePick(index + 2));
+    dispatch(changePick(index + SIDE_TABS_OFFSET));
   };
 
   const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined):void => {
