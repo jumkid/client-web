@@ -50,8 +50,16 @@ function TopBar ({ menuSettings, userSettings }: Props) {
   const userNotificationsCount = useAppSelector((state:RootState) => state.userNotifications.count);
   const dispatch = useAppDispatch();
 
+  const autoRefresh = ():ReturnType<typeof setInterval> => {
+    dispatch(fetchUserActivityNotifications()); // run at the very first time
+    return setInterval(() => {
+      dispatch(fetchUserActivityNotifications());
+    }, 5000);
+  }
+
   useEffect(() => {
-    dispatch(fetchUserActivityNotifications())
+    const autoRefreshEvent = autoRefresh();
+    return () => { clearInterval(autoRefreshEvent); }
   },[]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>):void => {
