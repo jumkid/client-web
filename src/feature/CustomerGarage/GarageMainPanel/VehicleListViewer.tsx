@@ -106,7 +106,7 @@ function VehicleListViewer () {
               onChange={handleSearchChange}
               disabled={isSubmitted}
               InputProps={{
-                startAdornment: <Search color="primary" fontSize="medium" sx={{ mr: 1 }}/>,
+                startAdornment: <Search color="primary" fontSize="medium" sx={{ mr:1 }}/>,
                 endAdornment: (<IconButton
                   sx={{visibility: keyword? "visible": "hidden"}}
                   onClick={handleClearClick}><Clear/></IconButton>)
@@ -116,7 +116,7 @@ function VehicleListViewer () {
         </FormControl>
       </form>
 
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p:1 }}>
         <TablePagination
           component="div"
           count={total}
