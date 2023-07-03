@@ -15,7 +15,13 @@ import * as C from '../../../App.constants';
 import * as _ from 'lodash';
 import ConfirmDialog from '../../../component/ConfirmDialog';
 import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedVehicleSlice';
-import { fetchMatchVehicles, setMatchVehicles, setStatus } from '../../../store/searchVehiclesSlice';
+import {
+  clearMatchFields,
+  fetchMatchVehicles,
+  setMatchFields,
+  setMatchVehicles,
+  setStatus
+} from '../../../store/searchVehiclesSlice';
 import { APIResponse } from '../../../service/model/Response';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 
@@ -39,6 +45,8 @@ function VehicleFormActionsBar () {
 
     try {
       await dispatch(saveNewVehicle({...currentVehicle, id: null}));
+      dispatch(clearMatchFields());
+      dispatch(setMatchVehicles([]));
       dispatch(setConnectorStep(0));
     } catch (error) {
       console.error(error)

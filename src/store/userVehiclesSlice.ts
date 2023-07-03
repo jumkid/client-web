@@ -183,8 +183,6 @@ export const userVehiclesSlice = createSlice({
         state.currentVehicleStatus = C.SUCCEEDED;
         if (action.payload.status === 201) {
           state.vehicles.push(action.payload.data);
-          state.currentPick = state.vehicles.length + 1; // jump to the new vehicle as current pick
-          state.currentVehicle = state.vehicles[state.vehicles.length - 1];
         }
       })
       .addCase(updateUserVehicleName.fulfilled, (state, action) => {
