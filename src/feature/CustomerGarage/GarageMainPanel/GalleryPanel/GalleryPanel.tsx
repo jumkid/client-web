@@ -64,19 +64,24 @@ const reducer = (state:ComponentState, action:Action):ComponentState => {
 }
 
 type Props = {
+  mode: 'simple' | 'active'
   mediaGalleryId?:string | null
 }
 
-function GalleryPanel ({mediaGalleryId}:Props) {
+function GalleryPanel ({mode, mediaGalleryId}:Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!mediaGalleryId) {
+      dispatch({ type: 'setItemsId', payload: [] });
+      return;
+    }
+
     clearInterval(state.intervalEvent);
     setStep(0);
     setLoading(true);
-    if (!mediaGalleryId) { return; }
 
     contentService.getGalleryItemIds(mediaGalleryId)
       .then((items) => { dispatch({ type: 'setItemsId', payload: items });});
@@ -146,7 +151,7 @@ function GalleryPanel ({mediaGalleryId}:Props) {
   return (
     <Box
       width="100%"
-      height="380px"
+      height={mode === 'active' ? '364px' : '176px'}
       className="drawboard"
       sx={{ py: 1, gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}
     >
@@ -184,10 +189,10 @@ function GalleryPanel ({mediaGalleryId}:Props) {
         </Box>
         }
         <Box>
-          <Button color="primary" onClick={toggleAutoplay}>
+          { mode === 'active' && <Button color="primary" onClick={toggleAutoplay}>
             { !state.autoplay ? <PlayCircleOutline/> : <Pause/> }
             Autoplay
-          </Button>
+          </Button> }
         </Box>
       </Stack>
 

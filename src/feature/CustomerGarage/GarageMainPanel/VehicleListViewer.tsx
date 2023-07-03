@@ -130,7 +130,7 @@ function VehicleListViewer () {
         />
         { <CardWaitSkeleton isShown={status === 'loading'} /> }
         { _.isEmpty(userVehicles) && (status !== 'loading') &&
-        <Typography variant='h5'>There is no vehicle in your garage yet, click the connect button to start.</Typography>}
+        <Typography variant='h6' m={3}>There is no vehicle in your garage, click the connect button to start.</Typography>}
         { userVehicles?.map((vehicle, index) => (
           <Card raised key={index}>
             <CardHeader

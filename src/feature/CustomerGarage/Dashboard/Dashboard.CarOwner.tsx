@@ -12,7 +12,7 @@ function CarOwner () {
   const userVehiclesStatus = useAppSelector(state => state.userVehicles.status);
 
   useEffect(() => {
-    if (userVehiclesStatus === 'idle') {
+    if (userVehiclesStatus === C.IDLE) {
       const pagingSearch = { keyword: '*', page: 1, size: C.DEFAULT_PAGE_SIZE }
       dispatch(fetchUserVehicles(pagingSearch));
     }

@@ -1,7 +1,8 @@
 import { Activity, ContentResource, Priority } from './model/Activity';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { activityService } from '../service';
-import { FAILED, IDLE, LOADING, SUCCEEDED } from '../App.constants';
+import { FormStatus } from '../service/model/CommonTypes';
+import * as C from '../App.constants';
 
 export const fetchVehicleActivities = createAsyncThunk('vehicleActivities/fetch',
   async (entityId: string) => activityService.getByEntityId(entityId)
@@ -51,7 +52,7 @@ type VehicleActivitiesState = {
   activities: Activity[] | null
   activityPriorities: Priority[] | null
   activityStatuses: string[] | null
-  status: IDLE | LOADING | SUCCEEDED | FAILED
+  status: FormStatus
 };
 
 const currentTime = new Date();
@@ -71,7 +72,7 @@ const initialState: VehicleActivitiesState = {
   activities: [],
   activityPriorities: [],
   activityStatuses: [],
-  status: IDLE
+  status: C.IDLE
 };
 
 export const vehicleActivitiesSlice = createSlice({
@@ -113,25 +114,25 @@ export const vehicleActivitiesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchVehicleActivities.pending, (state) => {
-        state.status = LOADING;
+        state.status = C.LOADING;
       })
       .addCase(fetchVehicleActivities.fulfilled, (state, action) => {
-        state.status = SUCCEEDED;
+        state.status = C.SUCCEEDED;
         state.activities = action.payload.data;
       })
       .addCase(fetchVehicleActivities.rejected, (state) => {
-        state.status = FAILED;
+        state.status = C.FAILED;
       })
       .addCase(fetchActivity.pending, (state) => {
-        state.status = LOADING;
+        state.status = C.LOADING;
       })
       .addCase(fetchActivity.fulfilled, (state, action) => {
-        state.status = SUCCEEDED;
+        state.status = C.SUCCEEDED;
         const data = action.payload.data;
         if (data != null) state.currentActivity = data;
       })
       .addCase(fetchActivity.rejected, (state) => {
-        state.status = FAILED;
+        state.status = C.FAILED;
       })
       .addCase(fetchActivityPriorities.fulfilled, (state, action) => {
         state.activityPriorities = action.payload.data;

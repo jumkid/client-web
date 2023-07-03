@@ -22,7 +22,7 @@ function VehicleConnector () {
     case 1:
       return <PreviewVehicleStep connectedVehicle={connectedVehicle!}/>
     case 2:
-      return <AddToGarageStep connectedVehicle={connectedVehicle!}/>
+      return <AddToGarageStep />
     default:
       return <VehicleFinderStep currentTab={currentTab} handleTabChange={handleTabChange}/>;
     }

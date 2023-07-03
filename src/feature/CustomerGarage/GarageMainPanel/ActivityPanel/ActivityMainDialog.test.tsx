@@ -7,10 +7,10 @@ import { render, screen } from '@testing-library/react';
 describe(ActivityMainDialog, () => {
   it('Should render correctly', () => {
     render(
-        <Provider store={store}>
-          <ActivityMainDialog setShowDialog={(showDialog)=>{}} showDialog={true} vehicleId='abed-1234'/>
-        </Provider>
-      );
+      <Provider store={store}>
+        <ActivityMainDialog setShowDialog={(showDialog):void => {}} showDialog={true} vehicleId='abed-1234'/>
+      </Provider>
+    );
     expect(screen.getByText(/Activity Details/i)).toBeDefined();
   });
 });

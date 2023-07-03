@@ -2,6 +2,7 @@ import * as C from '../App.constants';
 import { APIResponse, APIResponseWithHeaders, ContentMetadata } from './model/Response';
 import restfulClient from './RestfulClient';
 import { ContentResource } from '../store/model/Activity';
+import { AccessScope } from './model/CommonTypes';
 
 export interface IContentService {
   getContentMetadata(uuid:string):Promise<APIResponse<ContentMetadata>>
@@ -10,7 +11,7 @@ export interface IContentService {
   getContentSteam(uuid:string):Promise<any>
   getGalleryItemIds(galleryId:string):Promise<string[]>
 
-  upload(file:Blob, accessScope: "public" | "private", setProgress:(progress:number) => void):Promise<APIResponse<ContentMetadata>>
+  upload(file:Blob, accessScope: AccessScope, setProgress:(progress:number) => void):Promise<APIResponse<ContentMetadata>>
   download(uuid:string, fileName:string | undefined):void
 
   deleteContentMetadata(id:string):Promise<APIResponse<any>>
@@ -56,7 +57,7 @@ class ContentService implements IContentService{
 
   async upload(
     file:Blob,
-    accessScope: "public" | "private",
+    accessScope: AccessScope,
     setProgress?:(progress:number) => void): Promise<APIResponse<ContentMetadata>> {
 
     const formData = new FormData();

@@ -15,6 +15,7 @@ export interface IVehicleService {
   getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse | null>
   getByVin: (vin:string) => Promise<APIResponse<any>>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse<any>>
+  update: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
 }
 
@@ -46,6 +47,11 @@ class VehicleService implements IVehicleService {
   async getByVin (vin:string): Promise<APIResponse<any>> {
     const url = `${C.VEHICLE_VIN_DECODE_API}/${vin}`;
     return await restfulClient.getWithPromise(url);
+  }
+
+  async update (id:string, vehicleProfile:VehicleProfile): Promise<APIResponse<VehicleProfile>> {
+    const url = `${C.VEHICLES_API}/${id}`;
+    return await restfulClient.putWithPromise(url, vehicleProfile);
   }
 
   async updateName (id:string, vehicleProfile:VehicleProfile): Promise<APIResponse<any>> {

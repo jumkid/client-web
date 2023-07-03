@@ -1,7 +1,6 @@
 import { VehicleEngine } from './VehicleEngine';
 import { VehicleTransmission } from './VehicleTransmission';
-
-type AccessScope = "private" | "public"
+import { AccessScope } from '../../service/model/CommonTypes';
 
 export interface VehicleProfile {
     id?: string | null

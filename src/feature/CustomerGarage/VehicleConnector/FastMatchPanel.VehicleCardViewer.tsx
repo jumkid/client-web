@@ -1,6 +1,6 @@
 import React from 'react';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import { Box, Card, CardActionArea, CardContent, Fade, Stack } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Fade, Link, Stack, Typography } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch } from '../../../App.hooks';
@@ -13,7 +13,7 @@ interface Prop {
 function VehicleCardViewer ({vehicles}:Prop) {
   const dispatch = useAppDispatch();
 
-  const handleClick = (vehicle:VehicleProfile): void => {
+  const handleViewClick = (vehicle:VehicleProfile): void => {
     dispatch(setConnectedVehicle(vehicle));
     dispatch(setConnectorStep(1));
   }
@@ -22,23 +22,25 @@ function VehicleCardViewer ({vehicles}:Prop) {
     <Fade in={true}>
       <Box>
         { vehicles?.map((vehicle, index) => (
-          <Card sx={{ width: 236, height: 168 }} raised key={index}>
-            <CardActionArea sx={{ height: '100%' }} onClick={() => handleClick(vehicle)}>
-              <CardContent sx={{ verticalAlign: "top" }}>
-                <Stack direction="row" alignItems="top" gap={1} fontSize="medium" mb={2}>
-                  <FontAwesomeIcon icon={faCar} size="1x"/>{vehicle.vehicleEngine!.name}
-                </Stack>
-                <Stack direction="row" alignItems="top" gap={1} fontSize="medium" mb={2}>
-                  <FontAwesomeIcon icon={faGears} size="1x"/>{vehicle.vehicleTransmission!.name}
-                </Stack>
-                <Stack direction="row" alignItems="top" gap={1} fontSize="medium" mb={1}>
-                  <FontAwesomeIcon icon={faCarSide} size="1x"/>{vehicle.vehicleTransmission!.drivetrain}
-                </Stack>
-              </CardContent>
-            </CardActionArea>
+          <Card sx={{ width: 236, height: 146 }} raised key={index}>
+            <CardContent sx={{ verticalAlign: "top" }}>
+              <Typography fontSize="16px" fontWeight="bold" noWrap={true}>
+                <FontAwesomeIcon icon={faCar} size="1x" width={23}/> {vehicle.vehicleEngine!.name}
+              </Typography>
+              <Typography fontSize="16px" fontWeight="bold" noWrap={true}>
+                <FontAwesomeIcon icon={faGears} size="1x" width={23}/> {vehicle.vehicleTransmission!.name}
+              </Typography>
+              <Typography fontSize="16px" fontWeight="bold" noWrap={true}>
+                <FontAwesomeIcon icon={faCarSide} size="1x" width={23}/> {vehicle.vehicleTransmission!.drivetrain}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Link color="secondary" variant="body1" onClick={() => handleViewClick(vehicle)}>
+                VIEW
+              </Link>
+            </CardActions>
           </Card>
-        )
-        )}
+        ))}
       </Box>
     </Fade>
   )

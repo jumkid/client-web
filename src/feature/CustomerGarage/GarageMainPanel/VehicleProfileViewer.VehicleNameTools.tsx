@@ -1,10 +1,19 @@
-import React, { useEffect, useReducer } from 'react';
-import { Box, Button, IconButton, TextField } from '@mui/material';
-import { Delete, ModeEdit } from '@mui/icons-material';
+import React, { useContext, useEffect, useMemo, useReducer } from 'react';
+import { Box, Button, CircularProgress, IconButton, TextField } from '@mui/material';
+import { Add, Delete, ModeEdit, Save } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { deleteVehicle, updateUserVehicleName } from '../../../store/userVehiclesSlice';
+import {
+  deleteVehicle,
+  saveNewVehicle,
+  syncCurrentVehicleToList,
+  updateUserVehicleName,
+  updateVehicle
+} from '../../../store/userVehiclesSlice';
 import { RootState } from '../../../store';
 import ConfirmDialog from '../../../component/ConfirmDialog';
+import authenticationManager from '../../../security/Auth/AuthenticationManager';
+import { ErrorsContext } from './VehicleProfileContext';
+import * as _ from 'lodash';
 
 type ComponentState = {
   name: string
@@ -36,17 +45,19 @@ const reducer = (state:ComponentState, action: Action):ComponentState => {
 
 type Prop = {
   vehicleName: string
-  vehicleId: string
+  vehicleId: string | null
 }
 
 function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
   const [state, dispatch] = useReducer(reducer,
     {name: vehicleName, editable: false, isSubmitted: false, isDialogOpen: false});
-
-  const currentPick = useAppSelector((state:RootState) => state.userVehicles.currentPick);
-  const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.vehicles[currentPick - 2]);
+  const {errors, setErrors} = useContext(ErrorsContext);
+  const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
+  const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
 
   const appDispatch = useAppDispatch();
+
+  const isAdmin: boolean = useMemo(() => authenticationManager.isAdmin(), []);
 
   useEffect(() => {
     dispatch({type: 'setEditable', payload: false});
@@ -66,8 +77,8 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
     dispatch({type: 'setEditable', payload: false});
   }
 
-  const handleSave = ():void => {
-    if (state.isSubmitted) return;
+  const handleSaveName = ():void => {
+    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
     else dispatch({type: 'setIsSubmitted', payload: true});
 
     appDispatch(updateUserVehicleName({ id:vehicleId, vehicle:{name: state.name, accessScope:null, modificationDate:currentVehicle.modificationDate!} }))
@@ -77,8 +88,33 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
       });
   }
 
+  const handleSave = ():void => {
+    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
+    else dispatch({type: 'setIsSubmitted', payload: true});
+
+    appDispatch(updateVehicle({id:vehicleId, vehicle:currentVehicle}))
+      .then(() => {
+        dispatch({type: 'setIsSubmitted', payload: false});
+        appDispatch(syncCurrentVehicleToList());
+        setErrors({hasUpdate:false});
+      });
+  }
+
+  const handleSaveNew = ():void => {
+    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
+    else dispatch({type: 'setIsSubmitted', payload: true});
+
+    appDispatch(saveNewVehicle({id:null, ...currentVehicle}))
+      .then(() => {
+        dispatch({type: 'setIsSubmitted', payload: false});
+        setErrors({hasUpdate:false});
+      });
+  }
+
   const confirmDelete = ():void => {
-    dispatch({type: 'setIsDialogOpen', payload: true});
+    if (!_.isNull(vehicleId)) {
+      dispatch({type: 'setIsDialogOpen', payload: true});
+    }
   }
 
   const dialogConfirm = async (): Promise<void> => {
@@ -88,7 +124,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
     else dispatch({type: 'setIsSubmitted', payload: true});
 
     dispatch({type: 'setEditable', payload: false});
-    await appDispatch(deleteVehicle(vehicleId));
+    await appDispatch(deleteVehicle(vehicleId!));
     dispatch({type: 'setIsSubmitted', payload: false});
   };
 
@@ -98,12 +134,14 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
 
   const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleSave();
+      handleSaveName();
     }
   };
 
+  const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
+
   return (
-    <>
+    <Box mb={1}>
       { state.editable &&
       <TextField
         sx={{ width: 480 }}
@@ -117,7 +155,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
         InputProps={{
           style: {fontSize: 22},
           endAdornment: (<>
-            <Button onClick={handleSave} variant="text">save</Button>
+            <Button onClick={handleSaveName} variant="text">save</Button>
             &#160;
             <Button onClick={handleCancel} variant="text">cancel</Button>
           </>)
@@ -132,9 +170,32 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
       </Box>
       }
       <Box sx={{ mt: 1 }}>
+        { isAdmin &&
+          <Button onClick={handleSave} color="primary" variant="outlined" disabled={!isFormValid} startIcon={<Save/>}>
+            save
+          </Button>
+        }
+        {status === 'loading' && (
+          <CircularProgress
+            size={30}
+            sx={{
+              position: 'absolute',
+              top: 135,
+              left: 450
+            }}
+          />
+        )}
+        &nbsp;
         <Button onClick={confirmDelete} color="primary" variant="outlined" startIcon={<Delete/>}>
           Delete
         </Button>
+        &nbsp;
+        { isAdmin &&
+        <Button onClick={handleSaveNew} color="primary" variant="outlined" disabled={!isFormValid} startIcon={<Add/>}>
+          save as new
+        </Button>
+        }
+
         <ConfirmDialog
           title="Delete Vehicle"
           message="All related data will be removed. Are you sure to delete this vehicle?"
@@ -143,7 +204,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
           cancelCallback={dialogCancel}
         />
       </Box>
-    </>)
+    </Box>)
 }
 
 export default VehicleNameTools;

@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN yarn run build
+RUN npm run build
 
 # production environment
 FROM nginx:1.24

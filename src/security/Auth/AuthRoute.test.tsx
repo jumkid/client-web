@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthRoute from './AuthRoute';
-import { generateTestJwtToken } from '../../App.test';
+import { getTestJwtToken } from '../../App.test';
 import authenticationManager from './AuthenticationManager';
 import ReactTestRenderer from 'react-test-renderer';
 import { act } from 'react-dom/test-utils';
@@ -9,10 +9,10 @@ import { Provider } from 'react-redux';
 import { Route } from '@mui/icons-material';
 
 describe(AuthRoute, () => {
-  const token = generateTestJwtToken();
+  const token = getTestJwtToken();
 
   it('Should render correctly render child component with jwt', async () => {
-    authenticationManager.updateToken(generateTestJwtToken());
+    authenticationManager.updateToken(getTestJwtToken());
 
     await act(async () => {
       const tree = ReactTestRenderer

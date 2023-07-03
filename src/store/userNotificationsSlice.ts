@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ActivityNotification from '../layout/MainLayout/model/ActivityNotification';
 import { userService } from '../service';
 import * as _ from 'lodash';
+import * as C from '../App.constants';
+import { FormStatus } from '../service/model/CommonTypes';
 
 export const fetchUserActivityNotifications = createAsyncThunk('activityNotifications/fetch',
   async () => userService.getActivityNotifications()
@@ -10,13 +12,13 @@ export const fetchUserActivityNotifications = createAsyncThunk('activityNotifica
 interface NotificationState {
   activityNotifications: ActivityNotification[]
   count: number
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: FormStatus
 }
 
 const initialState: NotificationState = {
   activityNotifications: [],
   count: 0,
-  status: 'idle'
+  status: C.IDLE
 }
 
 export const userNotificationsSlice = createSlice({
@@ -48,15 +50,15 @@ export const userNotificationsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserActivityNotifications.pending, (state) => {
-        state.status = 'loading';
+        state.status = C.LOADING;
       })
       .addCase(fetchUserActivityNotifications.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = C.SUCCEEDED;
         state.activityNotifications = action.payload.data || [];
         userNotificationsSlice.caseReducers.reCalculateCount(state);
       })
       .addCase(fetchUserActivityNotifications.rejected, (state) => {
-        state.status = 'failed';
+        state.status = C.FAILED;
       })
   }
 });

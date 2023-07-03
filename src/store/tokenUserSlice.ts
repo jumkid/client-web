@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { UserProfile } from '../security/AuthUser/model/UserProfile';
 import authenticationService from '../service/AuthenticationService';
 import { APIResponse } from '../service/model/Response';
+import { FormStatus } from '../service/model/CommonTypes';
+import * as C from '../App.constants';
 
 export const fetchUserProfile = createAsyncThunk('tokenUser/fetchUserProfile', async (userId:string) => {
   const response = await authenticationService.getUser(userId);
@@ -21,7 +23,7 @@ export const submitUserProfile = createAsyncThunk('tokenUser/submitUserProfile',
 export interface UserProfileState {
   userId: string
   userProfile: UserProfile
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: FormStatus
 }
 
 const initialState: UserProfileState = {
@@ -35,7 +37,7 @@ const initialState: UserProfileState = {
       avatar: ['']
     }
   },
-  status: 'idle'
+  status: C.IDLE
 }
 
 export const tokenUserSlice = createSlice({
@@ -61,14 +63,14 @@ export const tokenUserSlice = createSlice({
   extraReducers (builder) {
     builder
       .addCase(fetchUserProfile.pending, (state) => {
-        state.status = 'loading';
+        state.status = C.LOADING;
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = C.SUCCEEDED;
         state.userProfile = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state) => {
-        state.status = 'failed';
+        state.status = C.FAILED;
       });
   }
 });

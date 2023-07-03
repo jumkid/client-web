@@ -2,6 +2,7 @@ import JwtDecode from 'jwt-decode';
 import * as C from '../../App.constants';
 import authenticationService from '../../service/AuthenticationService';
 import { JWTTokenUser } from './model/JWTTokenUser';
+import { ADMIN_ROLE } from '../../App.constants';
 
 const localStoredToken = {
   get: ():string | null => {
@@ -23,6 +24,7 @@ export interface IAuthenticationManager {
   updateToken (token:string | null):void
   updateTokenUserAvatar(avatarId:string):void
   isLoggedIn():boolean
+  isAdmin():boolean
   logout():void
 }
 
@@ -114,6 +116,10 @@ export class AuthenticationManager implements IAuthenticationManager{
 
   isLoggedIn(): boolean {
     return !!this.getAccessToken();
+  }
+
+  isAdmin(): boolean {
+    return this.jwtUser!.realm_access.roles.findIndex(role => role === ADMIN_ROLE) > -1
   }
 
   logout(): void {

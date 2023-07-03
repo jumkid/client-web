@@ -5,9 +5,10 @@ import * as U from '../App.utils';
 import { VehicleProfile } from './model/VehicleProfile';
 import { PagingSearch } from '../service/model/Request';
 import { vehicleService } from '../service';
+import { FormStatus } from '../service/model/CommonTypes';
 
 interface SearchVehiclesState {
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: FormStatus
   searchVIN: string
   vinVehicle: VehicleFieldValuePair[]
   searchKeyword: string
@@ -26,7 +27,7 @@ interface SearchVehiclesState {
 }
 
 const initialState:SearchVehiclesState = {
-  status: 'idle',
+  status: C.IDLE,
   searchVIN: '',
   vinVehicle: [],
   searchKeyword: '',
@@ -62,6 +63,9 @@ export const searchVehiclesSlice = createSlice({
   initialState,
 
   reducers: {
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
     setSearchVIN: (state, action) => {
       state.searchVIN = action.payload;
     },
@@ -115,24 +119,26 @@ export const searchVehiclesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchVehicleByVin.pending, (state) => {
-        state.status = "loading"
+        state.status = C.LOADING;
       })
       .addCase(fetchVehicleByVin.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = C.SUCCEEDED;
         state.vinVehicle = U.vinVehicleToFieldValuePairs(action.payload.data);
       })
       .addCase(fetchMatchVehicles.pending, (state) => {
-        state.status = "loading"
+        state.status = C.LOADING;
       })
       .addCase(fetchMatchVehicles.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = C.SUCCEEDED;
+
         state.matchVehicles = action.payload.data;
       })
       .addCase(fetchSearchVehicles.pending, (state) => {
-        state.status = "loading";
+        state.status = C.LOADING;
+
       })
       .addCase(fetchSearchVehicles.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = C.SUCCEEDED;
         state.searchVehicles = action.payload.data;
         state.searchTotal = action.payload.total;
       })
@@ -141,6 +147,7 @@ export const searchVehiclesSlice = createSlice({
 });
 
 export const {
+  setStatus,
   changeMatchSelections,
   setMatchFields,
   clearMatchFields,

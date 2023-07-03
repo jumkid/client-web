@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 export type ValidationErrors = {
   hasUpdate: boolean
+
   name?: string | null
   startDate?: string | null
   endDate?: string | null,

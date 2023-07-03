@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useContext, useEffect } from 'react';
 import {
   Box,
-  FormControl,
   Grid,
   InputLabel,
   MenuItem,
@@ -9,8 +8,6 @@ import {
   SelectChangeEvent,
   TextField
 } from '@mui/material';
-import styled from '@emotion/styled';
-import { Theme } from '@emotion/react';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -27,15 +24,7 @@ import * as _ from 'lodash';
 import Validator  from './ActivityMainForm.Validator';
 import { ErrorsContext } from './ActivityContext';
 import { DATETIME_FORMAT, DATETIME_FORMAT_NO_SECOND } from '../../../../App.constants';
-
-type ItemProps = {
-  theme: Theme
-}
-
-const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
-  ...theme,
-  margin: '6px 6px 6px 0'
-}));
+import { S_FormControl } from '../../../../layout/Layout.Theme';
 
 interface Props {
   vehicleId: string

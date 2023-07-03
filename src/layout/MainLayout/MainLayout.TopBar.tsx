@@ -76,8 +76,8 @@ function TopBar ({ menuSettings, userSettings }: Props) {
 
   return (
     <AppBar position="static">
-      <Container maxWidth={false} disableGutters={true}>
-        <Toolbar sx={{ backgroundColor: '#C41407' }} variant="dense">
+      <Container maxWidth={false} disableGutters={true} sx={{ backgroundColor: '#C41407' }}>
+        <Toolbar variant="dense">
           <Icon className="navigation-logo"/>
           <NavButtons items={items} handleClick={menuOnClickHandler}/>
 

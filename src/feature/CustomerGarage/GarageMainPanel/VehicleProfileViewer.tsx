@@ -13,9 +13,10 @@ import ActivityAccordion from './VehicleProfileViewer.ActivityAccordion';
 type Props = {
   showName?: boolean
   vehicleProfile: VehicleProfile
+  mode: 'simple' | 'active'
 }
 
-function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
+function VehicleProfileViewer ({ showName, vehicleProfile, mode }:Props) {
   const showEditableName = _.isUndefined(showName) ? true : showName;
 
   return (
@@ -37,23 +38,24 @@ function VehicleProfileViewer ({ showName, vehicleProfile }:Props) {
           </ItemHeader>
         </Grid>
         <Grid item xs={4}>
-          <IconButton sx={{ float: 'right', mt: 3.5 }} aria-label="access scope" component="label">
-            { vehicleProfile.accessScope === "private" && <Lock fontSize="large"/> }
-            { vehicleProfile.accessScope === "public" && <LockOpen fontSize="large"/> }
+          <IconButton sx={{ float: 'right', mt: 3.5 }} aria-label="access scope" component="label" disabled={true}>
+            { vehicleProfile.accessScope === C.PRIVATE && <Lock fontSize="large"/> }
+            { vehicleProfile.accessScope === C.PUBLIC && <LockOpen fontSize="large"/> }
           </IconButton>
         </Grid>
       </Grid>
       <Item>
-        <Item>Make <ItemText>{vehicleProfile.make}</ItemText></Item>
-        <Item>Model <ItemText>{vehicleProfile.model}</ItemText></Item>
-        <Item>Trim Level <ItemText>{vehicleProfile.trimLevel}</ItemText></Item>
-        <Item>Model Year <ItemText>{vehicleProfile.modelYear}</ItemText></Item>
+        <Item>Make <ItemText>{ vehicleProfile.make }</ItemText></Item>
+        <Item>Model <ItemText>{ vehicleProfile.model }</ItemText></Item>
+        <Item>Trim Level <ItemText>{ vehicleProfile.trimLevel }</ItemText></Item>
+        <Item>Model Year <ItemText>{ vehicleProfile.modelYear }</ItemText></Item>
       </Item>
 
-      <GalleryAccordion mediaGalleryId={vehicleProfile.mediaGalleryId}/>
+      <GalleryAccordion mode={mode} mediaGalleryId={ vehicleProfile.mediaGalleryId } />
 
-      { vehicleProfile.id && <ActivityAccordion vehicleId={vehicleProfile.id}/> }
-      <DetailsAccordion vehicleProfile={vehicleProfile} />
+      { mode === C.MODE_ACTIVE && vehicleProfile.id && <ActivityAccordion vehicleId={ vehicleProfile.id }/> }
+
+      <DetailsAccordion expanded={ mode === C.MODE_SIMPLE } vehicleProfile={vehicleProfile}/>
 
     </Stack>
   );

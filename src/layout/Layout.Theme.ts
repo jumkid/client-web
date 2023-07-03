@@ -1,7 +1,7 @@
 import React from 'react';
 import { grey } from '@mui/material/colors';
 import styled from '@emotion/styled';
-import { Box, Paper } from '@mui/material';
+import { Box, FormControl, Paper } from '@mui/material';
 import { Theme } from '@emotion/react';
 
 const ColorModeContext = React.createContext({ toggleColorMode: ():void => { console.log("empty function");} });
@@ -233,14 +233,14 @@ type ItemProps = {
 
 const Item = styled(Paper)(({ theme }:ItemProps) => ({
   ...theme,
-  backgroundImage: 'none',
   paddingBottom: '8px',
+  marginRight: '8px',
   fontSize: '16px',
   fontWeight: '200',
   float: 'left'
 }));
 
-const ItemText = styled(Box)(({ theme }:ItemProps) => ({
+const ItemText = styled(Paper)(({ theme }:ItemProps) => ({
   ...theme,
   width: '248px',
   textTransform: 'uppercase',
@@ -248,7 +248,7 @@ const ItemText = styled(Box)(({ theme }:ItemProps) => ({
   fontSize: '18px'
 }));
 
-const ItemHeader = styled(Box)(({ theme }:ItemProps) => ({
+const ItemHeader = styled(Paper)(({ theme }:ItemProps) => ({
   ...theme,
   width: '100%',
   textTransform: 'uppercase',
@@ -257,8 +257,14 @@ const ItemHeader = styled(Box)(({ theme }:ItemProps) => ({
   marginTop: '21px'
 }));
 
+const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
+  ...theme,
+  margin: '6px 6px 6px 0'
+}));
+
 export {
-  Item, ItemText, ItemHeader,
+  ItemProps, Item, ItemText, ItemHeader,
+  S_FormControl,
   ColorModeContext,
   DesignTokens
 };

@@ -1,19 +1,20 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import { Item, ItemText } from '../../../layout/Layout.Theme';
+import { VehicleProfile } from '../../../store/model/VehicleProfile';
 
 type Props = {
+  expanded: boolean
   vehicleProfile: VehicleProfile
 }
 
-function DetailsAccordion ({vehicleProfile}:Props) {
-  const vehicleEngine = vehicleProfile.vehicleEngine;
-  const vehicleTransmission = vehicleProfile.vehicleTransmission;
+function DetailsAccordion ({expanded, vehicleProfile}:Props) {
+  const vehicleEngine = vehicleProfile!.vehicleEngine;
+  const vehicleTransmission = vehicleProfile!.vehicleTransmission;
 
   return (
-    <Accordion>
+    <Accordion defaultExpanded={expanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
       >

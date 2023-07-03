@@ -6,6 +6,8 @@ import authenticationManager from './security/Auth/AuthenticationManager';
 import jwt from 'jsonwebtoken';
 import { act } from 'react-dom/test-utils';
 import { VehicleProfile } from './store/model/VehicleProfile';
+import { USER_ROLE } from './App.constants';
+import * as C from './App.constants';
 
 describe(App, () => {
   beforeAll(() => {});
@@ -27,7 +29,7 @@ describe(App, () => {
   });
 
   it('renders user home screen', async () => {
-    authenticationManager.updateToken(generateTestJwtToken());
+    authenticationManager.updateToken(getTestJwtToken());
 
     await act( async () => renderWithRouter(<App />, {}));
     expect(screen.getByText(/My Garage/i)).toBeDefined();
@@ -45,7 +47,7 @@ export const renderWithRouter = (ui:React.ReactElement, {route = '/'} = {}) => {
   }
 }
 
-export const generateTestJwtToken = ():string => {
+export const getTestJwtToken = ():string => {
   const secret = 'mySecretKey';
   const payload = {
     scope: "roles profile email",
@@ -58,40 +60,41 @@ export const generateTestJwtToken = ():string => {
     family_name: "Test",
     email: "test@jumkid.com",
     realm_access: {
-      roles: ["USER_ROLE"]
+      roles: [USER_ROLE]
     }
   };
   return jwt.sign(payload, secret);
 }
 
 export const testVehicleProfile:VehicleProfile = {
-  accessScope: 'public',
-  id: undefined,
-  make: 'Porsche',
-  mediaGalleryId: undefined,
-  model: '911',
-  modelYear: 1974,
-  modificationDate: '',
-  name: 'Porsche 911',
+  id: 'dummy-id',
+  name: 'porsche cayenne with techart magnum body kits',
+  make: 'porsche',
+  model: 'cayenne',
+  modelYear: 2008,
   trimLevel: 'turbo',
+  mediaGalleryId: null,
+  accessScope: C.PUBLIC,
   vehicleEngine: {
-    name: '4.8l v8',
-    type: 'v8',
+    vehicleEngineId: 1,
+    name: 'twin turbo v8',
+    type: 'V8',
     cylinder: 8,
     displacement: 4.8,
     fuelType: 'gasoline',
     horsepower: 500,
-    horsepowerRpm: 3600,
-    torque: 700,
-    torqueRpm: 4000,
-    manufacturerEngineCode: 'M515'
+    horsepowerRpm: 6600,
+    torque: 800,
+    torqueRpm: 5800,
+    manufacturerEngineCode: 'M151'
   },
   vehicleTransmission: {
-    name: '8 speed tiptronic',
-    type: 'AT',
-    drivetrain: '',
-    availability: '',
-    automaticType: 'AMT',
-    numberOfSpeeds: 8
+    vehicleTransmissionId: 1,
+    name: 'tiptronic 6-speed',
+    type: 'AMT',
+    drivetrain: 'Full time AWD',
+    availability: null,
+    automaticType: 'AT',
+    numberOfSpeeds: 6
   }
-}
+};

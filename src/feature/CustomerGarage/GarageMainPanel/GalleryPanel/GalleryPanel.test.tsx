@@ -6,7 +6,7 @@ describe(GalleryPanel, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
-        <GalleryPanel />
+        <GalleryPanel mode='active'/>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

@@ -4,10 +4,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GalleryPanel from './GalleryPanel';
 
 interface Props {
+  mode: 'simple' | 'active'
   mediaGalleryId?: string | null
 }
 
-function GalleryAccordion ({mediaGalleryId}:Props) {
+function GalleryAccordion ({mode, mediaGalleryId}:Props) {
 
   return (
     <Accordion defaultExpanded={true}>
@@ -17,7 +18,7 @@ function GalleryAccordion ({mediaGalleryId}:Props) {
         <Typography>Gallery</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <GalleryPanel mediaGalleryId={mediaGalleryId}/>
+        <GalleryPanel mode={mode} mediaGalleryId={mediaGalleryId}/>
       </AccordionDetails>
     </Accordion>
   )

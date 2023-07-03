@@ -39,7 +39,7 @@ export default function UserAvatarUploadForm () {
     // step 1: upload content and return new content id
     const {status, data} = await contentService.upload(newAvatar, "public");
     // step 2: update avatar id by the new content id
-    dispatch(setStatus('idle'));
+    dispatch(setStatus(C.IDLE));
 
     if (status === 202 && data) {
       const newAvatarId = data.uuid;

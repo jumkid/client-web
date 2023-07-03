@@ -19,6 +19,10 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
     dispatch(setConnectorStep(currentStep - 1));
   };
 
+  const handleEdit = (): void => {
+    dispatch(setConnectorStep(currentStep + 1));
+  };
+
   const handleForward = (): void => {
     dispatch(setConnectorStep(currentStep + 1));
   };
@@ -33,7 +37,7 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
           Next<ArrowForwardIos/>
         </Button>
       </Box>
-      <VehicleProfileViewer showName={false} vehicleProfile={connectedVehicle} />
+      <VehicleProfileViewer showName={false} vehicleProfile={connectedVehicle} mode='simple'/>
     </>
   )
 }

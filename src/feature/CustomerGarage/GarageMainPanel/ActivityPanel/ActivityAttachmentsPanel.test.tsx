@@ -7,10 +7,10 @@ import { render, screen } from '@testing-library/react';
 describe(ActivityAttachmentsPanel, () => {
   it('Should render correctly', () => {
     render(
-        <Provider store={store}>
-          <ActivityAttachmentsPanel/>
-        </Provider>
-      );
+      <Provider store={store}>
+        <ActivityAttachmentsPanel/>
+      </Provider>
+    );
     expect(screen.findByLabelText(/activity attachments/i)).toBeDefined();
   });
 });

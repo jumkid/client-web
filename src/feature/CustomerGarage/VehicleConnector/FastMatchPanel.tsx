@@ -41,9 +41,9 @@ const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
 }));
 
 function FastMatchPanel () {
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [target, setTarget] = useState(C.MAKE);
 
+  const status = useAppSelector((state:RootState) => state.searchVehicles.status);
   const searchVIN = useAppSelector((state:RootState) => state.searchVehicles.searchVIN);
   const vinVehicle = useAppSelector((state:RootState) => state.searchVehicles.vinVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
@@ -53,16 +53,9 @@ function FastMatchPanel () {
   
   useEffect(() => {
     if (target === C.VIN) {
-      setIsSubmitted(true);
-      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: vinVehicle })).then(
-        () => { setIsSubmitted(false); }
-      );
-    } else
-    if (target === "submit") {
-      setIsSubmitted(true);
-      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields })).then(
-        () => { setIsSubmitted(false); }
-      )
+      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: vinVehicle }));
+    } else if (target === "submit") {
+      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
     } else {
       vehicleService.getForAggregation(target, matchFields).then(
         (response) => {
@@ -109,10 +102,9 @@ function FastMatchPanel () {
 
   const handleVinSearch = (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      if (isSubmitted) return;
-      else setIsSubmitted(true);
+      if (status === C.LOADING) return;
       cleanUp(C.VIN);
-      dispatch(fetchVehicleByVin(searchVIN)).then(() => { setIsSubmitted(false); });
+      dispatch(fetchVehicleByVin(searchVIN));
     }
   };
 
@@ -239,7 +231,7 @@ function FastMatchPanel () {
           </S_FormControl>
         </form>
       </Box>
-      { <CardWaitSkeleton isShown={isSubmitted}/> }
+      { <CardWaitSkeleton isShown={status === C.LOADING}/> }
       { !_.isEmpty(matchVehicles) && <VehicleCardViewer vehicles={matchVehicles}/>}
     </Box>
   )

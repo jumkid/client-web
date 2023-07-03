@@ -12,11 +12,6 @@ export interface JWTTokenUser {
     realm_access: {
         roles: string[]
     }
-    resource_access: {
-        account: {
-            roles: string[]
-        }
-    }
     scope: string
     sid: string
     avatarId: string

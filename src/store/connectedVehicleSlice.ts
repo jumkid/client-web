@@ -22,11 +22,14 @@ export const connectedVehicleSlice = createSlice({
     },
     setConnectorStep: (state, action) => {
       state.connectorStep = action.payload
+    },
+    changeConnectedVehicleName: (state, action) => {
+      state.vehicle!.name = action.payload
     }
   }
 
 });
 
-export const { setConnectedVehicle, setConnectorStep } = connectedVehicleSlice.actions;
+export const { setConnectedVehicle, setConnectorStep, changeConnectedVehicleName } = connectedVehicleSlice.actions;
 
 export default connectedVehicleSlice.reducer;

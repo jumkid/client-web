@@ -1,9 +1,4 @@
-const _API_URL: string = process.env.REACT_APP_API_GATEWAY_HOST!;
-
-export type IDLE = "idle";
-export type LOADING = "loading";
-export type SUCCEEDED = "succeeded";
-export type FAILED = "failed";
+const _API_URL: string = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_GATEWAY_HOST! : "http://localhost";
 
 export const IDLE = "idle";
 export const LOADING = "loading";
@@ -15,9 +10,21 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const RIGHT = 'RIGHT';
 export const LEFT = 'LEFT';
 
+export const PUBLIC = 'public';
+export const PRIVATE = 'private';
+
 export const USERNAME = 'username';
 export const PASSWORD = 'password';
 export const JWT_TOKEN_KEY = 'jwToken';
+export const USER_ROLE = 'USER_ROLE';
+export const ADMIN_ROLE = 'ADMIN_ROLE';
+
+export const MODE_SIMPLE = 'simple';
+export const MODE_ACTIVE = 'active';
+
+export const DATETIME_FORMAT_NO_SECOND = 'YYYY-MM-DDTHH:mm';
+export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
+export const DATE_FORMAT = 'YYYY-MM-DD';
 
 export const USER_API:string = _API_URL + process.env.REACT_APP_USER_API;
 export const USER_LOGIN_API:string = _API_URL + process.env.REACT_APP_USER_LOGIN_API;
@@ -53,7 +60,3 @@ export const MODEL = 'model';
 export const MODEL_YEAR = 'modelYear';
 export const TRIM_LEVEL = 'trimLevel';
 export const VIN = 'vin';
-
-export const DATETIME_FORMAT_NO_SECOND = 'YYYY-MM-DDTHH:mm';
-export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
-export const DATE_FORMAT = 'YYYY-MM-DD';
