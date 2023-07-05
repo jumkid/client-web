@@ -1,4 +1,4 @@
-export interface VehicleEngine {
+export type VehicleEngine = {
     vehicleEngineId?: number | null
     name: string | null
     type: string | null

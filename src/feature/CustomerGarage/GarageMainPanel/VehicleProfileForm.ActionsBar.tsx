@@ -18,7 +18,6 @@ import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedV
 import {
   clearMatchFields,
   fetchMatchVehicles,
-  setMatchFields,
   setMatchVehicles,
   setStatus
 } from '../../../store/searchVehiclesSlice';

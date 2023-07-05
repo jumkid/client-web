@@ -26,11 +26,11 @@ function UserLogin () {
       .then(({ isSuccess, status }) => {
         if (isSuccess) {
           navigate('/');
-        } else {
-          setLoginMessage(status === 500
-            ? 'Oops! Something goes wrong with network connection or the online service.'
-            : 'Login failed. Please make sure username and password is correct');
         }
+      }).catch(({ isSuccess, status }) => {
+        setLoginMessage(status === 500
+          ? 'Oops! Something goes wrong with network connection or the online service.'
+          : 'Login failed. Please make sure username and password is correct');
       });
   };
 
@@ -70,12 +70,7 @@ function UserLogin () {
                 required
               />
 
-              { loginMessage
-                ? <Fade appear={true} in={true} timeout={1000}>
-                  <Typography className="warning-text" textAlign="center">{loginMessage}</Typography>
-                </Fade>
-                : <Typography className="warning-text" /> // placeholder
-              }
+              <Typography className="warning-text" textAlign="center">{loginMessage}</Typography>
             </Stack>
             <Divider sx={{ mb: '28px' }}/>
           </FormControl>

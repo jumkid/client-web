@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import GalleryAccordion from './VehicleProfileViewer.GalleryAccordion';
 import DetailsAccordion from './VehicleProfileViewer.DetailsAccordion';
 import ActivityAccordion from './VehicleProfileViewer.ActivityAccordion';
+import PricingViewerAccordion from './VehicleProfileViewer.PricingAccordion';
 
 type Props = {
   showName?: boolean
@@ -54,6 +55,8 @@ function VehicleProfileViewer ({ showName, vehicleProfile, mode }:Props) {
       <GalleryAccordion mode={mode} mediaGalleryId={ vehicleProfile.mediaGalleryId } />
 
       { mode === C.MODE_ACTIVE && vehicleProfile.id && <ActivityAccordion vehicleId={ vehicleProfile.id }/> }
+
+      <PricingViewerAccordion expanded={true} vehicleProfile={vehicleProfile} />
 
       <DetailsAccordion expanded={ mode === C.MODE_SIMPLE } vehicleProfile={vehicleProfile}/>
 

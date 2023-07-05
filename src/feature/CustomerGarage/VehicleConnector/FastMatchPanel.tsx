@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   FormControl,
@@ -21,7 +21,7 @@ import {
   changeMatchSelections, clearMatchFields,
   fetchMatchVehicles, fetchVehicleByVin,
   setMatchFields, setMatchVehicles,
-  setSearchVIN
+  setSearchVIN, setTarget
 } from '../../../store/searchVehiclesSlice';
 import { Clear } from '@mui/icons-material';
 import CardWaitSkeleton from './CardWaitSkeleton';
@@ -41,9 +41,8 @@ const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
 }));
 
 function FastMatchPanel () {
-  const [target, setTarget] = useState(C.MAKE);
-
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
+  const target = useAppSelector((state:RootState) => state.searchVehicles.target);
   const searchVIN = useAppSelector((state:RootState) => state.searchVehicles.searchVIN);
   const vinVehicle = useAppSelector((state:RootState) => state.searchVehicles.vinVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
@@ -54,7 +53,7 @@ function FastMatchPanel () {
   useEffect(() => {
     if (target === C.VIN) {
       dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: vinVehicle }));
-    } else if (target === "submit") {
+    } else if (target === C.SUBMIT) {
       dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
     } else {
       vehicleService.getForAggregation(target, matchFields).then(
@@ -85,7 +84,7 @@ function FastMatchPanel () {
   const handleOnChange = (event:SelectChangeEvent<any>) => {
     const field = event.target.name;
     const value = event.target.value;
-    setTarget(getNextTarget(field));
+    dispatch(setTarget(getNextTarget(field)));
     dispatch(setMatchFields({field, value}));
     dispatch(setMatchVehicles([]));
   }
@@ -117,9 +116,9 @@ function FastMatchPanel () {
     case C.MODEL_YEAR:
       return C.TRIM_LEVEL;
     case C.TRIM_LEVEL:
-      return "submit";
+      return C.SUBMIT;
     default:
-      return C.MAKE;
+      return "";
     }
   }
 

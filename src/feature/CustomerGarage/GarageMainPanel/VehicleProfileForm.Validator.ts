@@ -9,6 +9,9 @@ export type ValidationErrors = {
   model?: string | null
   modelYear?: string | null
   trimLevel?: string | null
+  pricing?: {
+    msrp?: string | null
+  }
   engine?: {
     type?: string | null
     name?: string | null
@@ -101,6 +104,16 @@ class Validator {
       this.errors.modelYear = "model year should be 1900 or later year";
     } else {
       delete this.errors.modelYear;
+    }
+
+    this.setHasUpdate();
+  }
+
+  validatePricingMSRP (value: number) {
+    if (value < 0) {
+      this.errors.pricing = { msrp:"msrp should be greater than or equal to 0" };
+    } else if (!_.isNil(this.errors.pricing)) {
+      delete this.errors.pricing.msrp;
     }
 
     this.setHasUpdate();

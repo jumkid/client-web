@@ -9,6 +9,7 @@ import { FormStatus } from '../service/model/CommonTypes';
 
 interface SearchVehiclesState {
   status: FormStatus
+  target: string
   searchVIN: string
   vinVehicle: VehicleFieldValuePair[]
   searchKeyword: string
@@ -28,6 +29,7 @@ interface SearchVehiclesState {
 
 const initialState:SearchVehiclesState = {
   status: C.IDLE,
+  target: C.MAKE,
   searchVIN: '',
   vinVehicle: [],
   searchKeyword: '',
@@ -113,6 +115,9 @@ export const searchVehiclesSlice = createSlice({
     },
     setMatchVehicles: (state, action) => {
       state.matchVehicles = action.payload
+    },
+    setTarget: (state, action) => {
+      state.target = action.payload;
     }
   },
 
@@ -156,7 +161,8 @@ export const {
   clearSearchKeyword,
   setSearchPage,
   setSearchPageSize,
-  setMatchVehicles
+  setMatchVehicles,
+  setTarget
 } = searchVehiclesSlice.actions;
 
 export default searchVehiclesSlice.reducer;

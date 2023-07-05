@@ -20,6 +20,7 @@ import Validator from './VehicleProfileForm.Validator';
 import { ErrorsContext } from './VehicleProfileContext';
 import { RootState } from '../../../store';
 import { changeName } from '../../../store/vehicleActivitiesSlice';
+import PricingAccordion from './VehicleProfileForm.PricingAccordion';
 
 function VehicleProfileForm () {
   const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
@@ -146,7 +147,7 @@ function VehicleProfileForm () {
               name="modelYear"
               onChange={handleModelYearChange}
               required={true}
-              type="number"
+              type="integer"
               variant="outlined"
               value={vehicleProfile!.modelYear}
               error={!_.isNil(errors.modelYear)}
@@ -155,6 +156,8 @@ function VehicleProfileForm () {
           </Item>
         </Item>
       </S_FormControl>
+
+      <PricingAccordion expanded={true} />
 
       <DetailsAccordion expanded={true} />
 

@@ -1,4 +1,12 @@
-import { Accordion, AccordionDetails, AccordionSummary, Stack, TextField, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  InputAdornment,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Item, S_FormControl } from '../../../layout/Layout.Theme';
 import React, { ChangeEvent, useContext } from 'react';
@@ -30,6 +38,7 @@ type Props = {
 
 function DetailsAccordion ({expanded}:Props) {
   const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
+
   const vehicleEngine = vehicleProfile!.vehicleEngine!;
   const vehicleTransmission = vehicleProfile!.vehicleTransmission!;
 
@@ -149,9 +158,7 @@ function DetailsAccordion ({expanded}:Props) {
 
   return (
     <Accordion defaultExpanded={expanded}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-      >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Technical Spec</Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -160,15 +167,17 @@ function DetailsAccordion ({expanded}:Props) {
           <S_FormControl>
             <Item>
               <h2>Engine</h2>
-              <TextField
-                label="Name"
-                name="name"
-                onChange={handleEngineNameChange}
-                variant="outlined"
-                value={vehicleEngine.name}
-                error={!_.isNil(errors.engine) && !_.isNil(errors.engine.name)}
-                helperText={!_.isNil(errors.engine) && !_.isNil(errors.engine.name) ? errors.engine.name : ''}
-              />
+              <Item>
+                <TextField
+                  label="Name"
+                  name="name"
+                  onChange={handleEngineNameChange}
+                  variant="outlined"
+                  value={vehicleEngine.name}
+                  error={!_.isNil(errors.engine) && !_.isNil(errors.engine.name)}
+                  helperText={!_.isNil(errors.engine) && !_.isNil(errors.engine.name) ? errors.engine.name : ''}
+                />
+              </Item>
             </Item>
             <Item>
               <Item>
@@ -187,7 +196,7 @@ function DetailsAccordion ({expanded}:Props) {
                   label="Number of Cylinder"
                   name="cylinder"
                   onChange={handleCylinderChange}
-                  type="number"
+                  type="integer"
                   variant="outlined"
                   value={vehicleEngine.cylinder}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.cylinder)}
@@ -196,11 +205,14 @@ function DetailsAccordion ({expanded}:Props) {
               </Item>
               <Item>
                 <TextField
-                  label="Displacement(L)"
+                  label="Displacement"
                   name="displacement"
                   onChange={handleDisplacementChange}
-                  type="number"
+                  type="float"
                   variant="outlined"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">L</InputAdornment>
+                  }}
                   value={vehicleEngine.displacement}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.displacement)}
                   helperText={!_.isNil(errors.engine) && !_.isNil(errors.engine.displacement) ? errors.engine.displacement : ''}
@@ -237,7 +249,7 @@ function DetailsAccordion ({expanded}:Props) {
                   label="Horsepower"
                   name="horsepower"
                   onChange={handleHorsepowerChange}
-                  type="number"
+                  type="integer"
                   variant="outlined"
                   value={vehicleEngine.horsepower}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.horsepower)}
@@ -249,7 +261,7 @@ function DetailsAccordion ({expanded}:Props) {
                   label="Horsepower RPM"
                   name="horsepowerRpm"
                   onChange={handleHorsepowerRpmChange}
-                  type="number"
+                  type="integer"
                   variant="outlined"
                   value={vehicleEngine.horsepowerRpm}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.horsepowerRpm)}
@@ -263,7 +275,7 @@ function DetailsAccordion ({expanded}:Props) {
                   label="Torque"
                   name="torque"
                   onChange={handleTorqueChange}
-                  type="number"
+                  type="integer"
                   variant="outlined"
                   value={vehicleEngine.torque}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.torque)}
@@ -275,7 +287,7 @@ function DetailsAccordion ({expanded}:Props) {
                   label="Torque RPM"
                   name="torqueRpm"
                   onChange={handleTorqueRpmChange}
-                  type="number"
+                  type="integer"
                   variant="outlined"
                   value={vehicleEngine.torqueRpm}
                   error={!_.isNil(errors.engine) && !_.isNil(errors.engine.torqueRpm)}
@@ -290,15 +302,17 @@ function DetailsAccordion ({expanded}:Props) {
           <S_FormControl>
             <Item>
               <h2>Transmission</h2>
-              <TextField
-                label="Name"
-                name="name"
-                onChange={handleTransmissionNameChange}
-                variant="outlined"
-                value={vehicleTransmission.name}
-                error={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.name)}
-                helperText={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.name) ? errors.transmission.name : ''}
-              />
+              <Item>
+                <TextField
+                  label="Name"
+                  name="name"
+                  onChange={handleTransmissionNameChange}
+                  variant="outlined"
+                  value={vehicleTransmission.name}
+                  error={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.name)}
+                  helperText={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.name) ? errors.transmission.name : ''}
+                />
+              </Item>
             </Item>
             <Item>
               <Item>
@@ -329,7 +343,7 @@ function DetailsAccordion ({expanded}:Props) {
                   name="numberOfSpeeds"
                   onChange={handleNumberOfSpeedsChange}
                   variant="outlined"
-                  type="number"
+                  type="integer"
                   value={vehicleTransmission.numberOfSpeeds}
                   error={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.numberOfSpeeds)}
                   helperText={!_.isNil(errors.transmission) && !_.isNil(errors.transmission.numberOfSpeeds) ? errors.transmission.numberOfSpeeds : ''}

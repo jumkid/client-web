@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import { Box, Button, Chip, CircularProgress, Paper, Stack } from '@mui/material';
+import React, { ChangeEvent, useCallback, useEffect, useReducer, useState } from 'react';
+import { Box, Button, Chip, CircularProgress, IconButton, LinearProgress, Paper, Stack, Toolbar } from '@mui/material';
 import * as C from '../../../../App.constants';
 import './Gallery.css';
 import { contentService } from '../../../../service';
-import { Pause, PlayCircleOutline } from '@mui/icons-material';
+import { Pause, PlayCircleOutline, Upload } from '@mui/icons-material';
 import * as _ from 'lodash';
 import { preloadContentThumbnails } from '../../../../App.utils';
 
@@ -72,6 +72,9 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const [progress, setProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (!mediaGalleryId) {
@@ -148,6 +151,22 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
     }, 100);
   }
 
+  const handleUpload = async (event:ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || isUploading) { return; }
+
+    setIsUploading(true);
+
+    try {
+      //TODO
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+      event.target.value = "";
+    }
+  }
+
   return (
     <Box
       width="100%"
@@ -189,10 +208,19 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
         </Box>
         }
         <Box>
-          { mode === 'active' && <Button color="primary" onClick={toggleAutoplay}>
-            { !state.autoplay ? <PlayCircleOutline/> : <Pause/> }
-            Autoplay
-          </Button> }
+          { mode === 'active' &&
+          <>
+            <Button color="primary" onClick={toggleAutoplay}>
+              { !state.autoplay ? <PlayCircleOutline/> : <Pause/> }
+              Autoplay
+            </Button>
+            <Button component="label" aria-label="upload" color="primary">
+              <input onChange={handleUpload} hidden accept="*/*" type="file"/>
+              <Upload /> Upload
+            </Button>
+            { isUploading && <LinearProgress variant={"determinate"} value={progress} color={"secondary"}/> }
+          </>
+          }
         </Box>
       </Stack>
 

@@ -3,6 +3,13 @@ import { VehicleFieldValuePair } from './service/VehicleService';
 import { contentService } from './service';
 import { Buffer } from 'buffer';
 
+function currencyFormatter (amount:number | null | undefined):string {
+  return _.isNil(amount) ? '0.00' : amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  });
+}
+
 function dateFormatter (datetime: string | undefined):string {
   const [dateString] = getDatetimeParts(datetime);
   const currentYear = new Date().getFullYear().toString();
@@ -20,15 +27,13 @@ const getDatetimeParts = (datetime: string | undefined):string[] => {
 }
 
 function isJson (item: string | object) {
-  item = typeof item !== 'string' ? JSON.stringify(item) : item;
-
   try {
-    item = JSON.parse(item);
+    item = JSON.parse(JSON.stringify(item));
   } catch (e) {
     return false;
   }
 
-  return typeof item === 'object' && item !== null;
+  return item !== null && _.isObject(item);
 }
 
 async function preloadContentThumbnails (contentIds: (string | undefined)[], thumbnailSize: string): Promise<string[]> {
@@ -82,6 +87,7 @@ function vinVehicleToFieldValuePairs(vinVehicle: Record<string, unknown>): Vehic
 
 export {
   isJson,
+  currencyFormatter,
   dateFormatter,
   timeFormatter,
   preloadContentThumbnails,
