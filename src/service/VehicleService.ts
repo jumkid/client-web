@@ -15,8 +15,11 @@ export interface IVehicleService {
   getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse | null>
   getByVin: (vin:string) => Promise<APIResponse<any>>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse<any>>
+
   update: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
+
+  saveAsNew (vehicleProfile:VehicleProfile): Promise<APIResponse<any>>
 }
 
 class VehicleService implements IVehicleService {

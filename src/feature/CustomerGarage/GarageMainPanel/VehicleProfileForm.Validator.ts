@@ -133,7 +133,7 @@ class Validator {
     } else {
       delete this.errors.engine?.cylinder;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -143,7 +143,7 @@ class Validator {
     } else {
       delete this.errors.engine?.displacement;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -223,6 +223,12 @@ class Validator {
 
   setHasUpdate () {
     this.errors.hasUpdate = true;
+  }
+
+  cleanUpEngineError () {
+    if (!_.isNil(this.errors.engine) && Object.values(this.errors.engine).length == 0) {
+      delete this.errors.engine
+    }
   }
 
 }

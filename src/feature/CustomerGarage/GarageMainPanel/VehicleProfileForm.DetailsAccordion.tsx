@@ -1,8 +1,7 @@
 import {
   Accordion,
   AccordionDetails,
-  AccordionSummary,
-  InputAdornment,
+  AccordionSummary, InputAdornment,
   Stack,
   TextField,
   Typography
@@ -33,6 +32,7 @@ import {
 } from '../../../store/userVehiclesSlice';
 import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
 import * as C from '../../../App.constants';
+import NumberInputWithDecimal from '../../../component/NumberInputWithDecimal';
 
 type Props = {
   mode: DISPLAY_MODE
@@ -211,9 +211,9 @@ function DetailsAccordion ({mode}:Props) {
                   label="Displacement"
                   name="displacement"
                   onChange={handleDisplacementChange}
-                  type="float"
                   variant="outlined"
                   InputProps={{
+                    inputComponent: NumberInputWithDecimal as any,
                     endAdornment: <InputAdornment position="end">L</InputAdornment>
                   }}
                   value={vehicleEngine.displacement}

@@ -18,6 +18,7 @@ import Validator from './VehicleProfileForm.Validator';
 import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
 import * as _ from 'lodash';
 import * as C from '../../../App.constants';
+import NumberInputWithDecimal from '../../../component/NumberInputWithDecimal';
 
 type Props = {
   mode: DISPLAY_MODE
@@ -59,6 +60,7 @@ function PricingAccordion ({mode}:Props) {
                 variant="outlined"
                 value={_.isNil(vehiclePricing) ? 0 : vehiclePricing.msrp}
                 InputProps={{
+                  inputComponent: NumberInputWithDecimal as any,
                   startAdornment: <InputAdornment position="start">$</InputAdornment>
                 }}
                 error={!_.isNil(errors.pricing) && !_.isNil(errors.pricing.msrp)}

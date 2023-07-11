@@ -101,11 +101,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       .then((itemsId) => {
         dispatch({ type:'setItemsId', payload:itemsId });
         if (!_.isEmpty(itemsId)) {
-          preloadContentThumbnails(itemsId, 'large')
-            .then((response) => {
-              dispatch({ type:'setItemsImage', payload:response });
-              setLoading(false);
-            });
+          preloadGalleryImages(itemsId, 'large', () => {setLoading(false);});
         } else {
           setLoading(false);
         }
@@ -120,6 +116,16 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       clearInterval(state.intervalEvent);
     }
   }, [state.autoplay]);
+
+  const preloadGalleryImages = (itemsId:string[], size:string, callBack?:()=>void) => {
+    preloadContentThumbnails(itemsId, 'large')
+      .then((response) => {
+        dispatch({ type:'setItemsImage', payload:response });
+        if (!_.isNil(callBack)) {
+          callBack();
+        }
+      });
+  }
 
   const handleMouseMove = (event:React.MouseEvent) => {
     if (state.axisX > event.clientX ) {
@@ -201,8 +207,11 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       }
 
       //reload gallery
-      dispatch({ type:'setItemsId', payload:updatedMediaGallery.children.map(ref => ref.uuid) });
-      setStep(state.itemsId.length);
+      const updatedItemsId = updatedMediaGallery.children.map(ref => ref.uuid);
+      dispatch({ type:'setItemsId', payload:updatedItemsId });
+      preloadGalleryImages(updatedItemsId, 'large', () => {setLoading(false);});
+      //show the last image
+      setStep(updatedItemsId.length - 1);
     } catch (error) {
       console.error(error);
     } finally {
@@ -221,13 +230,15 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
 
       if (!_.isNil(response.data)) {
         const remainItems = response.data as ContentMetadata[];
-        dispatch({type: 'setItemsId', payload: remainItems.map(metadata => metadata.uuid)});
+        const updatedItemsId = remainItems.map(metadata => metadata.uuid);
+        dispatch({type: 'setItemsId', payload: updatedItemsId});
+        preloadGalleryImages(updatedItemsId, 'large');
       }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
-      setStep(0);
+      setStep(prevState => prevState != 0 ? prevState - 1 : 0);
     }
   }
 
