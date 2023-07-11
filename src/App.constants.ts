@@ -44,6 +44,7 @@ export const CONTENT_UPLOAD_API:string = _API_URL + process.env.REACT_APP_CONTEN
 export const CONTENT_DOWNLOAD_API:string = _API_URL + process.env.REACT_APP_CONTENT_DOWNLOAD_API;
 export const CONTENT_THUMBNAIL_API:string = _API_URL + process.env.REACT_APP_CONTENT_THUMBNAIL_API;
 export const CONTENT_STREAM_API:string = _API_URL + process.env.REACT_APP_CONTENT_STREAM_API;
+export const CONTENT_GALLERY_API:string = _API_URL + process.env.REACT_APP_CONTENT_GALLERY_API;
 
 export const ACTIVITY_API:string = _API_URL + process.env.REACT_APP_ACTIVITY_API;
 export const ACTIVITIES_API:string = _API_URL + process.env.REACT_APP_ACTIVITIES_API;

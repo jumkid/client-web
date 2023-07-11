@@ -47,7 +47,9 @@ async function preloadContentThumbnails (contentIds: (string | undefined)[], thu
 }
 
 async function preloadContentThumbnail (contentId: string | undefined, thumbnailSize: string): Promise<string> {
-  if (!contentId) return '';
+  if (!contentId) {
+    return '';
+  }
   const { data, headers } = await contentService.getContentThumbnail(contentId, thumbnailSize);
   const base64 = Buffer.from(data, 'binary').toString('base64');
   return `data:${headers['content-type']};base64,${base64}`;

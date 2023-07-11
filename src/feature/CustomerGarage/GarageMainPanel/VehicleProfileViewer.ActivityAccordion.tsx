@@ -2,15 +2,18 @@ import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, AppBar, Button, Toolbar, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ActivitiesPanel from './ActivityPanel';
+import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import * as C from '../../../App.constants';
 
 interface Props {
+  mode: DISPLAY_MODE
   vehicleId: string
 }
 
-function ActivityAccordion ({vehicleId}:Props) {
+function ActivityAccordion ({mode, vehicleId}:Props) {
 
   return (
-    <Accordion defaultExpanded={true}>
+    <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
       >

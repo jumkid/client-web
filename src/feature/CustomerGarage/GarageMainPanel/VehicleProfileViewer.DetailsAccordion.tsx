@@ -3,18 +3,20 @@ import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Item, ItemText } from '../../../layout/Layout.Theme';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import * as C from '../../../App.constants';
 
 type Props = {
-  expanded: boolean
+  mode: DISPLAY_MODE
   vehicleProfile: VehicleProfile
 }
 
-function DetailsAccordion ({expanded, vehicleProfile}:Props) {
+function DetailsAccordion ({mode, vehicleProfile}:Props) {
   const vehicleEngine = vehicleProfile!.vehicleEngine;
   const vehicleTransmission = vehicleProfile!.vehicleTransmission;
 
   return (
-    <Accordion defaultExpanded={expanded}>
+    <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
       >

@@ -100,8 +100,11 @@ function FastMatchPanel () {
   }
 
   const handleVinSearch = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    if (status === C.LOADING) {
+      return;
+    }
+
     if (event.key === 'Enter') {
-      if (status === C.LOADING) return;
       cleanUp(C.VIN);
       dispatch(fetchVehicleByVin(searchVIN));
     }

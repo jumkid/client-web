@@ -11,7 +11,7 @@ function AddToGarageStepAdminView () {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setCurrentVehicle(connectedVehicle))
+    dispatch(setCurrentVehicle(connectedVehicle));
   }, []);
 
   return (

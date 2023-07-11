@@ -18,6 +18,8 @@ export interface IRestfulClient {
          formData:FormData,
          setProgress?:(progress:number) => void):Promise<APIResponse<any>>
   download(url:string, fileName:string | undefined):void
+
+  deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse<any>>
 }
 
 export class RestfulClient implements IRestfulClient {
@@ -167,7 +169,7 @@ export class RestfulClient implements IRestfulClient {
     const contentType = this.getContentTypeByParams(params);
     const conf = this.getConf(contentType);
     try {
-      const response = await axios.delete(url, conf);
+      const response = await axios.delete(url, {...conf, data: params});
       return {
         status: response ? response.status : 500,
         data: response ? response.data : null

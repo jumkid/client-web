@@ -5,17 +5,19 @@ import * as _ from 'lodash';
 import { Item, ItemText } from '../../../layout/Layout.Theme';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import { currencyFormatter } from '../../../App.utils';
+import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import * as C from '../../../App.constants';
 
 type Props = {
-  expanded: boolean
+  mode: DISPLAY_MODE
   vehicleProfile: VehicleProfile
 }
 
-function PricingViewerAccordion ({expanded, vehicleProfile}:Props) {
+function PricingViewerAccordion ({mode, vehicleProfile}:Props) {
   const vehiclePricing = vehicleProfile!.vehiclePricing;
 
   return(
-    <Accordion defaultExpanded={expanded}>
+    <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Prices</Typography>
       </AccordionSummary>

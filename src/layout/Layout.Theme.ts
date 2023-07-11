@@ -63,9 +63,9 @@ const DesignTokens = (mode: string):object => ({
         root: {
           border: '1px solid',
           borderColor: JK_RED,
-          margin: "1px 0",
+          margin: "12px 0",
           "&.Mui-expanded": {
-            margin: "1px 0"
+            margin: "12px 0"
           }
         }
       }

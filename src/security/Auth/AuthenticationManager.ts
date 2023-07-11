@@ -111,7 +111,9 @@ export class AuthenticationManager implements IAuthenticationManager{
 
   updateTokenUserAvatar(avatarId: string): void {
     console.log("updated token user avatar");
-    if (this.jwtUser) this.jwtUser.avatarId = avatarId;
+    if (this.jwtUser) {
+      this.jwtUser.avatarId = avatarId;
+    }
   }
 
   isLoggedIn(): boolean {

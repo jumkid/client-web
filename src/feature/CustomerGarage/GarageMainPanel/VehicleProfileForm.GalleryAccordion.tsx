@@ -2,23 +2,22 @@ import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GalleryPanel from './GalleryPanel';
-import * as C from '../../../App.constants';
 import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
 
-interface Props {
+type Props = {
   mode: DISPLAY_MODE
-  mediaGalleryId?: string | null
 }
 
-function GalleryAccordion ({mode, mediaGalleryId}:Props) {
+function GalleryAccordion ({mode}:Props) {
 
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Gallery</Typography>
       </AccordionSummary>
+
       <AccordionDetails>
-        <GalleryPanel mode={mode} mediaGalleryId={mediaGalleryId}/>
+        <GalleryPanel mode={mode} />
       </AccordionDetails>
     </Accordion>
   )

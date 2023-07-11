@@ -10,6 +10,7 @@ import { ErrorsContext } from './VehicleProfileContext';
 import { initValidationErrors } from './VehicleProfileForm.Validator';
 import VehicleFormActionsBar from './VehicleProfileForm.ActionsBar';
 import { Box } from '@mui/material';
+import * as C from '../../../App.constants';
 
 function GarageMainPanel () {
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
@@ -39,7 +40,7 @@ function GarageMainPanel () {
           </Box>
           <VehicleProfileForm />
         </ErrorsContext.Provider>}
-        {!isAdmin && <VehicleProfileViewer vehicleProfile={currentVehicle} mode='active'/>}
+        { !isAdmin && <VehicleProfileViewer vehicleProfile={currentVehicle} mode={C.MODE_ACTIVE}/> }
       </>
       }
     </>

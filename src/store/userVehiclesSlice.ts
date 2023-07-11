@@ -106,6 +106,9 @@ export const userVehiclesSlice = createSlice({
     changeAccessScope:  (state, action) => {
       state.currentVehicle!.accessScope = action.payload;
     },
+    changeMediaGalleryId: (state, action) => {
+      state.currentVehicle!.mediaGalleryId = action.payload;
+    },
     changePricingMSRP: (state, action) => {
       if (_.isNil(state.currentVehicle!.vehiclePricing)) {
         state.currentVehicle!.vehiclePricing = { id:null, msrp:0 }
@@ -211,7 +214,7 @@ export const userVehiclesSlice = createSlice({
 export const {
   changePick, setCurrentVehicle,
   setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncCurrentVehicleToList,
-  changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope,
+  changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope, changeMediaGalleryId,
   changePricingMSRP,
   changeEngineType, changeEngineName, changeEngineFuelType, changeEngineHorsepower, changeEngineCode,
   changeEngineCylinder, changeEngineDisplacement, changeEngineTorque, changeEngineTorqueRpm, changeEngineHorsepowerRpm,

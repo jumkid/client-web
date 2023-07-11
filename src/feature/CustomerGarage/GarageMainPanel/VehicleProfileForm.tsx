@@ -4,9 +4,9 @@ import { Lock, LockOpen } from '@mui/icons-material';
 import * as C from '../../../App.constants';
 import { Item } from '../../../layout/Layout.Theme';
 import * as _ from 'lodash';
-import GalleryAccordion from './VehicleProfileViewer.GalleryAccordion';
+import GalleryAccordion from './VehicleProfileForm.GalleryAccordion';
 import DetailsAccordion from './VehicleProfileForm.DetailsAccordion';
-import { MODE_ACTIVE, PRIVATE, PUBLIC } from '../../../App.constants';
+import { PRIVATE, PUBLIC } from '../../../App.constants';
 import { S_FormControl } from '../../../layout/Layout.Theme';
 import {
   changeAccessScope,
@@ -23,12 +23,12 @@ import { changeName } from '../../../store/vehicleActivitiesSlice';
 import PricingAccordion from './VehicleProfileForm.PricingAccordion';
 
 function VehicleProfileForm () {
-  const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
+  const editableVehicle = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
   const {errors, setErrors} = useContext(ErrorsContext);
 
   const dispatch = useAppDispatch();
 
-  const validator = new Validator(vehicleProfile, errors);
+  const validator = new Validator(editableVehicle, errors);
 
   const handleNameChange = (event:ChangeEvent<HTMLInputElement>):void => {
     const value = event.target.value
@@ -66,7 +66,7 @@ function VehicleProfileForm () {
   };
 
   const toggleAccessScope = ():void => {
-    dispatch(changeAccessScope(vehicleProfile!.accessScope === PUBLIC ? PRIVATE : PUBLIC));
+    dispatch(changeAccessScope(editableVehicle!.accessScope === PUBLIC ? PRIVATE : PUBLIC));
     validateForm();
   }
 
@@ -80,14 +80,14 @@ function VehicleProfileForm () {
         <Grid item xs={12}>
           <Avatar
             variant="rounded"
-            src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicleProfile!.make}.png`}
+            src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${editableVehicle!.make}.png`}
             sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
           />
         </Grid>
         <Grid item xs={4}>
           <IconButton sx={{ float: 'right' }} aria-label="access scope" component="label" onClick={toggleAccessScope}>
-            { vehicleProfile!.accessScope === PRIVATE && <Lock fontSize="large"/> }
-            { vehicleProfile!.accessScope === PUBLIC && <LockOpen fontSize="large"/> }
+            { editableVehicle!.accessScope === PRIVATE && <Lock fontSize="large"/> }
+            { editableVehicle!.accessScope === PUBLIC && <LockOpen fontSize="large"/> }
           </IconButton>
         </Grid>
       </Grid>
@@ -99,7 +99,7 @@ function VehicleProfileForm () {
             onChange={handleNameChange}
             required={true}
             variant="outlined"
-            value={vehicleProfile!.name}
+            value={editableVehicle!.name}
             error={!_.isNil(errors.name)}
             helperText={!_.isNil(errors.name) ? errors.name : ' '}
           />
@@ -112,7 +112,7 @@ function VehicleProfileForm () {
               onChange={handleMakeChange}
               required={true}
               variant="outlined"
-              value={vehicleProfile!.make}
+              value={editableVehicle!.make}
               error={!_.isNil(errors.make)}
               helperText={!_.isNil(errors.make) ? errors.make : ' '}
             />
@@ -124,7 +124,7 @@ function VehicleProfileForm () {
               onChange={handleModelChange}
               required={true}
               variant="outlined"
-              value={vehicleProfile!.model}
+              value={editableVehicle!.model}
               error={!_.isNil(errors.model)}
               helperText={!_.isNil(errors.model) ? errors.model : ' '}
             />
@@ -136,7 +136,7 @@ function VehicleProfileForm () {
               onChange={handleTrimLevelChange}
               required={true}
               variant="outlined"
-              value={vehicleProfile!.trimLevel}
+              value={editableVehicle!.trimLevel}
               error={!_.isNil(errors.trimLevel)}
               helperText={!_.isNil(errors.trimLevel) ? errors.trimLevel : ' '}
             />
@@ -149,7 +149,7 @@ function VehicleProfileForm () {
               required={true}
               type="integer"
               variant="outlined"
-              value={vehicleProfile!.modelYear}
+              value={editableVehicle!.modelYear}
               error={!_.isNil(errors.modelYear)}
               helperText={!_.isNil(errors.modelYear) ? errors.modelYear : null}
             />
@@ -157,12 +157,11 @@ function VehicleProfileForm () {
         </Item>
       </S_FormControl>
 
-      <PricingAccordion expanded={true} />
+      <GalleryAccordion mode={C.MODE_ACTIVE}/>
 
-      <DetailsAccordion expanded={true} />
+      <PricingAccordion mode={C.MODE_ACTIVE} />
 
-      <GalleryAccordion mode={MODE_ACTIVE} mediaGalleryId={ vehicleProfile!.mediaGalleryId } />
-
+      <DetailsAccordion mode={C.MODE_ACTIVE}/>
     </Stack>
   );
 }

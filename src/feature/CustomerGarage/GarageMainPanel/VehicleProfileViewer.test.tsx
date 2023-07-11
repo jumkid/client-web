@@ -5,6 +5,7 @@ import { testVehicleProfile } from '../../../App.test';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
+import * as C from '../../../App.constants';
 
 //Configuring a mockStore
 const middlewares = [thunk];
@@ -25,7 +26,7 @@ describe(VehicleProfileViewer, () => {
       const tree = ReactTestRenderer
         .create(
           <Provider store={store}>
-            <VehicleProfileViewer showName={false} vehicleProfile={testVehicleProfile} mode='active'/>
+            <VehicleProfileViewer showName={false} vehicleProfile={testVehicleProfile} mode={C.MODE_ACTIVE} />
           </Provider>
         )
         .toJSON();

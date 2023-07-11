@@ -31,12 +31,14 @@ import {
   changeTransmissionNumberOfSpeeds,
   changeTransmissionType
 } from '../../../store/userVehiclesSlice';
+import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import * as C from '../../../App.constants';
 
 type Props = {
-  expanded: boolean
+  mode: DISPLAY_MODE
 }
 
-function DetailsAccordion ({expanded}:Props) {
+function DetailsAccordion ({mode}:Props) {
   const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
 
   const vehicleEngine = vehicleProfile!.vehicleEngine!;
@@ -157,10 +159,11 @@ function DetailsAccordion ({expanded}:Props) {
   };
 
   return (
-    <Accordion defaultExpanded={expanded}>
+    <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Technical Spec</Typography>
       </AccordionSummary>
+
       <AccordionDetails>
         <Stack className="dashboard-viewer-box">
           { vehicleEngine &&

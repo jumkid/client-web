@@ -10,18 +10,20 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Item, S_FormControl } from '../../../layout/Layout.Theme';
-import * as _ from 'lodash';
 import { changePricingMSRP } from '../../../store/userVehiclesSlice';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { RootState } from '../../../store';
 import { ErrorsContext } from './VehicleProfileContext';
 import Validator from './VehicleProfileForm.Validator';
+import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import * as _ from 'lodash';
+import * as C from '../../../App.constants';
 
 type Props = {
-  expanded: boolean
+  mode: DISPLAY_MODE
 }
 
-function PricingAccordion ({expanded}:Props) {
+function PricingAccordion ({mode}:Props) {
   const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
   const vehiclePricing = vehicleProfile!.vehiclePricing!;
 
@@ -40,10 +42,11 @@ function PricingAccordion ({expanded}:Props) {
   const validateForm = () => {setErrors( { ...validator.errors });};
 
   return (
-    <Accordion defaultExpanded={expanded}>
+    <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Prices</Typography>
       </AccordionSummary>
+
       <AccordionDetails>
         <Stack className="dashboard-viewer-box">
           <S_FormControl>

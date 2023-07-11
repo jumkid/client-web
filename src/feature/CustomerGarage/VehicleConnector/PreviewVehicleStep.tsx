@@ -1,11 +1,16 @@
-import React from 'react';
-import { Box, Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, Button, Stack } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import VehicleProfileViewer from '../GarageMainPanel/VehicleProfileViewer';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import { RootState } from '../../../store';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setConnectorStep } from '../../../store/connectedVehicleSlice';
+import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
+import * as C from '../../../App.constants';
+import VehicleProfileSummary from '../GarageMainPanel/VehicleProfileViewer.Summary';
+import GalleryAccordion from '../GarageMainPanel/VehicleProfileViewer.GalleryAccordion';
+import PricingViewerAccordion from '../GarageMainPanel/VehicleProfileViewer.PricingAccordion';
+import DetailsAccordion from '../GarageMainPanel/VehicleProfileViewer.DetailsAccordion';
 
 interface Prop {
   connectedVehicle: VehicleProfile
@@ -14,6 +19,10 @@ interface Prop {
 function PreviewVehicleStep ({connectedVehicle}:Prop) {
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setCurrentVehicle(null));
+  }, [connectedVehicle]);
 
   const handleBackward = (): void => {
     dispatch(setConnectorStep(currentStep - 1));
@@ -37,7 +46,17 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
           Next<ArrowForwardIos/>
         </Button>
       </Box>
-      <VehicleProfileViewer showName={false} vehicleProfile={connectedVehicle} mode='simple'/>
+      <Stack className="dashboard-viewer-box">
+
+        <VehicleProfileSummary showName={false} vehicleProfile={connectedVehicle}/>
+
+        <GalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
+
+        <PricingViewerAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle} />
+
+        <DetailsAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle}/>
+
+      </Stack>
     </>
   )
 }

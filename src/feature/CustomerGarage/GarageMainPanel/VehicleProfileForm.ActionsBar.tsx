@@ -53,7 +53,9 @@ function VehicleFormActionsBar () {
   };
 
   const handleSave = ():void => {
-    if (status === C.LOADING || _.isNil(currentVehicle)) return;
+    if (status === C.LOADING || _.isNil(currentVehicle)) {
+      return;
+    }
 
     if (!_.isNil(currentVehicle.id)) {
       dispatch(updateVehicle({id:currentVehicle.id!, vehicle:currentVehicle}))
@@ -79,7 +81,9 @@ function VehicleFormActionsBar () {
   }
 
   const confirmDelete = ():void => {
-    if (status === C.LOADING || _.isNil(currentVehicle)) return;
+    if (status === C.LOADING || _.isNil(currentVehicle)) {
+      return;
+    }
 
     if (!_.isNil(currentVehicle.id)) {
       setIsConfirmOpen(true);
