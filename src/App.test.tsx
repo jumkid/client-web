@@ -10,8 +10,8 @@ import { USER_ROLE } from './App.constants';
 import * as C from './App.constants';
 
 describe(App, () => {
-  beforeAll(() => {});
-  beforeEach(() => {});
+  beforeAll(() => { return; });
+  beforeEach(() => { return; });
 
   it('renders user login screen', () => {
     renderWithRouter(<App />, {});
@@ -35,8 +35,8 @@ describe(App, () => {
     expect(screen.getByText(/My Garage/i)).toBeDefined();
   });
 
-  afterAll(() => {});
-  afterEach(() => {});
+  afterAll(() => { return; });
+  afterEach(() => { return; });
 });
 
 export const renderWithRouter = (ui:React.ReactElement, {route = '/'} = {}) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Divider, Fade, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
+import { Box, Button, Divider, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
 import authenticationService from '../../service/AuthenticationService';
 import SimpleLayout from '../../layout/SimpleLayout';
 

@@ -26,11 +26,7 @@ import { ErrorsContext } from './ActivityContext';
 import { DATETIME_FORMAT, DATETIME_FORMAT_NO_SECOND } from '../../../../App.constants';
 import { S_FormControl } from '../../../../layout/Layout.Theme';
 
-interface Props {
-  vehicleId: string
-}
-
-function ActivityMainForm ({vehicleId}:Props) {
+function ActivityMainForm () {
   const activity = useAppSelector((state:RootState) => state.vehicleActivities.currentActivity);
   const activityPriorities = useAppSelector((state:RootState) => state.vehicleActivities.activityPriorities);
   const activityStatuses = useAppSelector((state:RootState) => state.vehicleActivities.activityStatuses);

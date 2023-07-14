@@ -205,7 +205,7 @@ export const userVehiclesSlice = createSlice({
       .addCase(deleteVehicle.pending, (state) => {
         state.currentVehicleStatus = C.LOADING;
       })
-      .addCase(deleteVehicle.fulfilled, (state, action) => {
+      .addCase(deleteVehicle.fulfilled, (state) => {
         state.currentVehicleStatus = C.SUCCEEDED;
       });
   }

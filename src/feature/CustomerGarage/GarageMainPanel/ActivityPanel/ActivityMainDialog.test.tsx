@@ -8,7 +8,7 @@ describe(ActivityMainDialog, () => {
   it('Should render correctly', () => {
     render(
       <Provider store={store}>
-        <ActivityMainDialog setShowDialog={(showDialog):void => {}} showDialog={true} vehicleId='abed-1234'/>
+        <ActivityMainDialog setShowDialog={(showDialog):void => { return; }} showDialog={true} vehicleId='abed-1234'/>
       </Provider>
     );
     expect(screen.getByText(/Activity Details/i)).toBeDefined();

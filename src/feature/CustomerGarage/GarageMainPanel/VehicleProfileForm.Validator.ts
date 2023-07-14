@@ -112,10 +112,10 @@ class Validator {
   validatePricingMSRP (value: number) {
     if (value < 0) {
       this.errors.pricing = { msrp:"msrp should be greater than or equal to 0" };
-    } else if (!_.isNil(this.errors.pricing)) {
-      delete this.errors.pricing.msrp;
+    } else {
+      delete this.errors.pricing?.msrp;
     }
-
+    this.cleanUpPricingError();
     this.setHasUpdate();
   }
 
@@ -161,7 +161,7 @@ class Validator {
     } else {
       delete this.errors.engine?.horsepower;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -171,7 +171,7 @@ class Validator {
     } else {
       delete this.errors.engine?.horsepowerRpm;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -181,7 +181,7 @@ class Validator {
     } else {
       delete this.errors.engine?.torque;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -191,7 +191,7 @@ class Validator {
     } else {
       delete this.errors.engine?.torqueRpm;
     }
-
+    this.cleanUpEngineError();
     this.setHasUpdate();
   }
 
@@ -213,7 +213,7 @@ class Validator {
     } else {
       delete this.errors.transmission?.numberOfSpeeds;
     }
-
+    this.cleanUpTransmissionError();
     this.setHasUpdate();
   }
 
@@ -225,9 +225,21 @@ class Validator {
     this.errors.hasUpdate = true;
   }
 
+  cleanUpPricingError () {
+    if (!_.isNil(this.errors.pricing) && Object.values(this.errors.pricing).length == 0) {
+      delete this.errors.pricing
+    }
+  }
+
   cleanUpEngineError () {
     if (!_.isNil(this.errors.engine) && Object.values(this.errors.engine).length == 0) {
       delete this.errors.engine
+    }
+  }
+
+  cleanUpTransmissionError () {
+    if (!_.isNil(this.errors.transmission) && Object.values(this.errors.transmission).length == 0) {
+      delete this.errors.transmission
     }
   }
 

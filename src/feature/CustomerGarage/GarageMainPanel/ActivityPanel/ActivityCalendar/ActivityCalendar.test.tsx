@@ -1,6 +1,6 @@
 import React from 'react';
 import ActivityCalendar from './ActivityCalendar';
-import ReactTestRenderer, { act } from 'react-test-renderer';
+import ReactTestRenderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import { store } from '../../../../../store';
 

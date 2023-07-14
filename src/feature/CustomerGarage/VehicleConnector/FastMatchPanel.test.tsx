@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestRenderer, { act } from 'react-test-renderer';
+import ReactTestRenderer from 'react-test-renderer';
 import FastMatchPanel from './FastMatchPanel';
 import { Provider } from 'react-redux';
 import { store } from '../../../store';

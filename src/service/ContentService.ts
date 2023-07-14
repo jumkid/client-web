@@ -21,7 +21,7 @@ export interface IContentService {
   download(uuid:string, fileName:string | undefined):void
   galleryUpload(
     mediaGalleryId:string,
-    file:Blob,
+    file:FileList,
     tags:(string | number | null | undefined)[],
     title:string | null,
     accessScope: AccessScope,
@@ -88,14 +88,16 @@ class ContentService implements IContentService{
 
   async galleryUpload(
     mediaGalleryId:string | null | undefined,
-    files:Blob,
+    files:FileList,
     tags:(string | number | null | undefined)[],
     title:string | null | undefined,
     accessScope: AccessScope | null,
     setProgress:(progress:number) => void
   ):Promise<APIResponse<ContentMetadata>> {
     const formData = new FormData();
-    formData.append("files", files);
+    for (let i=0;i<files.length;i++) {
+      formData.append("files", files.item(i)!);
+    }
     formData.append("accessScope", accessScope ? accessScope : C.PRIVATE);
     if (!_.isNil(title)) { formData.append("title", title);}
     if (!_.isNil(tags)) {  formData.append("tags", tags.join(',')); }

@@ -28,10 +28,6 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
     dispatch(setConnectorStep(currentStep - 1));
   };
 
-  const handleEdit = (): void => {
-    dispatch(setConnectorStep(currentStep + 1));
-  };
-
   const handleForward = (): void => {
     dispatch(setConnectorStep(currentStep + 1));
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestRenderer, { act } from 'react-test-renderer';
+import ReactTestRenderer from 'react-test-renderer';
 import VehicleSearchTable from './VehicleSearchTable';
 import { testVehicleProfile } from '../../../App.test';
 import { Provider } from 'react-redux';

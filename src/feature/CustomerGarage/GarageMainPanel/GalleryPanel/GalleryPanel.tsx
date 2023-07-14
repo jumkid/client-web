@@ -12,6 +12,7 @@ import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
+import { JK_RED } from '../../../../layout/Layout.Theme';
 
 const showDebug= false;
 
@@ -182,7 +183,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
   };
 
   const handleUpload = async (event:ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files?.[0];
+    const files = event.target.files;
     if (!files || isUploading || _.isNil(editableVehicle)) { return; }
 
     setIsUploading(true);
@@ -291,7 +292,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
               Autoplay
             </Button>
             <Button component="label" aria-label="upload" color="primary">
-              <input onChange={handleUpload} hidden accept="*/*" type="file"/>
+              <input onChange={handleUpload} hidden accept="*/*" type="file" multiple={true}/>
               <Upload />Upload
             </Button>
             <Button
@@ -318,7 +319,8 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
 
       <Box gridColumn="span 1" sx={{ float: 'right', overflowY: 'auto' }}>
         {!_.isEmpty(state.itemsImage) && !loading && state.itemsImage.map((itemImage, idx) => (
-          <Paper key={idx}
+          <Paper
+            key={idx}
             sx={{
               width: '90%',
               height: 54,
@@ -328,6 +330,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center center',
               cursor: 'pointer',
+              border: `4px ${(step === idx) ? JK_RED : '#000'} solid`
             }}
             onClick={() => setStep(idx)}
           >

@@ -7,8 +7,8 @@ describe(ConfirmDialog, () => {
     render(<ConfirmDialog
       title='test confirm dialog'
       isShown={true}
-      confirmCallback={()=>{}}
-      cancelCallback={()=>{}}
+      confirmCallback={()=>{ return; }}
+      cancelCallback={()=>{ return; }}
     />);
     expect(screen.getByText(/test confirm dialog/i)).toBeDefined();
   });

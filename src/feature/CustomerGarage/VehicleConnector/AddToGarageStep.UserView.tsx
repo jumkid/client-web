@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { changeConnectedVehicleName, setConnectorStep } from '../../../store/connectedVehicleSlice';
 import { saveNewVehicle } from '../../../store/userVehiclesSlice';

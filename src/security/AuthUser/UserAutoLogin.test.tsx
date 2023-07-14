@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTestRenderer, { act } from 'react-test-renderer';
+import ReactTestRenderer from 'react-test-renderer';
 import UserAutoLogin from './UserAutoLogin';
 import { Route } from '@mui/icons-material';
 

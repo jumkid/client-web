@@ -2,7 +2,6 @@ import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GalleryPanel from './GalleryPanel';
-import * as C from '../../../App.constants';
 import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
 
 interface Props {

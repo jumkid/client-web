@@ -21,7 +21,7 @@ export const fetchActivityPriorities = createAsyncThunk('activityPriorities/fetc
 );
 
 export const saveNew = createAsyncThunk('vehicleActivity/new',
-  async (activity: Activity, {rejectWithValue}) => {
+  async (activity:Activity, {rejectWithValue}) => {
     try {
       return await activityService.saveNewActivity(activity);
     } catch (e:any) {
@@ -32,11 +32,11 @@ export const saveNew = createAsyncThunk('vehicleActivity/new',
 );
 
 export const saveUpdate = createAsyncThunk('vehicleActivity/update',
-  async (activity: Activity) => activityService.updateActivity(activity)
+  async (activity:Activity) => activityService.updateActivity(activity)
 );
 
 export const deleteActivity = createAsyncThunk('vehicleActivity/delete',
-  async (activityId: number) => activityService.deleteActivity(activityId)
+  async (activityId:number) => activityService.deleteActivity(activityId)
 );
 
 export const saveActivityContent = createAsyncThunk('vehicleActivity/content/update',
@@ -44,7 +44,7 @@ export const saveActivityContent = createAsyncThunk('vehicleActivity/content/upd
 );
 
 export const deleteActivityContent = createAsyncThunk('vehicleActivity/content/delete',
-  async (id: number) => activityService.deleteActivityContent(id)
+  async (id:number) => activityService.deleteActivityContent(id)
 );
 
 type VehicleActivitiesState = {

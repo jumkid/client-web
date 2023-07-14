@@ -1,6 +1,6 @@
 import React from 'react';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import { Box, Card, CardActions, CardContent, Fade, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Fade, Link, Typography } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch } from '../../../App.hooks';

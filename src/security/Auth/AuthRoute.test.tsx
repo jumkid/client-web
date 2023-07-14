@@ -12,7 +12,7 @@ describe(AuthRoute, () => {
   const token = getTestJwtToken();
 
   it('Should render correctly render child component with jwt', async () => {
-    authenticationManager.updateToken(getTestJwtToken());
+    authenticationManager.updateToken(token);
 
     await act(async () => {
       const tree = ReactTestRenderer

@@ -1,12 +1,12 @@
 import React from 'react';
 import { grey } from '@mui/material/colors';
 import styled from '@emotion/styled';
-import { Box, FormControl, Paper } from '@mui/material';
+import { FormControl, Paper } from '@mui/material';
 import { Theme } from '@emotion/react';
 
 const ColorModeContext = React.createContext({ toggleColorMode: ():void => { console.log("empty function");} });
 
-const JK_RED = '#C41407';
+export const JK_RED = '#C41407';
 
 const DesignTokens = (mode: string):object => ({
   palette: {

@@ -8,7 +8,7 @@ describe(ActivityMainForm, () => {
   it('Should render correctly', () => {
     render(
       <Provider store={store}>
-        <ActivityMainForm  vehicleId='abed-1234'/>
+        <ActivityMainForm/>
       </Provider>);
     expect(screen.getByText(/Assignee/i)).toBeDefined();
   });

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import * as _ from 'lodash';
 import GalleryAccordion from './VehicleProfileViewer.GalleryAccordion';
 import DetailsAccordion from './VehicleProfileViewer.DetailsAccordion';
 import ActivityAccordion from './VehicleProfileViewer.ActivityAccordion';
@@ -16,8 +15,6 @@ type Props = {
 }
 
 function VehicleProfileViewer ({ showName, vehicleProfile, mode }:Props) {
-  const showEditableName = _.isUndefined(showName) ? true : showName;
-
   return (
     <Stack className="dashboard-viewer-box">
       <VehicleProfileSummary showName={showName} vehicleProfile={vehicleProfile}/>

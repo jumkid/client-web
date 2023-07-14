@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, AppBar, Button, Toolbar, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ActivitiesPanel from './ActivityPanel';
 import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
