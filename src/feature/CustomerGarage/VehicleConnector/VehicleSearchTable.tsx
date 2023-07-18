@@ -79,7 +79,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {vehicles.map((vehicle, index) => (
+            {!_.isNil(vehicles) && vehicles.map((vehicle, index) => (
               <TableRow
                 key={index}
                 hover

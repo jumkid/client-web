@@ -7,22 +7,22 @@ import {
   saveNewVehicle, setCurrentVehicle,
   syncCurrentVehicleToList,
   updateVehicle
-} from '../../../store/userVehiclesSlice';
-import { ErrorsContext } from './VehicleProfileContext';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { RootState } from '../../../store';
-import * as C from '../../../App.constants';
+} from '../../../../store/userVehiclesSlice';
+import { ErrorsContext } from '../VehicleProfileContext';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
+import * as C from '../../../../App.constants';
 import * as _ from 'lodash';
-import ConfirmDialog from '../../../component/ConfirmDialog';
-import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedVehicleSlice';
+import ConfirmDialog from '../../../../component/ConfirmDialog';
+import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
 import {
   clearMatchFields,
   fetchMatchVehicles,
   setMatchVehicles,
   setStatus
-} from '../../../store/searchVehiclesSlice';
-import { APIResponse } from '../../../service/model/Response';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
+} from '../../../../store/searchVehiclesSlice';
+import { APIResponse } from '../../../../service/model/Response';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 
 function VehicleFormActionsBar () {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import VehicleProfileForm from '../GarageMainPanel/VehicleProfileForm';
+import VehicleProfileForm from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
 import { RootState } from '../../../store';

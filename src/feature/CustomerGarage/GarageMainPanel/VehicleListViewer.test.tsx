@@ -1,16 +1,15 @@
 import React from 'react';
-import ActivityCalendar from './ActivityCalendar';
+import VehicleListViewer from './VehicleListViewer';
 import ReactTestRenderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
-import { store } from '../../../../../store';
-import * as C from '../../../../../App.constants';
+import { store } from '../../../store';
 
-describe(ActivityCalendar, () => {
-  test('Should render correctly', () => {
+describe(VehicleListViewer, () => {
+  it('should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
         <Provider store={store}>
-          <ActivityCalendar mode={C.WEEK}/>
+          <VehicleListViewer />
         </Provider>
       )
       .toJSON();

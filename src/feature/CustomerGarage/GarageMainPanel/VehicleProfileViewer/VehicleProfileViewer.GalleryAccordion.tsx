@@ -1,8 +1,8 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import GalleryPanel from './GalleryPanel';
-import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import GalleryPanel from '../GalleryPanel';
+import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 
 interface Props {
   mode: DISPLAY_MODE

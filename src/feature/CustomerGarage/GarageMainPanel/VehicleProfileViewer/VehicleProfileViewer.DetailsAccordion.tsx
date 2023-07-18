@@ -1,10 +1,10 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Item, ItemText } from '../../../layout/Layout.Theme';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
-import * as C from '../../../App.constants';
+import { Item, ItemText } from '../../../../layout/Layout.Theme';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
+import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
+import * as C from '../../../../App.constants';
 
 type Props = {
   mode: DISPLAY_MODE

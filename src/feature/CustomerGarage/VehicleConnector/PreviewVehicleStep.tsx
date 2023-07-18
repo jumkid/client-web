@@ -7,10 +7,10 @@ import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setConnectorStep } from '../../../store/connectedVehicleSlice';
 import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
 import * as C from '../../../App.constants';
-import VehicleProfileSummary from '../GarageMainPanel/VehicleProfileViewer.Summary';
-import GalleryAccordion from '../GarageMainPanel/VehicleProfileViewer.GalleryAccordion';
-import PricingViewerAccordion from '../GarageMainPanel/VehicleProfileViewer.PricingAccordion';
-import DetailsAccordion from '../GarageMainPanel/VehicleProfileViewer.DetailsAccordion';
+import VehicleProfileSummary from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.Summary';
+import GalleryAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.GalleryAccordion';
+import PricingViewerAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.PricingAccordion';
+import DetailsAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.DetailsAccordion';
 
 interface Prop {
   connectedVehicle: VehicleProfile

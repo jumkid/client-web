@@ -1,16 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import VehicleProfileViewer from './VehicleProfileViewer';
+import VehicleProfileViewer from './VehicleProfileViewer/VehicleProfileViewer';
 import VehicleListViewer from './VehicleListViewer';
 import { RootState } from '../../../store';
 import { useAppSelector } from '../../../App.hooks';
 import VehicleConnector from '../VehicleConnector';
 import authenticationManager from '../../../security/Auth/AuthenticationManager';
-import VehicleProfileForm from './VehicleProfileForm';
+import VehicleProfileForm from './VeichleProfileForm/VehicleProfileForm';
 import { ErrorsContext } from './VehicleProfileContext';
-import { initValidationErrors } from './VehicleProfileForm.Validator';
-import VehicleFormActionsBar from './VehicleProfileForm.ActionsBar';
+import { initValidationErrors } from './VeichleProfileForm/VehicleProfileForm.Validator';
+import VehicleFormActionsBar from './VeichleProfileForm/VehicleProfileForm.ActionsBar';
 import { Box } from '@mui/material';
 import * as C from '../../../App.constants';
+import * as _ from 'lodash';
 
 function GarageMainPanel () {
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
@@ -31,16 +32,18 @@ function GarageMainPanel () {
 
       {currentPick === 1 && <VehicleListViewer/>}
 
-      {currentPick > 1 && currentVehicle &&
+      {currentPick > 1 && !_.isNil(currentVehicle) &&
       <>
-        {isAdmin &&
-        <ErrorsContext.Provider value={errorsProvider}>
-          <Box mx={2} mt={2} mb={1}>
-            <VehicleFormActionsBar />
-          </Box>
-          <VehicleProfileForm />
-        </ErrorsContext.Provider>}
-        { !isAdmin && <VehicleProfileViewer vehicleProfile={currentVehicle} mode={C.MODE_ACTIVE}/> }
+        { isAdmin ?
+          <ErrorsContext.Provider value={errorsProvider}>
+            <Box mx={2} mt={2} mb={1}>
+              <VehicleFormActionsBar />
+            </Box>
+            <VehicleProfileForm />
+          </ErrorsContext.Provider>
+          :
+          <VehicleProfileViewer vehicleProfile={currentVehicle} mode={C.MODE_ACTIVE}/>
+        }
       </>
       }
     </>

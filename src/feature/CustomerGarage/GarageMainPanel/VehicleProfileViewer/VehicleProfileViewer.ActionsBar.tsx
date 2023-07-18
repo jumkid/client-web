@@ -1,12 +1,12 @@
 import React from 'react';
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { RootState } from '../../../store';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
 import * as _ from 'lodash';
-import * as C from '../../../App.constants';
-import { saveNewVehicle } from '../../../store/userVehiclesSlice';
-import { setConnectorStep } from '../../../store/connectedVehicleSlice';
+import * as C from '../../../../App.constants';
+import { saveNewVehicle } from '../../../../store/userVehiclesSlice';
+import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
 
 function VehicleViewerActionsBar () {
   const connectedVehicle = useAppSelector((state:RootState) => state.connectedVehicle.vehicle);

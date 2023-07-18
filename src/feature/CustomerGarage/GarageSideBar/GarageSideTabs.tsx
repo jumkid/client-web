@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { grey } from '@mui/material/colors';
 import { changePick } from '../../../store/userVehiclesSlice';
 import SideTabWaitSkeleton from './SideTabWaitSkeleton';
+import * as C from '../../../App.constants';
+import * as _ from 'lodash';
 
 export const SIDE_TABS_OFFSET = 2;
 
@@ -35,11 +37,11 @@ function GarageSideTabs () {
           icon={<DirectionsCarFilled sx={{ mr: 1 }} />}
         />
         <Tab icon={<ViewList/>} iconPosition="start" label="LIST" sx={{ backgroundColor: grey[900] }}/>
-        { userVehicles.map((vehicle, index) =>
+        { !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
           <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }} wrapped={true}/>
         )}
       </Tabs>
-      { <SideTabWaitSkeleton isShown={status === 'loading'} /> }
+      { <SideTabWaitSkeleton isShown={status === C.LOADING} /> }
     </>
   );
 }

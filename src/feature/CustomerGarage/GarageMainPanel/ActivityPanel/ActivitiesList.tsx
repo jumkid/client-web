@@ -7,6 +7,7 @@ import './Activity.css';
 import { ErrorsContext } from './ActivityContext';
 import { Activity } from '../../../../store/model/Activity';
 import { dateFormatter, timeFormatter } from '../../../../App.utils';
+import * as _ from 'lodash';
 
 interface Props {
   activities?: Activity[]
@@ -27,7 +28,7 @@ function ActivitiesList ({activities}:Props) {
 
   return (
     <Box padding={1}>
-      { activities?.map((activity, index) =>
+      { !_.isNil(activities) && activities.map((activity, index) =>
         <div key={index}>
           <Event className="activity-icon" />
           <Chip className="date-chip" label={dateFormatter(activity.startDate)}/>

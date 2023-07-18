@@ -318,7 +318,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       </Stack>
 
       <Box gridColumn="span 1" sx={{ float: 'right', overflowY: 'auto' }}>
-        {!_.isEmpty(state.itemsImage) && !loading && state.itemsImage.map((itemImage, idx) => (
+        {!loading && !_.isEmpty(state.itemsImage) && state.itemsImage.map((itemImage, idx) => (
           <Paper
             key={idx}
             sx={{

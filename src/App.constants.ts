@@ -22,6 +22,11 @@ export const ADMIN_ROLE = 'ADMIN_ROLE';
 export const MODE_SIMPLE = 'simple';
 export const MODE_ACTIVE = 'active';
 
+export const DAY = "day";
+export const WEEK = "week";
+export const MONTH = "month";
+export const YEAR = "year";
+
 export const DATETIME_FORMAT_NO_SECOND = 'YYYY-MM-DDTHH:mm';
 export const DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
 export const DATE_FORMAT = 'YYYY-MM-DD';
@@ -52,6 +57,7 @@ export const ACTIVITY_CONTENT_API:string = _API_URL + process.env.REACT_APP_ACTI
 
 export const USER_ACTIVITY_NOTIFICATION_API:string = _API_URL + process.env.REACT_APP_USER_ACTIVITY_NOTIFICATION_API;
 
+export const DOMAIN_DATA_API:string = _API_URL + process.env.REACT_APP_DOMAIN_DATA_API;
 export const DOMAIN_IMAGES_API:string = _API_URL + process.env.REACT_APP_DOMAIN_IMAGE_API;
 export const DOMAIN_IMAGES_AUTO_BRAND_API:string = DOMAIN_IMAGES_API + '/automobile/brand';
 

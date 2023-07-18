@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar, Grid, IconButton } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import * as C from '../../../App.constants';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
+import * as C from '../../../../App.constants';
 import VehicleNameTools from './VehicleProfileViewer.VehicleNameTools';
-import { Item, ItemHeader, ItemText } from '../../../layout/Layout.Theme';
+import { Item, ItemHeader, ItemText } from '../../../../layout/Layout.Theme';
 import * as _ from 'lodash';
 
 type Props = {
@@ -26,10 +26,7 @@ function VehicleProfileSummary ({ showName, vehicleProfile}:Props) {
               sx={{ float: "left", mb: 1, mr: 2, width: 58, height: 64 }}
             />
             { showEditableName &&
-              <VehicleNameTools
-                vehicleName={vehicleProfile.name!}
-                vehicleId={vehicleProfile.id!}
-              />
+              <VehicleNameTools vehicleName={vehicleProfile.name!} vehicleId={vehicleProfile.id!} />
             }
           </ItemHeader>
         </Grid>

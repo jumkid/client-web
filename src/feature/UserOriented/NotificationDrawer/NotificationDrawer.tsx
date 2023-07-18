@@ -66,7 +66,7 @@ function NotificationDrawer ({drawerOpen, toggleDrawer}:Props) {
       onClose={toggleDrawer}
     >
       <Paper sx={{ m: 2, borderRadius: '13px' }}>
-        { activityNotifications.map((activityNotification, idx) => (
+        { !_.isNil(activityNotifications) && activityNotifications.map((activityNotification, idx) => (
           <ListItem key={idx}>
             <Event sx={{ mr:1 }} fontSize={'small'}/>
             <ListItemText

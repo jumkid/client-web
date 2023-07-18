@@ -119,7 +119,7 @@ function ActivityMainForm () {
                     value={(!_.isEmpty(activityStatuses) && activity?.status) || ''}
                     onChange={handleOnStatusChange}
                   >
-                    { activityStatuses && activityStatuses.map((status, index) => (
+                    { !_.isNil(activityStatuses) && activityStatuses.map((status, index) => (
                       <MenuItem key={index} value={status}>{status}</MenuItem>
                     ))}
                   </Select>
@@ -157,7 +157,7 @@ function ActivityMainForm () {
                     value={(!_.isEmpty(activityPriorities) && activity.priority?.id) || ''}
                     onChange={handleOnPriorityChange}
                   >
-                    { activityPriorities && activityPriorities.map((priority, index) => (
+                    { !_.isNil(activityPriorities) && activityPriorities.map((priority, index) => (
                       <MenuItem key={index} value={priority.id}>
                         {priority.label}
                       </MenuItem>

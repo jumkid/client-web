@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch } from '../../../App.hooks';
 import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedVehicleSlice';
+import * as _ from 'lodash';
 
 interface Prop {
   vehicles: VehicleProfile[]
@@ -21,7 +22,7 @@ function VehicleCardViewer ({vehicles}:Prop) {
   return (
     <Fade in={true}>
       <Box>
-        { vehicles?.map((vehicle, index) => (
+        { !_.isNil(vehicles) && vehicles.map((vehicle, index) => (
           <Card sx={{ width: 236, height: 146 }} raised key={index}>
             <CardContent sx={{ verticalAlign: "top" }}>
               <Typography fontSize="16px" fontWeight="bold" noWrap={true}>

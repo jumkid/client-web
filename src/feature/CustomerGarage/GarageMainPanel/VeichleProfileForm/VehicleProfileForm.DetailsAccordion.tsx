@@ -7,12 +7,12 @@ import {
   Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Item, S_FormControl } from '../../../layout/Layout.Theme';
+import { Item, S_FormControl } from '../../../../layout/Layout.Theme';
 import React, { ChangeEvent, useContext } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { RootState } from '../../../store';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
 import * as _ from 'lodash';
-import { ErrorsContext } from './VehicleProfileContext';
+import { ErrorsContext } from '../VehicleProfileContext';
 import Validator from './VehicleProfileForm.Validator';
 import {
   changeEngineCode,
@@ -29,10 +29,10 @@ import {
   changeTransmissionName,
   changeTransmissionNumberOfSpeeds,
   changeTransmissionType
-} from '../../../store/userVehiclesSlice';
-import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
-import * as C from '../../../App.constants';
-import NumberInputWithDecimal from '../../../component/NumberInputWithDecimal';
+} from '../../../../store/userVehiclesSlice';
+import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
+import * as C from '../../../../App.constants';
+import NumberInputWithDecimal from '../../../../component/NumberInputWithDecimal';
 
 type Props = {
   mode: DISPLAY_MODE

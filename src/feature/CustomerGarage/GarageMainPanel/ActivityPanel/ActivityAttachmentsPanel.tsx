@@ -19,6 +19,7 @@ import { contentService } from '../../../../service';
 import AuthThumbnail from '../../../../component/AuthThumbnail';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { RootState } from '../../../../store';
+import * as _ from 'lodash';
 
 const initialState:{contents:(ContentMetadata | null)[], contentThumbnails:string[]} = {
   contents: [],
@@ -132,7 +133,7 @@ function ActivityAttachmentsPanel () {
       <TableContainer sx={{ overflowX: 'hidden' }}>
         <Table aria-label="activity attachments">
           <TableBody>
-            {contentMetadataList?.map( (contentMetadata, index) =>
+            {!_.isNil(contentMetadataList) && contentMetadataList.map( (contentMetadata, index) =>
               <TableRow
                 key={index}
                 hover

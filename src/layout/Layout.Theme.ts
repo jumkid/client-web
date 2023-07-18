@@ -259,7 +259,7 @@ const ItemHeader = styled(Paper)(({ theme }:ItemProps) => ({
 
 const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
   ...theme,
-  margin: '6px 6px 6px 0'
+  margin: '0 0'
 }));
 
 export {

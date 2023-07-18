@@ -4,17 +4,23 @@ import VehicleFinderStep from './VehicleFinderStep';
 import { RootState } from '../../../store';
 import PreviewVehicleStep from './PreviewVehicleStep';
 import AddToGarageStep from './AddToGarageStep';
-import { useAppSelector } from '../../../App.hooks';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
+import * as C from '../../../App.constants';
 
 const steps = ['Find a Vehicle', 'Preview Vehicle', 'Add to Garage'];
 
 function VehicleConnector () {
   const [currentTab, setCurrentTab] = useState(0);
   const connectedVehicle =useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
+  const dispatch = useAppDispatch();
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
 
   const handleTabChange = (event: React.SyntheticEvent, index: number): void => {
     setCurrentTab(index);
+    if (index === 2) {
+      dispatch(setCurrentVehicle({accessScope:C.PUBLIC, vehicleEngine:{}, vehicleTransmission:{}}));
+    }
   };
 
   const getStepComponents = (currentStep:number): JSX.Element => {
@@ -22,7 +28,7 @@ function VehicleConnector () {
     case 1:
       return <PreviewVehicleStep connectedVehicle={connectedVehicle!}/>
     case 2:
-      return <AddToGarageStep />
+      return <AddToGarageStep/>
     default:
       return <VehicleFinderStep currentTab={currentTab} handleTabChange={handleTabChange}/>;
     }

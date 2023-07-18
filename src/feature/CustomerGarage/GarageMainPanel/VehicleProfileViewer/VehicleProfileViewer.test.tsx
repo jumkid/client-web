@@ -1,35 +1,36 @@
 import React from 'react';
-import VehicleProfileForm from './VehicleProfileForm';
+import VehicleProfileViewer from './VehicleProfileViewer';
 import ReactTestRenderer, { act } from 'react-test-renderer';
-import authenticationManager from '../../../security/Auth/AuthenticationManager';
-import { getTestJwtToken, testVehicleProfile } from '../../../App.test';
+import { testVehicleProfile } from '../../../../App.test';
 import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
+import * as C from '../../../../App.constants';
 
 //Configuring a mockStore
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe(VehicleProfileForm, () => {
+describe(VehicleProfileViewer, () => {
   const store = mockStore({
+    vehicleActivities: {
+      currentActivity: {}
+    },
     userVehicles: {
       currentVehicle: testVehicleProfile
     }
   });
 
-  it('should render correctly', async () => {
+  it('Should render correctly', async () => {
     await act(async () => {
-      authenticationManager.updateToken(getTestJwtToken());
-
       const tree = ReactTestRenderer
         .create(
           <Provider store={store}>
-            <VehicleProfileForm/>
+            <VehicleProfileViewer showName={false} vehicleProfile={testVehicleProfile} mode={C.MODE_ACTIVE} />
           </Provider>
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
   });
-});
+})

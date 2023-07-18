@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import GalleryAccordion from './VehicleProfileViewer.GalleryAccordion';
 import DetailsAccordion from './VehicleProfileViewer.DetailsAccordion';
 import ActivityAccordion from './VehicleProfileViewer.ActivityAccordion';
 import PricingViewerAccordion from './VehicleProfileViewer.PricingAccordion';
-import { DISPLAY_MODE } from '../../../service/model/CommonTypes';
+import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 import VehicleProfileSummary from './VehicleProfileViewer.Summary';
 
 type Props = {

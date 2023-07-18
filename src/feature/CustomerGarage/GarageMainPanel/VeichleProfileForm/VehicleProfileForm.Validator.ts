@@ -1,4 +1,4 @@
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import * as _ from 'lodash';
 
 export type ValidationErrors = {

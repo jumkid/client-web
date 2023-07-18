@@ -8,10 +8,10 @@ import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { RootState } from '../../../store';
 import * as C from '../../../App.constants';
 import AddToGarageStepAdminView from './AddToGarageStep.AdminView';
-import VehicleFormActionsBar from '../GarageMainPanel/VehicleProfileForm.ActionsBar';
+import VehicleFormActionsBar from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.ActionsBar';
 import { ErrorsContext } from '../GarageMainPanel/VehicleProfileContext';
-import { initValidationErrors } from '../GarageMainPanel/VehicleProfileForm.Validator';
-import VehicleViewerActionsBar from '../GarageMainPanel/VehicleProfileViewer.ActionsBar';
+import { initValidationErrors } from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.Validator';
+import VehicleViewerActionsBar from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.ActionsBar';
 
 function AddToGarageStep () {
   const [errors, setErrors] = useState(initValidationErrors);
@@ -35,11 +35,9 @@ function AddToGarageStep () {
         <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>back
         </Button>
-        { !isAdmin && <VehicleViewerActionsBar /> }
-        { isAdmin && <VehicleFormActionsBar /> }
+        { isAdmin ? <VehicleFormActionsBar /> : <VehicleViewerActionsBar /> }
       </Box>
-      { !isAdmin && <AddToGarageStepUserView /> }
-      { isAdmin && <AddToGarageStepAdminView /> }
+      { isAdmin ? <AddToGarageStepAdminView /> : <AddToGarageStepUserView /> }
     </ErrorsContext.Provider>
   )
 }

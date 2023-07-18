@@ -34,8 +34,8 @@ export default function UserAvatarUploadForm () {
   }
 
   const handleSubmit = async () => {
-    if (tokenUser.status === 'loading') { return; }
-    else { dispatch(setStatus('loading')); }
+    if (tokenUser.status === C.LOADING) { return; }
+    else { dispatch(setStatus(C.LOADING)); }
     // step 1: upload content and return new content id
     const {status, data} = await contentService.upload(newAvatar, "public");
     // step 2: update avatar id by the new content id
@@ -61,7 +61,7 @@ export default function UserAvatarUploadForm () {
     }
   }
 
-  const isValidForm = Object.values(errors).length === 0 && (tokenUser.status !== 'loading');
+  const isValidForm = Object.values(errors).length === 0 && (tokenUser.status !== C.LOADING);
 
   return (
     <FormControl sx={{ width: '48vh', top: 30 }}>
@@ -88,7 +88,7 @@ export default function UserAvatarUploadForm () {
         >
           Upload
         </Button>
-        {tokenUser.status === 'loading' && (
+        {tokenUser.status === C.LOADING && (
           <CircularProgress
             size={24}
             sx={{

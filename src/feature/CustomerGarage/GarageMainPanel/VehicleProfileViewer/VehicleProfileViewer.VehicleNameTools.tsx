@@ -1,19 +1,20 @@
 import React, { useContext, useEffect, useMemo, useReducer } from 'react';
 import { Box, Button, CircularProgress, IconButton, TextField } from '@mui/material';
 import { Add, Delete, ModeEdit, Save } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import {
   deleteVehicle,
   saveNewVehicle,
   syncCurrentVehicleToList,
   updateUserVehicleName,
   updateVehicle
-} from '../../../store/userVehiclesSlice';
-import { RootState } from '../../../store';
-import ConfirmDialog from '../../../component/ConfirmDialog';
-import authenticationManager from '../../../security/Auth/AuthenticationManager';
-import { ErrorsContext } from './VehicleProfileContext';
+} from '../../../../store/userVehiclesSlice';
+import { RootState } from '../../../../store';
+import ConfirmDialog from '../../../../component/ConfirmDialog';
+import authenticationManager from '../../../../security/Auth/AuthenticationManager';
+import { ErrorsContext } from '../VehicleProfileContext';
 import * as _ from 'lodash';
+import * as C from '../../../../App.constants';
 
 type ComponentState = {
   name: string
@@ -175,7 +176,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
             save
           </Button>
         }
-        {status === 'loading' && (
+        { status === C.LOADING && (
           <CircularProgress
             size={30}
             sx={{

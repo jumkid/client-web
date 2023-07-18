@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Paper, SxProps } from '@mui/material';
 import { preloadContentThumbnail } from '../App.utils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 interface Props {
   contentId:string | undefined,

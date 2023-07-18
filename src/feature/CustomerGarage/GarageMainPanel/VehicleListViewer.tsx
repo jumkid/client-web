@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Chip,
   FormControl,
-  Icon, IconButton,
-  Link, TablePagination,
+  IconButton,
+  TablePagination,
   TextField, Typography
 } from '@mui/material';
-import * as C from '../../../App.constants';
-import { Clear, PlayArrow, Search } from '@mui/icons-material';
+import { Clear, Search } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import {
   changePick,
@@ -25,6 +19,8 @@ import {
 import { AppDispatch, RootState } from '../../../store';
 import CardWaitSkeleton from '../VehicleConnector/CardWaitSkeleton';
 import * as _ from 'lodash';
+import * as C from '../../../App.constants';
+import VehicleCard from './VehicleListViewer.VehicleCard';
 import { SIDE_TABS_OFFSET } from '../GarageSideBar/GarageSideTabs';
 
 function VehicleListViewer () {
@@ -52,11 +48,6 @@ function VehicleListViewer () {
       dispatch(setPage(0));
       dispatch(fetchUserVehicles({keyword, page: 1, size: pageSize}));
     }
-  };
-
-  const handleClick = (index:number):void => {
-    // the first two index (0 and 1) of tabs are used for specific actions
-    dispatch(changePick(index + SIDE_TABS_OFFSET));
   };
 
   const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined):void => {
@@ -90,6 +81,11 @@ function VehicleListViewer () {
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(changeRowsPerPageAction(Number(event.target.value)));
+  };
+
+  const handleClick = (index:number):void => {
+    // the first two index (0 and 1) of tabs are used for specific actions
+    dispatch(changePick(index + SIDE_TABS_OFFSET));
   };
 
   return (
@@ -128,30 +124,14 @@ function VehicleListViewer () {
           onRowsPerPageChange={handleChangeRowsPerPage}
           variant="head"
         />
-        { <CardWaitSkeleton isShown={status === 'loading'} /> }
-        { _.isEmpty(userVehicles) && (status !== 'loading') &&
-        <Typography variant='h6' m={3}>There is no vehicle in your garage, click the connect button to start.</Typography>}
-        { userVehicles?.map((vehicle, index) => (
-          <Card raised key={index}>
-            <CardHeader
-              titleTypographyProps={{ fontWeight: 'bold', noWrap: true, width: 328 }}
-              title={vehicle.name}
-              subheader={vehicle.trimLevel}
-            />
-            <CardContent>
-              <Chip
-                icon={<Icon sx={{ background: `url(${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicle.make}.png) no-repeat top left`, backgroundSize: "contain" }} />}
-                label={vehicle.make}
-              />
-              <Chip label={vehicle.model} />
-              <Chip label={vehicle.modelYear} />
-            </CardContent>
-            <CardActions>
-              <PlayArrow fontSize="small"/><Link onClick={ ()=> handleClick(index) } color="secondary" variant="body1">Details</Link>
-            </CardActions>
-          </Card>
-        ))
-        }
+        { status === C.LOADING ?  <CardWaitSkeleton isShown={true} /> :
+          _.isNil(userVehicles) || _.isEmpty(userVehicles) ? (
+            <Typography variant='h6' m={3}>There is no vehicle in your garage, click the connect button to start.</Typography>
+          ) : (
+            userVehicles.map((vehicle, index) => (
+              <VehicleCard key={index} vehicle={vehicle} callback={() => handleClick(index)}/>
+            ))
+          )}
       </Box>
     </Box>
   );

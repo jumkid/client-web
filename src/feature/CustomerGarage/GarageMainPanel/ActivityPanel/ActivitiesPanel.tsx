@@ -15,6 +15,7 @@ import { ErrorsContext } from './ActivityContext';
 import { initValidationErrors } from './ActivityMainForm.Validator';
 import ActivityMainDialog from './ActivityMainDialog';
 import ActivityCalendar from './ActivityCalendar';
+import * as C from '../../../../App.constants';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -93,7 +94,7 @@ function ActivitiesPanel ({vehicleId}:Props) {
           <ActivitiesList activities={activities || []}/>
         </TabPanel>
         <TabPanel value={tab} index={1}>
-          <ActivityCalendar mode='WEEK' activities={activities || []}/>
+          <ActivityCalendar mode={C.WEEK} activities={activities || []}/>
         </TabPanel>
       </ErrorsContext.Provider>
     </Box>
