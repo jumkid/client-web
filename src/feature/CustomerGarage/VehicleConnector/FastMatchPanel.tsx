@@ -169,6 +169,7 @@ function FastMatchPanel () {
               defaultValue=""
               value={getMatchFieldValue(C.MAKE)}
               onChange={handleOnChange}
+              MenuProps={{ PaperProps: { sx: { maxHeight: 230 } } }}
             >
               { !_.isEmpty(matchSelections.makers) && matchSelections.makers.map((maker, index) => (
                 <MenuItem key={index} value={maker}>
@@ -187,6 +188,7 @@ function FastMatchPanel () {
               value={getMatchFieldValue(C.MODEL)}
               disabled={_.isEmpty(matchSelections.models)}
               onChange={handleOnChange}
+              MenuProps={{ PaperProps: { sx: { maxHeight: 230 } } }}
             >
               { !_.isEmpty(matchSelections.models) && matchSelections.models.map((model, index) => (
                 <MenuItem key={index} value={model}>
@@ -205,6 +207,7 @@ function FastMatchPanel () {
               value={getMatchFieldValue(C.MODEL_YEAR)}
               disabled={_.isEmpty(matchSelections.modelYears)}
               onChange={handleOnChange}
+              MenuProps={{ PaperProps: { sx: { maxHeight: 230 } } }}
             >
               { !_.isEmpty(matchSelections.modelYears) && matchSelections.modelYears.map((modelYear, index) => (
                 <MenuItem key={index} value={modelYear}>
@@ -233,8 +236,7 @@ function FastMatchPanel () {
           </S_FormControl>
         </form>
       </Box>
-      { <CardWaitSkeleton isShown={status === C.LOADING}/> }
-      { !_.isEmpty(matchVehicles) && <VehicleCardViewer vehicles={matchVehicles}/>}
+      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/> : <VehicleCardViewer vehicles={matchVehicles}/> }
     </Box>
   )
 }

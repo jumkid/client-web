@@ -50,9 +50,14 @@ async function preloadContentThumbnail (contentId: string | undefined, thumbnail
   if (!contentId) {
     return '';
   }
-  const { data, headers } = await contentService.getContentThumbnail(contentId, thumbnailSize);
-  const base64 = Buffer.from(data, 'binary').toString('base64');
-  return `data:${headers['content-type']};base64,${base64}`;
+  const { status, data, headers } = await contentService.getContentThumbnail(contentId, thumbnailSize);
+  if (status === 200) {
+    const base64 = Buffer.from(data, 'binary').toString('base64');
+    return `data:${headers['content-type']};base64,${base64}`;
+  } else {
+    return '';
+  }
+
 }
 
 function preloadImages(urls:string[], allImagesLoadedCallback:() => void) {

@@ -3,7 +3,6 @@ import { Tabs, Tab } from '@mui/material';
 import { DirectionsCarFilled, ViewList } from '@mui/icons-material';
 import { RootState } from '../../../store';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { grey } from '@mui/material/colors';
 import { changePick } from '../../../store/userVehiclesSlice';
 import SideTabWaitSkeleton from './SideTabWaitSkeleton';
 import * as C from '../../../App.constants';
@@ -36,8 +35,8 @@ function GarageSideTabs () {
           iconPosition="start"
           icon={<DirectionsCarFilled sx={{ mr: 1 }} />}
         />
-        <Tab icon={<ViewList/>} iconPosition="start" label="LIST" sx={{ backgroundColor: grey[900] }}/>
-        { !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
+        <Tab icon={<ViewList/>} iconPosition="start" label="My Vehicles"/>
+        { currentPick !== 0 && !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
           <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }} wrapped={true}/>
         )}
       </Tabs>

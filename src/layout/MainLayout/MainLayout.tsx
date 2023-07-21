@@ -8,7 +8,7 @@ import './MainLayout.css';
 import { MenuSetting, UserSetting } from './model';
 
 const menuSettings: MenuSetting[] = [
-  { title: 'My Garage', isCurrent: true, route: '/' },
+  { title: 'Garage', isCurrent: true, route: '/' },
   { title: 'Professional', isCurrent: false, route: '/professional' }
 ];
 

@@ -12,12 +12,11 @@ import {
   TextField
 } from '@mui/material';
 import * as _ from 'lodash';
-import { changeName } from '../../../../store/vehicleActivitiesSlice';
 import {
   changeAccessScope,
   changeMake,
   changeModel,
-  changeModelYear,
+  changeModelYear, changeName,
   changeTrimLevel
 } from '../../../../store/userVehiclesSlice';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
@@ -25,7 +24,6 @@ import { RootState } from '../../../../store';
 import { ErrorsContext } from '../VehicleProfileContext';
 import Validator from './VehicleProfileForm.Validator';
 import * as C from '../../../../App.constants';
-import { PRIVATE, PUBLIC } from '../../../../App.constants';
 import { Lock, LockOpen } from '@mui/icons-material';
 import { domainDataService } from '../../../../service';
 import { DomainData } from '../../../../store/model/DomainData';
@@ -54,7 +52,8 @@ function VehicleProfileSummaryForm () {
   };
 
   const toggleAccessScope = ():void => {
-    dispatch(changeAccessScope(currentVehicle!.accessScope === PUBLIC ? PRIVATE : PUBLIC));
+    dispatch(changeAccessScope(currentVehicle!.accessScope === C.PUBLIC ? C.PRIVATE : C.PUBLIC));
+    validator.setHasUpdate();
     validateForm();
   }
 
@@ -104,8 +103,7 @@ function VehicleProfileSummaryForm () {
         </Grid>
         <Grid item xs={4}>
           <IconButton sx={{ float: 'right' }} aria-label="access scope" component="label" onClick={toggleAccessScope}>
-            { currentVehicle!.accessScope === PRIVATE && <Lock fontSize="large"/> }
-            { currentVehicle!.accessScope === PUBLIC && <LockOpen fontSize="large"/> }
+            { currentVehicle!.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
           </IconButton>
         </Grid>
       </Grid>

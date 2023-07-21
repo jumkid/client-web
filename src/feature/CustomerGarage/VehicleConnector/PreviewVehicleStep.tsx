@@ -44,7 +44,7 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
       </Box>
       <Stack className="dashboard-viewer-box">
 
-        <VehicleProfileSummary showName={false} vehicleProfile={connectedVehicle}/>
+        <VehicleProfileSummary mode={C.MODE_SIMPLE} showName={false} vehicleProfile={connectedVehicle}/>
 
         <GalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
 

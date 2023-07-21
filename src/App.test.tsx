@@ -8,7 +8,6 @@ import { act } from 'react-dom/test-utils';
 import { VehicleProfile } from './store/model/VehicleProfile';
 import { USER_ROLE } from './App.constants';
 import * as C from './App.constants';
-import axios from 'axios';
 
 describe(App, () => {
   beforeAll(() => { return; });

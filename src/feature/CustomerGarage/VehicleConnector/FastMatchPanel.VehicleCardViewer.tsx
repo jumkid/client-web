@@ -22,7 +22,7 @@ function VehicleCardViewer ({vehicles}:Prop) {
   return (
     <Fade in={true}>
       <Box>
-        { !_.isNil(vehicles) && vehicles.map((vehicle, index) => (
+          { !_.isNil(vehicles) && vehicles.map((vehicle, index) => (
           <Card sx={{ width: 236, height: 146 }} raised key={index}>
             <CardContent sx={{ verticalAlign: "top" }}>
               <Typography fontSize="16px" fontWeight="bold" noWrap={true}>

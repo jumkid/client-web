@@ -227,11 +227,11 @@ const DesignTokens = (mode: string):object => ({
   }
 });
 
-type ItemProps = {
+type StyledItemProps = {
   theme: Theme
 }
 
-const Item = styled(Paper)(({ theme }:ItemProps) => ({
+const Item = styled(Paper)(({ theme }:StyledItemProps) => ({
   ...theme,
   paddingBottom: '8px',
   marginRight: '8px',
@@ -240,7 +240,7 @@ const Item = styled(Paper)(({ theme }:ItemProps) => ({
   float: 'left'
 }));
 
-const ItemText = styled(Paper)(({ theme }:ItemProps) => ({
+const ItemText = styled(Paper)(({ theme }:StyledItemProps) => ({
   ...theme,
   width: '248px',
   textTransform: 'uppercase',
@@ -248,7 +248,7 @@ const ItemText = styled(Paper)(({ theme }:ItemProps) => ({
   fontSize: '18px'
 }));
 
-const ItemHeader = styled(Paper)(({ theme }:ItemProps) => ({
+const ItemHeader = styled(Paper)(({ theme }:StyledItemProps) => ({
   ...theme,
   width: '100%',
   textTransform: 'uppercase',
@@ -257,13 +257,13 @@ const ItemHeader = styled(Paper)(({ theme }:ItemProps) => ({
   marginTop: '21px'
 }));
 
-const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
+const S_FormControl = styled(FormControl)(({theme}:StyledItemProps) =>({
   ...theme,
   margin: '0 0'
 }));
 
 export {
-  ItemProps, Item, ItemText, ItemHeader,
+  StyledItemProps, Item, ItemText, ItemHeader,
   S_FormControl,
   ColorModeContext,
   DesignTokens

@@ -29,10 +29,10 @@ class Validator {
     this.activity = activity;
   }
 
-  validateName (name: string) {
-    if (_.isNull(name)) {
+  validateName (value: string) {
+    if (_.isNull(value)) {
       this.errors.name = "name is required";
-    } else if (name.length < 2) {
+    } else if (value.length < 2) {
       this.errors.name = "name is invalid";
     } else {
       delete this.errors.name;
@@ -41,7 +41,7 @@ class Validator {
     this.setHasUpdate();
   }
 
-  validateDescription (description: string) {
+  validateDescription (value: string) {
     this.setHasUpdate();
   }
 
@@ -71,8 +71,8 @@ class Validator {
     this.setHasUpdate();
   }
 
-  validatePriority (priority: number | unknown) {
-    if (typeof priority !== "number" || (priority < 1)) {
+  validatePriority (value: number | unknown) {
+    if (typeof value !== "number" || (value < 1)) {
       this.errors.priority = "priority is required";
     } else {
       delete this.errors.priority;
@@ -81,8 +81,8 @@ class Validator {
     this.setHasUpdate();
   }
 
-  validateStatus (status: string | unknown) {
-    if (_.isNil(status)) {
+  validateStatus (value: string | unknown) {
+    if (_.isNil(value)) {
       this.errors.status = "status is required";
     } else {
       delete this.errors.status;

@@ -3,7 +3,8 @@ import { Box, Button, CircularProgress, IconButton, TextField } from '@mui/mater
 import { Add, Delete, ModeEdit, Save } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import {
-  deleteVehicle,
+  changePick,
+  deleteVehicle, removeVehicleFromList,
   saveNewVehicle,
   syncCurrentVehicleToList,
   updateUserVehicleName,
@@ -15,18 +16,17 @@ import authenticationManager from '../../../../security/Auth/AuthenticationManag
 import { ErrorsContext } from '../VehicleProfileContext';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
+import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
 
 type ComponentState = {
   name: string
   editable: boolean
-  isSubmitted: boolean
   isDialogOpen: boolean
 }
 
 type Action =
   | { type: 'setName', payload: string }
   | { type: 'setEditable', payload: boolean }
-  | { type: 'setIsSubmitted', payload: boolean }
   | { type: 'setIsDialogOpen', payload: boolean }
 
 const reducer = (state:ComponentState, action: Action):ComponentState => {
@@ -35,8 +35,6 @@ const reducer = (state:ComponentState, action: Action):ComponentState => {
     return {...state, name: action.payload};
   case 'setEditable':
     return {...state, editable: action.payload};
-  case 'setIsSubmitted':
-    return {...state, isSubmitted: action.payload};
   case 'setIsDialogOpen':
     return {...state, isDialogOpen: action.payload};
   default:
@@ -51,9 +49,10 @@ type Prop = {
 
 function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
   const [state, dispatch] = useReducer(reducer,
-    {name: vehicleName, editable: false, isSubmitted: false, isDialogOpen: false});
+    {name: vehicleName, editable: false, isDialogOpen: false});
   const {errors, setErrors} = useContext(ErrorsContext);
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
+  const currentPick = useAppSelector((state:RootState) => state.userVehicles.currentPick);
   const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
 
   const appDispatch = useAppDispatch();
@@ -79,36 +78,36 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
   }
 
   const handleSaveName = ():void => {
-    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
-    else dispatch({type: 'setIsSubmitted', payload: true});
+    if (status === C.LOADING || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
 
     appDispatch(updateUserVehicleName({ id:vehicleId, vehicle:{name: state.name, accessScope:null, modificationDate:currentVehicle.modificationDate!} }))
       .then(() => {
-        dispatch({type: 'setIsSubmitted', payload: false});
         dispatch({type: 'setEditable', payload: false});
       });
   }
 
   const handleSave = ():void => {
-    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
-    else dispatch({type: 'setIsSubmitted', payload: true});
+    if (status === C.LOADING || _.isNull(vehicleId) || _.isNull(currentVehicle)) {
+      return;
+    }
 
     appDispatch(updateVehicle({id:vehicleId, vehicle:currentVehicle}))
       .then(() => {
-        dispatch({type: 'setIsSubmitted', payload: false});
         appDispatch(syncCurrentVehicleToList());
         setErrors({hasUpdate:false});
       });
   }
 
   const handleSaveNew = ():void => {
-    if (state.isSubmitted || _.isNull(vehicleId) || _.isNull(currentVehicle)) return;
-    else dispatch({type: 'setIsSubmitted', payload: true});
+    if (status === C.LOADING || _.isNull(vehicleId) || _.isNull(currentVehicle)) {
+      return;
+    }
 
     appDispatch(saveNewVehicle({id:null, ...currentVehicle}))
       .then(() => {
-        dispatch({type: 'setIsSubmitted', payload: false});
         setErrors({hasUpdate:false});
+        appDispatch(changePick(0));
+        appDispatch(setConnectorStep(0));
       });
   }
 
@@ -118,18 +117,20 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
     }
   }
 
-  const dialogConfirm = async (): Promise<void> => {
+  const doConfirm = async (): Promise<void> => {
     dispatch({type: 'setIsDialogOpen', payload: false});
 
-    if (state.isSubmitted) return;
-    else dispatch({type: 'setIsSubmitted', payload: true});
+    if (status === C.LOADING) {
+      return;
+    }
 
     dispatch({type: 'setEditable', payload: false});
     await appDispatch(deleteVehicle(vehicleId!));
-    dispatch({type: 'setIsSubmitted', payload: false});
+    appDispatch(removeVehicleFromList(currentPick - 2));
+    appDispatch(changePick(1));
   };
 
-  const dialogCancel = ():void => {
+  const doCancel = ():void => {
     dispatch({type: 'setIsDialogOpen', payload: false});
   };
 
@@ -201,8 +202,8 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
           title="Delete Vehicle"
           message="All related data will be removed. Are you sure to delete this vehicle?"
           isShown={state.isDialogOpen}
-          confirmCallback={dialogConfirm}
-          cancelCallback={dialogCancel}
+          confirmCallback={doConfirm}
+          cancelCallback={doCancel}
         />
       </Box>
     </Box>)

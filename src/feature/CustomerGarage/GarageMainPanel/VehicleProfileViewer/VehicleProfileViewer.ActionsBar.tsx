@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
-import { saveNewVehicle } from '../../../../store/userVehiclesSlice';
+import { changePick, saveNewVehicle } from '../../../../store/userVehiclesSlice';
 import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
 
 function VehicleViewerActionsBar () {
@@ -21,6 +21,7 @@ function VehicleViewerActionsBar () {
     try {
       await dispatch(saveNewVehicle({...connectedVehicle, id: null}));
       dispatch(setConnectorStep(0));
+      dispatch(changePick(1));
     } catch (error) {
       console.error(error)
     }

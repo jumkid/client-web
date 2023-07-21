@@ -17,7 +17,7 @@ type Props = {
 function VehicleProfileViewer ({ showName, vehicleProfile, mode }:Props) {
   return (
     <Stack className="dashboard-viewer-box">
-      <VehicleProfileSummary showName={showName} vehicleProfile={vehicleProfile}/>
+      <VehicleProfileSummary mode={mode} showName={showName} vehicleProfile={vehicleProfile}/>
 
       <GalleryAccordion mode={mode} mediaGalleryId={vehicleProfile.mediaGalleryId}/>
 

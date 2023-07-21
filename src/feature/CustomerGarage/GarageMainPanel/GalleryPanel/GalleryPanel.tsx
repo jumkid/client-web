@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useEffect, useReducer, useState } from 'react';
-import { Box, Button, Chip, CircularProgress, LinearProgress, Paper, Stack } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, LinearProgress, Paper, Select, Stack } from '@mui/material';
 import './Gallery.css';
 import { contentService } from '../../../../service';
 import { Delete, Pause, PlayCircleOutline, Upload } from '@mui/icons-material';
@@ -12,9 +12,24 @@ import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
-import { JK_RED } from '../../../../layout/Layout.Theme';
+import styled from '@emotion/styled';
+import { StyledItemProps } from '../../../../layout/Layout.Theme';
 
 const showDebug= false;
+
+const S_Paper = styled(Paper)(({ theme }:StyledItemProps) => ({
+  ...theme,
+  width: '90%',
+  height: 54,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center center',
+  textAlign:'center',
+  justifyContent:'center',
+  cursor: 'pointer',
+  fontSize: 30,
+  color: '#666'
+}));
 
 const initialState:ComponentState = {
   itemsId: [],
@@ -86,16 +101,12 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
   const editableVehicle = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
   const appDispatch = useAppDispatch();
 
-  //set mediaGalleryId for form
-  if (!_.isNil(editableVehicle)) { mediaGalleryId = editableVehicle.mediaGalleryId; }
-
   useEffect(() => {
     if (_.isNil(mediaGalleryId)) { return; }
 
     clearInterval(state.intervalEvent);
     setStep(0);
-    setLoading(true);
-
+    dispatch({ type:'setItemsId', payload:[] });
     dispatch({ type:'setItemsImage', payload:[] });
 
     contentService.getGalleryItemIds(mediaGalleryId)
@@ -106,6 +117,9 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
         } else {
           setLoading(false);
         }
+      })
+      .catch(() => {
+        setLoading(false);
       });
   }, [mediaGalleryId]);
 
@@ -189,22 +203,24 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
     setIsUploading(true);
     try {
       const tags = [editableVehicle.make, editableVehicle.model, editableVehicle.modelYear];
-      const response = await contentService.galleryUpload(mediaGalleryId, files, tags, editableVehicle.name,
-        editableVehicle.accessScope, setProgress);
+      const response = await contentService.galleryUpload(mediaGalleryId, files, tags,
+        editableVehicle.name || 'vehicle images', editableVehicle.accessScope, setProgress);
 
       if (!response.data) { return; }
 
       const updatedMediaGallery:ContentMetadata = response.data;
       if (updatedMediaGallery.uuid != mediaGalleryId) {
         appDispatch(changeMediaGalleryId(updatedMediaGallery.uuid));
-        appDispatch(updateVehicle({
-          id:editableVehicle.id!,
-          vehicle:{
-            mediaGalleryId:updatedMediaGallery.uuid,
-            accessScope:editableVehicle.accessScope,
-            modificationDate:editableVehicle.modificationDate
-          }
-        }));
+        if (editableVehicle.id) {
+          appDispatch(updateVehicle({
+            id:editableVehicle.id,
+            vehicle:{
+              mediaGalleryId:updatedMediaGallery.uuid,
+              accessScope:editableVehicle.accessScope,
+              modificationDate:editableVehicle.modificationDate
+            }
+          }));
+        }
       }
 
       //reload gallery
@@ -257,12 +273,13 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           sx={{
-            width: '60%',
+            width: '70%',
             height: '100%',
             background: `url('${!loading && state.itemsImage[step]}')`,
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center center',
+            backgroundColor: '#fff',
             mb:1
           }}
         >
@@ -275,6 +292,13 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
               }}
             />
           )}
+          {!loading && !_.isEmpty(state.itemsImage) && _.isEmpty(state.itemsImage[step]) &&
+            <Paper
+              sx={{width:'100%', height:'100%', textAlign:'center', justifyContent:'center', fontSize:200, color:'#666'}}
+            >
+              ?
+            </Paper>
+          }
         </Box>
         { showDebug &&
         <Box sx={{ float: 'right' }}>
@@ -293,7 +317,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
             </Button>
             <Button component="label" aria-label="upload" color="primary">
               <input onChange={handleUpload} hidden accept="*/*" type="file" multiple={true}/>
-              <Upload />Upload
+              <Upload/>Upload
             </Button>
             <Button
               component="label"
@@ -302,7 +326,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
               disabled={_.isEmpty(state.itemsId)}
               onClick={confirmDelete}
             >
-              <Delete />Delete
+              <Delete/>Delete
             </Button>
             <Box sx={{height:4}}>{ isUploading && <LinearProgress variant={"determinate"} value={progress}/> }</Box>
             <ConfirmDialog
@@ -318,23 +342,19 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       </Stack>
 
       <Box gridColumn="span 1" sx={{ float: 'right', overflowY: 'auto' }}>
-        {!loading && !_.isEmpty(state.itemsImage) && state.itemsImage.map((itemImage, idx) => (
-          <Paper
+        {!loading && !_.isNil(state.itemsImage) && state.itemsImage.map((itemImage, idx) => (
+          <S_Paper
             key={idx}
             sx={{
-              width: '90%',
-              height: 54,
-              mb: 1,
+              mb: 0.1,
               background: `#000 url('${itemImage}')`,
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center center',
-              cursor: 'pointer',
-              border: `4px ${(step === idx) ? JK_RED : '#000'} solid`
+              border: `4px ${(step === idx) ? 'red' : '#000'} solid`,
+              boxShadow: 0
             }}
             onClick={() => setStep(idx)}
           >
-          </Paper>
+            {_.isEmpty(itemImage) && <>?</>}
+          </S_Paper>
         ))}
       </Box>
     </Box>

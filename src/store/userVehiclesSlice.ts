@@ -91,6 +91,9 @@ export const userVehiclesSlice = createSlice({
         state.vehicles[state.currentPick - 2] = state.currentVehicle;
       }
     },
+    changeName: (state, action) => {
+      state.currentVehicle!.name = action.payload;
+    },
     changeMake: (state, action) => {
       state.currentVehicle!.make = action.payload;
     },
@@ -185,6 +188,9 @@ export const userVehiclesSlice = createSlice({
       .addCase(updateVehicle.fulfilled, (state) => {
         state.currentVehicleStatus = C.SUCCEEDED;
       })
+      .addCase(updateVehicle.rejected, (state) => {
+        state.currentVehicleStatus = C.FAILED;
+      })
       .addCase(saveNewVehicle.pending, (state) => {
         state.currentVehicleStatus = C.LOADING;
       })
@@ -193,6 +199,9 @@ export const userVehiclesSlice = createSlice({
         if (action.payload.status === 201) {
           state.vehicles.push(action.payload.data);
         }
+      })
+      .addCase(saveNewVehicle.rejected, (state) => {
+        state.currentVehicleStatus = C.FAILED;
       })
       .addCase(updateUserVehicleName.fulfilled, (state, action) => {
         state.currentVehicleStatus = C.SUCCEEDED;
@@ -207,6 +216,9 @@ export const userVehiclesSlice = createSlice({
       })
       .addCase(deleteVehicle.fulfilled, (state) => {
         state.currentVehicleStatus = C.SUCCEEDED;
+      })
+      .addCase(deleteVehicle.rejected, (state) => {
+        state.currentVehicleStatus = C.FAILED;
       });
   }
 });
@@ -214,8 +226,8 @@ export const userVehiclesSlice = createSlice({
 export const {
   changePick, setCurrentVehicle,
   setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncCurrentVehicleToList,
-  changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope, changeMediaGalleryId,
-  changePricingMSRP,
+  changeName, changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope,
+  changeMediaGalleryId, changePricingMSRP,
   changeEngineType, changeEngineName, changeEngineFuelType, changeEngineHorsepower, changeEngineCode,
   changeEngineCylinder, changeEngineDisplacement, changeEngineTorque, changeEngineTorqueRpm, changeEngineHorsepowerRpm,
   changeTransmissionName, changeTransmissionType, changeTransmissionAvailability, changeTransmissionAutomaticType,

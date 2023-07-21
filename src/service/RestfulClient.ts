@@ -91,7 +91,11 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        headers: e.response.headers,
+        data: null
+      };
     }
   }
 

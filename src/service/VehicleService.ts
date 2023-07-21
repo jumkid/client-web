@@ -43,7 +43,7 @@ class VehicleService implements IVehicleService {
   async getForAggregation (field: string, matchFields: VehicleFieldValuePair[]): Promise<APIResponse<any>> {
     return await restfulClient.postWithPromise(
       C.VEHICLES_AGG_SEARCH_API,
-      {field, size: C.DEFAULT_PAGE_SIZE},
+      {field, size: 100},
       matchFields);
   }
 
