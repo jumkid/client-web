@@ -1,12 +1,12 @@
 import React from 'react';
 import VehicleProfileForm from './VehicleProfileForm';
-import ReactTestRenderer, { act } from 'react-test-renderer';
 import authenticationManager from '../../../../security/Auth/AuthenticationManager';
 import { getTestJwtToken, testVehicleProfile } from '../../../../App.test';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import axios from 'axios';
+import { act, render, screen } from '@testing-library/react';
 
 //Configuring a mockStore
 const middlewares = [thunk];
@@ -29,14 +29,12 @@ describe(VehicleProfileForm, () => {
     await act(async () => {
       authenticationManager.updateToken(getTestJwtToken());
 
-      const tree = ReactTestRenderer
-        .create(
+      render(
           <Provider store={store}>
             <VehicleProfileForm/>
           </Provider>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+        );
+      expect(screen).toMatchSnapshot();
     });
   });
 });

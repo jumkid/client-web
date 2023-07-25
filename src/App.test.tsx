@@ -31,8 +31,8 @@ describe(App, () => {
   it('renders user home screen', async () => {
     authenticationManager.updateToken(getTestJwtToken());
 
-    await act( async () => renderWithRouter(<App />, {}));
-    expect(screen.getByText(/My Garage/i)).toBeDefined();
+    await act( async () => renderWithRouter(<App />, {route: '/'}));
+    expect(screen.getByText(/connect a vehicle/i)).toBeDefined();
   });
 
   afterAll(() => { return; });

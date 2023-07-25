@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { Box, Button, CircularProgress, IconButton, TextField } from '@mui/material';
 import { Add, Delete, ModeEdit, Save } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
@@ -12,11 +12,11 @@ import {
 } from '../../../../store/userVehiclesSlice';
 import { RootState } from '../../../../store';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
-import authenticationManager from '../../../../security/Auth/AuthenticationManager';
 import { ErrorsContext } from '../VehicleProfileContext';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
 import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import UserProfile from '../../../../security/AuthUser/UserProfile';
 
 type ComponentState = {
   name: string
@@ -56,8 +56,6 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
   const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
 
   const appDispatch = useAppDispatch();
-
-  const isAdmin: boolean = useMemo(() => authenticationManager.isAdmin(), []);
 
   useEffect(() => {
     dispatch({type: 'setEditable', payload: false});
@@ -172,7 +170,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
       </Box>
       }
       <Box sx={{ mt: 1 }}>
-        { isAdmin &&
+        { UserProfile.isAdmin() &&
           <Button onClick={handleSave} color="primary" variant="outlined" disabled={!isFormValid} startIcon={<Save/>}>
             save
           </Button>
@@ -192,7 +190,7 @@ function VehicleNameTools ({ vehicleName, vehicleId }:Prop) {
           Delete
         </Button>
         &nbsp;
-        { isAdmin &&
+        { UserProfile.isAdmin() &&
         <Button onClick={handleSaveNew} color="primary" variant="outlined" disabled={!isFormValid} startIcon={<Add/>}>
           save as new
         </Button>

@@ -1,18 +1,16 @@
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
 import FastMatchPanel from './FastMatchPanel';
 import { Provider } from 'react-redux';
 import { store } from '../../../store';
+import { render } from '@testing-library/react';
 
 describe(FastMatchPanel, () => {
   it('Should render correctly', () => {
-    const tree = ReactTestRenderer
-      .create(
+    render(
         <Provider store={store}>
           <FastMatchPanel/>
         </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    expect(screen).toMatchSnapshot();
   });
 });

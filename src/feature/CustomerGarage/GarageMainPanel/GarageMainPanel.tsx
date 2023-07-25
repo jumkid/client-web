@@ -4,7 +4,6 @@ import VehicleListViewer from './VehicleListViewer';
 import { RootState } from '../../../store';
 import { useAppSelector } from '../../../App.hooks';
 import VehicleConnector from '../VehicleConnector';
-import authenticationManager from '../../../security/Auth/AuthenticationManager';
 import VehicleProfileForm from './VeichleProfileForm/VehicleProfileForm';
 import { ErrorsContext } from './VehicleProfileContext';
 import { initValidationErrors } from './VeichleProfileForm/VehicleProfileForm.Validator';
@@ -12,6 +11,7 @@ import VehicleFormActionsBar from './VeichleProfileForm/VehicleProfileForm.Actio
 import { Box } from '@mui/material';
 import * as C from '../../../App.constants';
 import * as _ from 'lodash';
+import UserProfile from '../../../security/AuthUser/UserProfile';
 
 function GarageMainPanel () {
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
@@ -19,8 +19,6 @@ function GarageMainPanel () {
 
   const [errors, setErrors] = useState(initValidationErrors);
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
-
-  const isAdmin: boolean = useMemo(() => authenticationManager.isAdmin(), []);
 
   useEffect(() => {
     setErrors({hasUpdate: false});
@@ -34,7 +32,7 @@ function GarageMainPanel () {
 
       {currentPick > 1 && !_.isNil(currentVehicle) &&
       <>
-        { isAdmin ?
+        { UserProfile.isAdmin() ?
           <ErrorsContext.Provider value={errorsProvider}>
             <Box mx={2} mt={2} mb={1}>
               <VehicleFormActionsBar />

@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import authenticationManager from '../../../security/Auth/AuthenticationManager';
 import AddToGarageStepUserView from './AddToGarageStep.UserView';
 import { Box, Button, CircularProgress } from '@mui/material';
 import { ArrowBackIos } from '@mui/icons-material';
@@ -12,6 +11,7 @@ import VehicleFormActionsBar from '../GarageMainPanel/VeichleProfileForm/Vehicle
 import { ErrorsContext } from '../GarageMainPanel/VehicleProfileContext';
 import { initValidationErrors } from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.Validator';
 import VehicleViewerActionsBar from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.ActionsBar';
+import UserProfile from '../../../security/AuthUser/UserProfile';
 
 function AddToGarageStep () {
   const [errors, setErrors] = useState(initValidationErrors);
@@ -21,8 +21,6 @@ function AddToGarageStep () {
   const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
 
   const dispatch = useAppDispatch();
-
-  const isAdmin: boolean = useMemo(() => authenticationManager.isAdmin(), []);
 
   const handleBackward = (): void => {
     dispatch(setConnectorStep(currentStep - 1));
@@ -35,9 +33,9 @@ function AddToGarageStep () {
         <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>back
         </Button>
-        { isAdmin ? <VehicleFormActionsBar /> : <VehicleViewerActionsBar /> }
+        { UserProfile.isAdmin() ? <VehicleFormActionsBar /> : <VehicleViewerActionsBar /> }
       </Box>
-      { isAdmin ? <AddToGarageStepAdminView /> : <AddToGarageStepUserView /> }
+      { UserProfile.isAdmin() ? <AddToGarageStepAdminView /> : <AddToGarageStepUserView /> }
     </ErrorsContext.Provider>
   )
 }

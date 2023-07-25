@@ -1,18 +1,16 @@
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
 import VehicleConnector from './VehicleConnector';
 import { Provider } from 'react-redux';
 import { store } from '../../../store';
+import { render, screen } from '@testing-library/react';
 
 describe(VehicleConnector, () => {
   it('Should render correctly', () => {
-    const tree = ReactTestRenderer
-      .create(
+    render(
         <Provider store={store}>
           <VehicleConnector/>
         </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    expect(screen).toMatchSnapshot();
   });
 });

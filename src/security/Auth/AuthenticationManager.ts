@@ -32,6 +32,8 @@ export class AuthenticationManager implements IAuthenticationManager{
   jwtToken:string | null = null;
   jwtUser:JWTTokenUser | null = null;
 
+  isAdminRole = false;
+
   constructor () {
     let token = localStoredToken.get();
     if (!token) {
@@ -67,6 +69,7 @@ export class AuthenticationManager implements IAuthenticationManager{
     this.jwtToken = token;
     try {
       this.jwtUser = JwtDecode(token);
+      this.isAdminRole = this.jwtUser!.realm_access.roles.findIndex(role => role === ADMIN_ROLE) > -1;
     } catch (error) {
       console.error(error);
       this.logout();
@@ -121,7 +124,7 @@ export class AuthenticationManager implements IAuthenticationManager{
   }
 
   isAdmin(): boolean {
-    return this.jwtUser!.realm_access.roles.findIndex(role => role === ADMIN_ROLE) > -1
+    return this.isAdminRole;
   }
 
   logout(): void {
