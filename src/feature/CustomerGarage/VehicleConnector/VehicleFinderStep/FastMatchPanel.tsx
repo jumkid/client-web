@@ -9,20 +9,20 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 import { Theme } from '@emotion/react';
-import { vehicleService } from '../../../service';
+import { vehicleService } from '../../../../service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons/faBarcode';
 import * as _ from 'lodash';
-import * as C from '../../../App.constants';
+import * as C from '../../../../App.constants';
 import VehicleCardViewer from './FastMatchPanel.VehicleCardViewer';
-import { useAppSelector, useAppDispatch } from '../../../App.hooks';
-import { RootState } from '../../../store';
+import { useAppSelector, useAppDispatch } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
 import {
   changeMatchSelections, clearMatchFields,
   fetchMatchVehicles, fetchVehicleByVin,
   setMatchFields, setMatchVehicles,
   setSearchVIN, setTarget
-} from '../../../store/searchVehiclesSlice';
+} from '../../../../store/searchVehiclesSlice';
 import { Clear } from '@mui/icons-material';
 import CardWaitSkeleton from './CardWaitSkeleton';
 
@@ -48,6 +48,7 @@ function FastMatchPanel () {
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
+
   const dispatch = useAppDispatch();
   
   useEffect(() => {
@@ -236,7 +237,7 @@ function FastMatchPanel () {
           </S_FormControl>
         </form>
       </Box>
-      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/> : <VehicleCardViewer vehicles={matchVehicles}/> }
+      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/> : <VehicleCardViewer/> }
     </Box>
   )
 }

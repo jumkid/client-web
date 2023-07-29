@@ -2,9 +2,9 @@ import React from 'react';
 import { Tab, Tabs } from '@mui/material';
 import FastMatchPanel from './FastMatchPanel';
 import AdvanceSearchPanel from './AdvanceSearchPanel';
-import VehicleProfileForm from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm';
-import AddButton from '../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.AddButton';
-import UserProfile from '../../../security/AuthUser/UserProfile';
+import VehicleProfileForm from '../../GarageMainPanel/VeichleProfileForm/VehicleProfileForm';
+import AddButton from '../../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.AddButton';
+import UserProfile from '../../../../security/AuthUser/UserProfile';
 
 interface Prop {
   currentTab: number

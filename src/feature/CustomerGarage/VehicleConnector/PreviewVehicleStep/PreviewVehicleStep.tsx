@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
-import { RootState } from '../../../store';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { setConnectorStep } from '../../../store/connectedVehicleSlice';
-import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
-import * as C from '../../../App.constants';
-import VehicleProfileSummary from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.Summary';
-import GalleryAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.GalleryAccordion';
-import PricingViewerAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.PricingAccordion';
-import DetailsAccordion from '../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.DetailsAccordion';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
+import { RootState } from '../../../../store';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { setCurrentVehicle } from '../../../../store/userVehiclesSlice';
+import * as C from '../../../../App.constants';
+import VehicleProfileSummary from '../../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.Summary';
+import GalleryAccordion from '../../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.GalleryAccordion';
+import PricingViewerAccordion from '../../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.PricingAccordion';
+import DetailsAccordion from '../../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.DetailsAccordion';
 
 interface Prop {
   connectedVehicle: VehicleProfile

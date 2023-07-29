@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { changeConnectedVehicleName, setConnectorStep } from '../../../store/connectedVehicleSlice';
-import { saveNewVehicle } from '../../../store/userVehiclesSlice';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { changeConnectedVehicleName, setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { saveNewVehicle } from '../../../../store/userVehiclesSlice';
 import { Avatar, Box, Fade, Grid, Stack, TextField } from '@mui/material';
-import { Item, ItemHeader, ItemText } from '../../../layout/Layout.Theme';
-import * as C from '../../../App.constants';
-import { RootState } from '../../../store';
+import { Item, ItemHeader, ItemText } from '../../../../layout/Layout.Theme';
+import * as C from '../../../../App.constants';
+import { RootState } from '../../../../store';
 import * as _ from 'lodash';
 
 function AddToGarageStepUserView () {

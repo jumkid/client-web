@@ -1,9 +1,11 @@
-import React from 'react';
-import { Card, CardActions, CardContent, CardHeader, Chip, Icon, Link } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Card, CardActions, CardContent, CardHeader, Chip, Icon, Link } from '@mui/material';
 import * as C from '../../../App.constants';
-import { PlayArrow } from '@mui/icons-material';
+import { Collections, PlayArrow } from '@mui/icons-material';
 import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import { useAppDispatch } from '../../../App.hooks';
+import * as _ from 'lodash';
+import BootstrapTooltip from '../../../component/BootstrapTooltip';
 
 interface Props {
   vehicle: VehicleProfile
@@ -11,7 +13,14 @@ interface Props {
 }
 
 function VehicleCard ({vehicle, callback}:Props) {
+  const [sourceMediaGalleryId, setSourceMediaGalleryId] = useState('');
+  const [sourceBackgroundColor, setSourceBackgroundColor] = useState('');
   const dispatch = useAppDispatch();
+
+  const handleOnDragCapture = (event:any, mediaGalleryId:string):void=> {
+    setSourceMediaGalleryId(mediaGalleryId);
+    setSourceBackgroundColor(event.currentTarget.style.getPropertyValue('background-color'));
+  }
 
   return (
     <Card raised key={vehicle.id}>
@@ -27,6 +36,20 @@ function VehicleCard ({vehicle, callback}:Props) {
         />
         <Chip label={vehicle.model} />
         <Chip label={vehicle.modelYear} />
+        { !_.isNil(vehicle.mediaGalleryId) &&
+        <Box
+          onDragStartCapture={(event) => handleOnDragCapture(event, vehicle.mediaGalleryId!)}
+          draggable={true}
+          className="draggable"
+        >
+          <BootstrapTooltip title="Copy this gallery to another card by drag and drop">
+            <Collections
+              sx={{float: 'right'}}
+              fontSize='large'
+            />
+          </BootstrapTooltip>
+        </Box>
+        }
       </CardContent>
       <CardActions>
         <PlayArrow fontSize="small"/><Link onClick={ () => callback() } color="secondary" variant="body1">Details</Link>

@@ -1,7 +1,7 @@
 import React from 'react';
 import FastMatchPanel from './FastMatchPanel';
 import { Provider } from 'react-redux';
-import { store } from '../../../store';
+import { store } from '../../../../store';
 import { render } from '@testing-library/react';
 
 describe(FastMatchPanel, () => {

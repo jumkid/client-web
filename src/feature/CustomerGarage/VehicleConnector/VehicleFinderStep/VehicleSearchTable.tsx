@@ -1,5 +1,5 @@
 import React from 'react'
-import { VehicleProfile } from '../../../store/model/VehicleProfile';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import {
   Box,
   Paper,
@@ -11,10 +11,10 @@ import {
   TablePagination,
   TableRow
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import { setConnectedVehicle, setConnectorStep } from '../../../store/connectedVehicleSlice';
-import { AppDispatch, RootState } from '../../../store';
-import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../store/searchVehiclesSlice';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { AppDispatch, RootState } from '../../../../store';
+import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../../store/searchVehiclesSlice';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

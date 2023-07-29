@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import PreviewVehicleStep from './PreviewVehicleStep';
-import { testVehicleProfile } from '../../../App.test';
+import { testVehicleProfile } from '../../../../App.test';
 import { Provider } from 'react-redux';
-import { store } from '../../../store';
+import { store } from '../../../../store';
 
 describe(PreviewVehicleStep, () => {
   it('Should render correctly', () => {

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useEffect, useReducer, useState } from 'react';
-import { Box, Button, Chip, CircularProgress, LinearProgress, Paper, Select, Stack } from '@mui/material';
+import { Box, Button, Checkbox, Chip, CircularProgress, LinearProgress, Paper, Stack } from '@mui/material';
 import './Gallery.css';
 import { contentService } from '../../../../service';
 import { Delete, Pause, PlayCircleOutline, Upload } from '@mui/icons-material';
@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
 import styled from '@emotion/styled';
 import { StyledItemProps } from '../../../../layout/Layout.Theme';
+import { MODE_SIMPLE } from '../../../../App.constants';
 
 const showDebug= false;
 
@@ -31,9 +32,21 @@ const S_Paper = styled(Paper)(({ theme }:StyledItemProps) => ({
   color: '#666'
 }));
 
+type ComponentState = {
+  itemsId:string[]       // store the item id in media gallery
+  itemsImage:string[]    // store the image of base64 string for each item
+  selectedItems:string[] // user selected item ids
+  isDragging:boolean     // indicate user is dragging the gallery image
+  axisX:number           // scale the horizontal movement of mouse
+  direction:string
+  autoplay:boolean       // auto switch image display in gallery
+  intervalEvent:ReturnType<typeof setInterval>
+}
+
 const initialState:ComponentState = {
   itemsId: [],
   itemsImage: [],
+  selectedItems: [],
   isDragging: false,
   axisX: 0,
   direction: C.RIGHT,
@@ -41,18 +54,9 @@ const initialState:ComponentState = {
   intervalEvent: setInterval(() => { return; }, -1)
 }
 
-type ComponentState = {
-  itemsId:string[]      // store the item id in media gallery
-  itemsImage:string[]   // store the image of base64 string for each item
-  isDragging:boolean    // indicate user is dragging the gallery image
-  axisX:number          // scale the horizontal movement of mouse
-  direction:string
-  autoplay:boolean      // auto switch image display in gallery
-  intervalEvent:ReturnType<typeof setInterval>
-}
-
 type Action = { type: 'setItemsId', payload: string[] }
   | { type: 'setItemsImage', payload: string[] }
+  | { type: 'setSelectedItems', payload: string[] }
   | { type: 'setIsDragging', payload: boolean }
   | { type: 'setAxisX', payload: number }
   | { type: 'setDirection', payload: string }
@@ -68,6 +72,8 @@ const reducer = (state:ComponentState, action:Action):ComponentState => {
     return {...state, itemsId: action.payload};
   case 'setItemsImage':
     return {...state, itemsImage: action.payload};
+  case 'setSelectedItems':
+    return {...state, selectedItems: action.payload};
   case 'setIsDragging':
     return {...state, isDragging: action.payload};
   case 'setAxisX':
@@ -93,22 +99,27 @@ type Props = {
 function GalleryPanel ({mode, mediaGalleryId}:Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [step, setStep] = useState(0);
+
   const [loading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
 
   const editableVehicle = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
-    if (_.isNil(mediaGalleryId)) { return; }
+    dispatch({ type:'setItemsId', payload:[] });
+    dispatch({ type:'setItemsImage', payload:[] });
+    dispatch({ type:'setSelectedItems', payload:[] });
+
+    if (_.isNil(mediaGalleryId) || _.isEmpty(mediaGalleryId)) { return; }
 
     clearInterval(state.intervalEvent);
     setStep(0);
-    dispatch({ type:'setItemsId', payload:[] });
-    dispatch({ type:'setItemsImage', payload:[] });
 
+    setLoading(true);
     contentService.getGalleryItemIds(mediaGalleryId)
       .then((itemsId) => {
         dispatch({ type:'setItemsId', payload:itemsId });
@@ -179,6 +190,16 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
     dispatch({ type: 'setAutoplay', payload: !state.autoplay });
   }
 
+  const toggleImageCheckBox = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const targetId = event.target.name;
+    const targetState = event.target.checked;
+    if (targetState) {
+      dispatch({ type: 'setSelectedItems', payload: [...state.selectedItems, targetId] });
+    } else {
+      dispatch({ type: 'setSelectedItems', payload: [...state.selectedItems.filter(itemId => itemId!=targetId)] });
+    }
+  }
+
   const runAutoplay = ():ReturnType<typeof setInterval> => {
     return setInterval(() => {
       oneStepChange();
@@ -226,9 +247,11 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
       //reload gallery
       const updatedItemsId = updatedMediaGallery.children.map(ref => ref.uuid);
       dispatch({ type:'setItemsId', payload:updatedItemsId });
-      preloadGalleryImages(updatedItemsId, 'large', () => {setLoading(false);});
-      //show the last image
-      setStep(updatedItemsId.length - 1);
+      preloadGalleryImages(updatedItemsId, 'large', () => {
+        //show the last image
+        setStep(updatedItemsId.length - 1);
+        setLoading(false);
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -242,20 +265,25 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
     setIsConfirmOpen(false);
     setLoading(true);
     try {
-      const itemId = state.itemsId[step];
-      const response = await contentService.deleteGalleryItems(mediaGalleryId, [itemId]);
+      const itemsId = _.isEmpty(state.selectedItems) ? [state.itemsId[step]] : state.selectedItems;
+      const response = await contentService.deleteGalleryItems(mediaGalleryId, itemsId);
 
       if (!_.isNil(response.data)) {
         const remainItems = response.data as ContentMetadata[];
         const updatedItemsId = remainItems.map(metadata => metadata.uuid);
         dispatch({type: 'setItemsId', payload: updatedItemsId});
-        preloadGalleryImages(updatedItemsId, 'large');
+        dispatch({type: 'setItemsImage', payload: []});
+        dispatch({type: 'setSelectedItems', payload: []});
+        preloadGalleryImages(updatedItemsId, 'large', () => {
+          setStep(0);
+          setLoading(false);
+        });
+      } else {
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
-    } finally {
       setLoading(false);
-      setStep(prevState => prevState != 0 ? prevState - 1 : 0);
     }
   }
 
@@ -328,10 +356,10 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
             >
               <Delete/>Delete
             </Button>
-            <Box sx={{height:4}}>{ isUploading && <LinearProgress variant={"determinate"} value={progress}/> }</Box>
+            <Box sx={{height:4}}>{ isUploading && <LinearProgress variant="determinate" value={progress}/> }</Box>
             <ConfirmDialog
-              title="Delete Image"
-              message="This image will be removed. Are you sure to delete?"
+              title={_.isEmpty(state.selectedItems) ? "Delete Image" : "Delete Selected Images"}
+              message={`${_.isEmpty(state.selectedItems) ? "This" : state.selectedItems.length} ${state.selectedItems.length > 1 ? "images" : "image"} will be removed. Are you sure to delete?`}
               isShown={isConfirmOpen}
               confirmCallback={handleDelete}
               cancelCallback={confirmCancel}
@@ -353,7 +381,14 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
             }}
             onClick={() => setStep(idx)}
           >
-            {_.isEmpty(itemImage) && <>?</>}
+            { _.isEmpty(itemImage) && '?' }
+            <Checkbox
+              name={state.itemsId[idx]}
+              color='secondary'
+              sx={{float:'right', verticalAlign:'top', p:'0 !important' }}
+              onChange={toggleImageCheckBox}
+              disabled={mode === MODE_SIMPLE}
+            />
           </S_Paper>
         ))}
       </Box>

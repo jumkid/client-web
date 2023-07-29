@@ -16,7 +16,7 @@ export interface IContentService {
     file:Blob,
     accessScope:
       AccessScope,
-    setProgress:(progress:number) => void
+    setProgress:(progress:any) => number
   ):Promise<APIResponse<ContentMetadata>>
   download(uuid:string, fileName:string | undefined):void
   galleryUpload(
@@ -25,7 +25,7 @@ export interface IContentService {
     tags:(string | number | null | undefined)[],
     title:string | null,
     accessScope: AccessScope,
-    setProgress:(progress:number) => void
+    setProgress:(progress:any) => void
   ):Promise<APIResponse<ContentMetadata>>
 
   deleteContentMetadata(id:string):Promise<APIResponse<any>>
@@ -73,7 +73,7 @@ class ContentService implements IContentService{
   async upload(
     file:Blob,
     accessScope: AccessScope,
-    setProgress?:(progress:number) => void): Promise<APIResponse<ContentMetadata>> {
+    setProgress?:(progress:any) => void): Promise<APIResponse<ContentMetadata>> {
 
     const formData = new FormData();
     formData.append("file", file);
@@ -92,7 +92,7 @@ class ContentService implements IContentService{
     tags:(string | number | null | undefined)[],
     title:string | null | undefined,
     accessScope: AccessScope | null,
-    setProgress:(progress:number) => void
+    setProgress:(progress:any) => void
   ):Promise<APIResponse<ContentMetadata>> {
     const formData = new FormData();
     for (let i=0;i<files.length;i++) {
@@ -111,8 +111,11 @@ class ContentService implements IContentService{
   }
 
   async deleteGalleryItems(galleryId:string, itemsId:string[]): Promise<APIResponse<any>> {
-    const params = "items=" + itemsId.join(",");
-    return await restfulClient.deleteWithPromise(`${C.CONTENT_GALLERY_API}/${galleryId}`, params);
+    const formData = new FormData();
+    for (let i=0;i<itemsId.length;i++) {
+      formData.append("items", itemsId[i]);
+    }
+    return await restfulClient.deleteWithPromise(`${C.CONTENT_GALLERY_API}/${galleryId}`, formData);
   }
 }
 

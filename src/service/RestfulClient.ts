@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as U from '../App.utils';
 import authenticationManager from '../security/Auth/AuthenticationManager';
 import { APIPagingResponse, APIResponse, APIResponseWithHeaders } from './model/Response';
+import * as _ from 'lodash';
 
 type Callback = (data?:object | object[] | string) => void
 
@@ -16,7 +17,7 @@ export interface IRestfulClient {
 
   upload(url:string,
          formData:FormData,
-         setProgress?:(progress:number) => void):Promise<APIResponse<any>>
+         setProgress?:(progress:any) => void):Promise<APIResponse<any>>
   download(url:string, fileName:string | undefined):void
 
   deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse<any>>
@@ -26,15 +27,15 @@ export class RestfulClient implements IRestfulClient {
 
   async upload(url: string,
     formData: FormData,
-    setProgress?:(progress:number) => void ): Promise<APIResponse<any>> {
+    setProgress?:(progress:any) => void ): Promise<APIResponse<any>> {
 
     const { headers } = this.getConf('');
     try {
       const response = await axios.post(url, formData, {
         headers,
         onUploadProgress: (progressEvent) => {
-          progressEvent?.total && setProgress && setProgress(
-            Math.round((progressEvent.loaded / progressEvent.total) * 100)
+          progressEvent?.total && setProgress && setProgress(() =>
+            Math.round((progressEvent.loaded / progressEvent.total!) * 100)
           );
         }
       });
@@ -194,8 +195,8 @@ export class RestfulClient implements IRestfulClient {
   }
 
   getContentTypeByParams(params?: string | object | object[] | null):string {
-    if (params) {
-      if (params instanceof FormData && params.has('file') && params.get('file') instanceof File) {
+    if (!_.isNil(params)) {
+      if (params instanceof FormData) {
         return 'multipart/form-data';
       } else
       if (U.isJson(params)) {

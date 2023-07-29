@@ -3,6 +3,8 @@ import { APIPagingResponse, APIResponse } from './model/Response';
 import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
 import * as C from '../App.constants';
+import * as _ from 'lodash';
+import { VEHICLE } from '../App.constants';
 
 export interface VehicleFieldValuePair {
   field:string
@@ -19,10 +21,13 @@ export interface IVehicleService {
   update: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
   updateName: (id:string, vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
 
-  saveAsNew (vehicleProfile:VehicleProfile): Promise<APIResponse<any>>
+  saveAsNew: (vehicleProfile:VehicleProfile) => Promise<APIResponse<any>>
+
+  copyGallery: (id:string, sourceMediaGalleryId:string) => Promise<APIResponse<any>>
 }
 
 class VehicleService implements IVehicleService {
+
   async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
     VehicleService.normalizePagingSearch(pagingSearch);
     const response = await restfulClient.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
@@ -68,6 +73,14 @@ class VehicleService implements IVehicleService {
 
   async save (vehicleProfile:VehicleProfile): Promise<APIResponse<any>> {
     return await restfulClient.postWithPromise(C.VEHICLES_API, null, vehicleProfile);
+  }
+
+  async copyGallery (id: string, sourceMediaGalleryId: string): Promise<APIResponse<string>> {
+    const compiled = _.template(C.VEHICLE_GALLERY_COPY_API);
+    const url = compiled({'id': id});
+    const params = {sourceMediaGalleryId};
+
+    return await restfulClient.postWithPromise(url, params);
   }
 
   async delete (id:string): Promise<APIResponse<any>> {

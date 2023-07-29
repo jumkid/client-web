@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import VehicleConnectStepper from './VehicleConnectStepper';
-import VehicleFinderStep from './VehicleFinderStep';
 import { RootState } from '../../../store';
 import PreviewVehicleStep from './PreviewVehicleStep';
 import AddToGarageStep from './AddToGarageStep';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
 import * as C from '../../../App.constants';
+import VehicleFinderStep from './VehicleFinderStep';
 
 const steps = ['Find a Vehicle', 'Preview Vehicle', 'Add to Garage'];
 

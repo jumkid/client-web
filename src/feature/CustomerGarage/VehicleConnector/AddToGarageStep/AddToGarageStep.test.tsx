@@ -1,9 +1,9 @@
 import React from 'react';
 import AddToGarageStep from './AddToGarageStep';
-import { getTestJwtToken, testVehicleProfile } from '../../../App.test';
+import { getTestJwtToken, testVehicleProfile } from '../../../../App.test';
 import { Provider } from 'react-redux';
 import { render, screen } from '@testing-library/react';
-import authenticationManager from '../../../security/Auth/AuthenticationManager';
+import authenticationManager from '../../../../security/Auth/AuthenticationManager';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 

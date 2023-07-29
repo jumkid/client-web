@@ -17,7 +17,7 @@ import {
   setPageSize
 } from '../../../store/userVehiclesSlice';
 import { AppDispatch, RootState } from '../../../store';
-import CardWaitSkeleton from '../VehicleConnector/CardWaitSkeleton';
+import CardWaitSkeleton from '../VehicleConnector/VehicleFinderStep/CardWaitSkeleton';
 import * as _ from 'lodash';
 import * as C from '../../../App.constants';
 import VehicleCard from './VehicleListViewer.VehicleCard';

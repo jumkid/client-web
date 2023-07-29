@@ -1,7 +1,7 @@
 import React from 'react';
 import { Skeleton, Box } from '@mui/material';
-import { useAppSelector } from '../../../App.hooks';
-import { RootState } from '../../../store';
+import { useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
 import * as _ from 'lodash';
 
 type Props = {
