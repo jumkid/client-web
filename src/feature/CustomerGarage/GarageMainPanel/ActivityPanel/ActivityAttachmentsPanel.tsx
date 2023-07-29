@@ -99,7 +99,7 @@ function ActivityAttachmentsPanel () {
       if (!contentResource || !contentResource.id) { return; }
 
       const { payload } = await dispatch(deleteActivityContent(contentResource.id));
-      const { status } = payload as APIResponse<any>
+      const { status } = payload as APIResponse<string>
 
       if (status === 204) {
         const updateContentResources = currentActivity.contentResources

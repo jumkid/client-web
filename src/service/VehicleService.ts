@@ -4,7 +4,6 @@ import { PagingSearch } from './model/Request';
 import { VehicleProfile } from '../store/model/VehicleProfile';
 import * as C from '../App.constants';
 import * as _ from 'lodash';
-import { VEHICLE } from '../App.constants';
 
 export interface VehicleFieldValuePair {
   field:string

@@ -11,7 +11,8 @@ import VehicleFormActionsBar from './VeichleProfileForm/VehicleProfileForm.Actio
 import { Box } from '@mui/material';
 import * as C from '../../../App.constants';
 import * as _ from 'lodash';
-import UserProfile from '../../../security/AuthUser/UserProfile';
+import AdminOnly from '../../../security/Auth/AdminOnly';
+import NoneAdminOnly from '../../../security/Auth/NoneAdminOnly';
 
 function GarageMainPanel () {
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
@@ -32,16 +33,17 @@ function GarageMainPanel () {
 
       {currentPick > 1 && !_.isNil(currentVehicle) &&
       <>
-        { UserProfile.isAdmin() ?
+        <AdminOnly>
           <ErrorsContext.Provider value={errorsProvider}>
             <Box mx={2} mt={2} mb={1}>
               <VehicleFormActionsBar />
             </Box>
             <VehicleProfileForm />
           </ErrorsContext.Provider>
-          :
+        </AdminOnly>
+        <NoneAdminOnly>
           <VehicleProfileViewer vehicleProfile={currentVehicle} mode={C.MODE_ACTIVE}/>
-        }
+        </NoneAdminOnly>
       </>
       }
     </>

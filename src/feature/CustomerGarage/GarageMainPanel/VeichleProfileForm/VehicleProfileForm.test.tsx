@@ -30,10 +30,10 @@ describe(VehicleProfileForm, () => {
       authenticationManager.updateToken(getTestJwtToken());
 
       render(
-          <Provider store={store}>
-            <VehicleProfileForm/>
-          </Provider>
-        );
+        <Provider store={store}>
+          <VehicleProfileForm/>
+        </Provider>
+      );
       expect(screen).toMatchSnapshot();
     });
   });

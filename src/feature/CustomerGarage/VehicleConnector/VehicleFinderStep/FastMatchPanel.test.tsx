@@ -7,10 +7,10 @@ import { render } from '@testing-library/react';
 describe(FastMatchPanel, () => {
   it('Should render correctly', () => {
     render(
-        <Provider store={store}>
-          <FastMatchPanel/>
-        </Provider>
-      );
+      <Provider store={store}>
+        <FastMatchPanel/>
+      </Provider>
+    );
     expect(screen).toMatchSnapshot();
   });
 });

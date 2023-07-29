@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, DragEvent } from 'react';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import {
   Box,
@@ -21,8 +21,9 @@ import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { vehicleService } from '../../../../service';
 import { AxiosError } from 'axios';
 import { RootState } from '../../../../store';
-import UserProfile from '../../../../security/AuthUser/UserProfile';
 import { setMatchVehicles } from '../../../../store/searchVehiclesSlice';
+import AdminOnly from '../../../../security/Auth/AdminOnly';
+import NoneAdminOnly from '../../../../security/Auth/NoneAdminOnly';
 
 function VehicleCardViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -42,23 +43,23 @@ function VehicleCardViewer () {
     dispatch(setConnectorStep(1));
   }
 
-  const handleOnDragCapture = (event:any, sourceVehicle:VehicleProfile):void=> {
+  const handleOnDragCapture = (event:DragEvent<HTMLDivElement>, sourceVehicle:VehicleProfile):void=> {
     setSourceVehicle(sourceVehicle);
     setSourceBackgroundColor(event.currentTarget.style.getPropertyValue('background-color'));
   }
 
-  const handleOnDragOver = (event:any, mediaGalleryId:string | undefined | null):void => {
+  const handleOnDragOver = (event:DragEvent<HTMLDivElement>, mediaGalleryId:string | undefined | null):void => {
     event.preventDefault();
     if (mediaGalleryId != sourceVehicle!.mediaGalleryId) {
       event.currentTarget.style.setProperty('background-color', 'rgba(255,165,0)');
     }
   }
 
-  const handleOnDragOut = (event:any):void => {
+  const handleOnDragOut = (event:DragEvent<HTMLDivElement>):void => {
     event.currentTarget.style.setProperty('background-color', sourceBackgroundColor);
   }
 
-  const handleOnDrop = (event:any, vehicleId:string | undefined | null):void => {
+  const handleOnDrop = (event:DragEvent<HTMLDivElement>, vehicleId:string | undefined | null):void => {
     if (isSubmitted || vehicleId === sourceVehicle!.id) {
       return;
     }
@@ -147,23 +148,28 @@ function VehicleCardViewer () {
                 <FontAwesomeIcon icon={faCarSide} size="1x" width={23}/> {vehicle.vehicleTransmission!.drivetrain}
               </Typography>
 
-              { UserProfile.isAdmin() && !_.isNil(vehicle.mediaGalleryId) &&
-                <Box
-                  onDragStartCapture={(event) => handleOnDragCapture(event, vehicle)}
-                  draggable={true}
-                  className="draggable"
-                  sx={{float: 'right'}}
-                >
-                  { (isSubmitted && currentVehicleId === vehicle.id) ?
-                    <CircularProgress size="2rem" color='secondary'/>
-                    :
-                    <BootstrapTooltip title="Drag this gallery to another vehicle with empty gallery to make a copy">
-                      <Collections
-                        fontSize='large'
-                      />
-                    </BootstrapTooltip>
-                  }
-                </Box>
+              { !_.isNil(vehicle.mediaGalleryId) &&
+                <>
+                  <AdminOnly>
+                    <Box
+                      onDragStartCapture={(event) => handleOnDragCapture(event, vehicle)}
+                      draggable={true}
+                      className="draggable"
+                      sx={{float: 'right'}}
+                    >
+                      { (isSubmitted && currentVehicleId === vehicle.id) ?
+                        <CircularProgress size="2rem" color='secondary'/>
+                        :
+                        <BootstrapTooltip title="Drag this gallery to another vehicle with empty gallery to make a copy">
+                          <Collections fontSize='large'/>
+                        </BootstrapTooltip>
+                      }
+                    </Box>
+                  </AdminOnly>
+                  <NoneAdminOnly>
+                    <Collections fontSize='large' sx={{float: 'right'}}/>
+                  </NoneAdminOnly>
+                </>
               }
             </CardContent>
 

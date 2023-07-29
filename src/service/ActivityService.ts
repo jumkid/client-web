@@ -13,7 +13,7 @@ interface IActivityService {
 
   saveNewActivity: (activity: Activity) => Promise<APIResponse<object>>
   updateActivity: (activity: Activity) => Promise<APIResponse<object>>
-  deleteActivity: (activityId: number) => Promise<APIResponse<any>>
+  deleteActivity: (activityId: number) => Promise<APIResponse<string>>
 
   saveActivityContent: (contentResource: ContentResource) => Promise<APIResponse<ContentResource>>
   deleteActivityContent: (id: number) => Promise<APIResponse<any>>
@@ -59,7 +59,7 @@ class ActivityService implements IActivityService {
     return await restfulClient.putWithPromise(url, activity);
   }
 
-  async deleteActivity (activityId: number): Promise<APIResponse<any>>{
+  async deleteActivity (activityId: number): Promise<APIResponse<string>>{
     const url = `${ACTIVITIES_API}/${activityId}`;
     return await restfulClient.deleteWithPromise(url);
   }
