@@ -14,19 +14,21 @@ import {
   fetchUserVehicles,
   setKeyword,
   setPage,
-  setPageSize
+  setPageSize, setUserVehicles
 } from '../../../store/userVehiclesSlice';
 import { AppDispatch, RootState } from '../../../store';
 import CardWaitSkeleton from '../VehicleConnector/VehicleFinderStep/CardWaitSkeleton';
 import * as _ from 'lodash';
 import * as C from '../../../App.constants';
-import VehicleCard from './VehicleListViewer.VehicleCard';
 import { SIDE_TABS_OFFSET } from '../GarageSideBar/GarageSideTabs';
+import VehicleCards from './VehicleCard';
+import { KeywordMode } from '../../../service/model/CommonTypes';
 
 function VehicleListViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const keyword = useAppSelector((state:RootState) => state.userVehicles.keyword);
+  const [keywordMode, setKeywordMode] = useState<KeywordMode>(C.MODE_KEYWORD);
   const total = useAppSelector((state:RootState) => state.userVehicles.total);
   const page = useAppSelector((state:RootState) => state.userVehicles.page);
   const pageSize = useAppSelector((state:RootState) => state.userVehicles.pageSize);
@@ -38,7 +40,7 @@ function VehicleListViewer () {
     return (dispatch:AppDispatch) => {
       dispatch(setPage(newPage));
       // backend page start from 1 instead of 0
-      dispatch(fetchUserVehicles({keyword, page: newPage + 1, size: pageSize}));
+      dispatch(fetchUserVehicles({keyword, keywordMode, page: newPage + 1, size: pageSize}));
     }
   };
 
@@ -46,15 +48,15 @@ function VehicleListViewer () {
     return (dispatch:AppDispatch) => {
       dispatch(setPageSize(pageSize));
       dispatch(setPage(0));
-      dispatch(fetchUserVehicles({keyword, page: 1, size: pageSize}));
+      dispatch(fetchUserVehicles({keyword, keywordMode, page: 1, size: pageSize}));
     }
   };
 
   const handleSearch = (event:React.FormEvent<HTMLFormElement> | undefined):void => {
     if (isSubmitted) { return; }
-
+    dispatch(setPage(0));
     setIsSubmitted(true);
-    dispatch(fetchUserVehicles({ keyword, page, size: pageSize }))
+    dispatch(fetchUserVehicles({ keyword, keywordMode, page: 0, size: pageSize }))
       .then(() => {
         setIsSubmitted(false);
       }, () => {setIsSubmitted(false);});
@@ -64,7 +66,7 @@ function VehicleListViewer () {
   const handleClearClick = ():void => {
     dispatch(clearKeyword());
     setIsSubmitted(true);
-    dispatch(fetchUserVehicles({ keyword: '', page, size: pageSize }))
+    dispatch(fetchUserVehicles({ keyword: '', keywordMode, page, size: pageSize }))
       .then(() => {
         setIsSubmitted(false);
       });
@@ -87,6 +89,17 @@ function VehicleListViewer () {
     // the first two index (0 and 1) of tabs are used for specific actions
     dispatch(changePick(index + SIDE_TABS_OFFSET));
   };
+
+  const handleGalleryCopyDone = (vehicleId:string, mediaGalleryId:string):void => {
+    const updatedUserVehicles = userVehicles.map(vehicle => {
+      if (vehicle.id === vehicleId) {
+        return {...vehicle, mediaGalleryId: mediaGalleryId}
+      } else {
+        return vehicle;
+      }
+    });
+    dispatch(setUserVehicles(updatedUserVehicles));
+  }
 
   return (
     <Box>
@@ -125,13 +138,15 @@ function VehicleListViewer () {
           variant="head"
         />
         { status === C.LOADING ?  <CardWaitSkeleton isShown={true} /> :
-          _.isNil(userVehicles) || _.isEmpty(userVehicles) ? (
+          _.isNil(userVehicles) || _.isEmpty(userVehicles) ?
             <Typography variant='h6' m={3}>There is no vehicle in your garage, click the connect button to start.</Typography>
-          ) : (
-            userVehicles.map((vehicle, index) => (
-              <VehicleCard key={index} vehicle={vehicle} callback={() => handleClick(index)}/>
-            ))
-          )}
+            :
+            <VehicleCards
+              vehicles={userVehicles}
+              detailsLnkCallback={handleClick}
+              copyDoneCallback={handleGalleryCopyDone}
+            />
+        }
       </Box>
     </Box>
   );

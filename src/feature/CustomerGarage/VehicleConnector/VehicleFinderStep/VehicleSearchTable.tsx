@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import {
   Box,
@@ -18,6 +18,8 @@ import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { KeywordMode } from '../../../../service/model/CommonTypes';
+import * as C from '../../../../App.constants';
 
 type Props = {
   keyword: string
@@ -25,6 +27,7 @@ type Props = {
 }
 
 function VehicleSearchTable ({keyword, vehicles}:Props) {
+  const [keywordMode, setKeywordMode] = useState<KeywordMode>(C.MODE_KEYWORD);
   const total = useAppSelector((state:RootState) => state.searchVehicles.searchTotal);
   const page = useAppSelector((state:RootState) => state.searchVehicles.searchPage);
   const pageSize = useAppSelector((state:RootState) => state.searchVehicles.searchPageSize);
@@ -35,7 +38,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
       dispatch(setSearchPage(newPage));
       if (!_.isEmpty(keyword)) {
         // backend page start from 1 instead of 0
-        dispatch(fetchSearchVehicles({keyword, page: newPage + 1, size: pageSize}));
+        dispatch(fetchSearchVehicles({keyword, keywordMode, page: newPage + 1, size: pageSize}));
       }
     };
   }
@@ -45,7 +48,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
       dispatch(setSearchPageSize(pageSize));
       dispatch(setSearchPage(0));
       if (!_.isEmpty(keyword)) {
-        dispatch(fetchSearchVehicles({keyword, page: 1, size: pageSize}));
+        dispatch(fetchSearchVehicles({keyword, keywordMode, page: 1, size: pageSize}));
       }
     };
   }

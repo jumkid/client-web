@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons/faBarcode';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
-import VehicleCardViewer from './FastMatchPanel.VehicleCardViewer';
 import { useAppSelector, useAppDispatch } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import {
@@ -25,6 +24,8 @@ import {
 } from '../../../../store/searchVehiclesSlice';
 import { Clear } from '@mui/icons-material';
 import CardWaitSkeleton from './CardWaitSkeleton';
+import VehicleCards from '../../GarageMainPanel/VehicleCard';
+import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
 
 type ItemProps = {
   theme: Theme
@@ -110,6 +111,22 @@ function FastMatchPanel () {
       dispatch(fetchVehicleByVin(searchVIN));
     }
   };
+
+  const handleCardClick = (index:number): void => {
+    dispatch(setConnectedVehicle(matchVehicles[index]));
+    dispatch(setConnectorStep(1));
+  }
+
+  const handleGalleryCopyDone = (vehicleId:string, mediaGalleryId:string):void => {
+    const updatedMatchVehicles = matchVehicles.map(vehicle => {
+      if (vehicle.id === vehicleId) {
+        return {...vehicle, mediaGalleryId: mediaGalleryId}
+      } else {
+        return vehicle;
+      }
+    });
+    dispatch(setMatchVehicles(updatedMatchVehicles));
+  }
 
   const getNextTarget = (target:string) => {
     switch (target) {
@@ -237,7 +254,14 @@ function FastMatchPanel () {
           </S_FormControl>
         </form>
       </Box>
-      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/> : <VehicleCardViewer/> }
+      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
+        :
+        <VehicleCards
+          vehicles={matchVehicles}
+          detailsLnkCallback={handleCardClick}
+          copyDoneCallback={handleGalleryCopyDone}
+        />
+      }
     </Box>
   )
 }

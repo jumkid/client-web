@@ -5,10 +5,10 @@ type Props = {
   children: ReactNode
 }
 
-function AdminOnly (props:React.PropsWithChildren<Props>) {
+function AdminUser (props:React.PropsWithChildren<Props>) {
   return (
     UserProfile.isAdmin() ? <>{props.children}</> : null
   )
 }
 
-export default AdminOnly;
+export default AdminUser;

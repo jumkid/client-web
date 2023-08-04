@@ -11,8 +11,8 @@ import VehicleFormActionsBar from '../../GarageMainPanel/VeichleProfileForm/Vehi
 import { ErrorsContext } from '../../GarageMainPanel/VehicleProfileContext';
 import { initValidationErrors } from '../../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.Validator';
 import VehicleViewerActionsBar from '../../GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.ActionsBar';
-import AdminOnly from '../../../../security/Auth/AdminOnly';
-import NoneAdminOnly from '../../../../security/Auth/NoneAdminOnly';
+import AdminUser from '../../../../security/Auth/AdminUser';
+import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
 
 function AddToGarageStep () {
   const [errors, setErrors] = useState(initValidationErrors);
@@ -35,12 +35,12 @@ function AddToGarageStep () {
           <ArrowBackIos/>back
         </Button>
 
-        <AdminOnly><VehicleFormActionsBar /></AdminOnly>
-        <NoneAdminOnly><VehicleViewerActionsBar /></NoneAdminOnly>
+        <AdminUser><VehicleFormActionsBar /></AdminUser>
+        <NoneAdminUser><VehicleViewerActionsBar /></NoneAdminUser>
       </Box>
 
-      <AdminOnly><AddToGarageStepAdminView /></AdminOnly>
-      <NoneAdminOnly><AddToGarageStepUserView /></NoneAdminOnly>
+      <AdminUser><AddToGarageStepAdminView /></AdminUser>
+      <NoneAdminUser><AddToGarageStepUserView /></NoneAdminUser>
     </ErrorsContext.Provider>
   )
 }

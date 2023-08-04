@@ -158,8 +158,6 @@ const DesignTokens = (mode: string):object => ({
           float: 'left',
           color: '#FFF',
           borderRadius: 0,
-          width: '353px',
-          height: '200px',
           padding: '0 0',
           margin: '6px 6px',
           fontSize: '1.25rem',
@@ -172,7 +170,7 @@ const DesignTokens = (mode: string):object => ({
     MuiCardHeader: {
       styleOverrides: {
         root: {
-          textTransform: 'uppercase'
+          textTransform: 'uppercase',
         }
       }
     },

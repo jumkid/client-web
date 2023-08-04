@@ -4,7 +4,7 @@ import FastMatchPanel from './FastMatchPanel';
 import AdvanceSearchPanel from './AdvanceSearchPanel';
 import VehicleProfileForm from '../../GarageMainPanel/VeichleProfileForm/VehicleProfileForm';
 import AddButton from '../../GarageMainPanel/VeichleProfileForm/VehicleProfileForm.AddButton';
-import AdminOnly from '../../../../security/Auth/AdminOnly';
+import AdminUser from '../../../../security/Auth/AdminUser';
 import UserProfile from '../../../../security/AuthUser/UserProfile';
 
 interface Prop {
@@ -22,11 +22,11 @@ function VehicleFinderStep ({currentTab, handleTabChange}:Prop) {
       >
         <Tab label="Fast Match" />
         <Tab label="Advance Search" />
-        <Tab label={<AdminOnly>Create New</AdminOnly>} disabled={!UserProfile.isAdmin()}/>
+        <Tab label={<AdminUser>Create New</AdminUser>} disabled={!UserProfile.isAdmin()}/>
       </Tabs>
       { currentTab == 0 && <FastMatchPanel/> }
       { currentTab == 1 && <AdvanceSearchPanel/> }
-      <AdminOnly>{ currentTab == 2 && <><AddButton/><VehicleProfileForm/></> } </AdminOnly>
+      <AdminUser>{ currentTab == 2 && <><AddButton/><VehicleProfileForm/></> } </AdminUser>
     </>
   )
 }

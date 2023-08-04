@@ -69,3 +69,6 @@ export const MODEL_YEAR = 'modelYear';
 export const TRIM_LEVEL = 'trimLevel';
 export const VIN = 'vin';
 export const SUBMIT = 'submit';
+
+export const MODE_KEYWORD = 'KEYWORD';
+export const MODE_QUERYSTRING = 'QUERYSTRING';

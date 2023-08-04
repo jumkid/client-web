@@ -66,6 +66,9 @@ export const userVehiclesSlice = createSlice({
     setCurrentVehicle: (state, action) => {
       state.currentVehicle = action.payload;
     },
+    setUserVehicles: (state, action) => {
+      state.vehicles = action.payload;
+    },
     setKeyword: (state, action) => {
       state.keyword = action.payload;
     },
@@ -224,7 +227,7 @@ export const userVehiclesSlice = createSlice({
 });
 
 export const {
-  changePick, setCurrentVehicle,
+  changePick, setCurrentVehicle, setUserVehicles,
   setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncCurrentVehicleToList,
   changeName, changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope,
   changeMediaGalleryId, changePricingMSRP,
