@@ -32,7 +32,7 @@ describe(App, () => {
     authenticationManager.updateToken(getTestJwtToken());
 
     await act( async () => renderWithRouter(<App />, {route: '/'}));
-    expect(screen.getByText(/connect a vehicle/i)).toBeDefined();
+    expect(screen.getByText(/Vehicle Research/i)).toBeDefined();
   });
 
   afterAll(() => { return; });

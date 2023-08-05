@@ -1,0 +1,47 @@
+import React, { useMemo, useState } from 'react';
+import AddToGarageStepUserView from './AddToGarageStep.UserView';
+import { Box, Button, CircularProgress } from '@mui/material';
+import { ArrowBackIos } from '@mui/icons-material';
+import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
+import * as C from '../../../../App.constants';
+import AddToGarageStepAdminView from './AddToGarageStep.AdminView';
+import VehicleFormActionsBar from '../../../MyGarage/GarageMainPanel/VeichleProfileForm/VehicleProfileForm.ActionsBar';
+import { ErrorsContext } from '../../../MyGarage/GarageMainPanel/VehicleProfileContext';
+import VehicleViewerActionsBar from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.ActionsBar';
+import AdminUser from '../../../../security/Auth/AdminUser';
+import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
+
+function AddToGarageStep () {
+  const [errors, setErrors] = useState({hasUpdate: false});
+  const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
+
+  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
+  const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
+
+  const dispatch = useAppDispatch();
+
+  const handleBackward = (): void => {
+    dispatch(setConnectorStep(currentStep - 1));
+  };
+
+  return (
+    <ErrorsContext.Provider value={errorsProvider}>
+      { status === C.LOADING && <CircularProgress size="1.5rem" sx={{ position: "absolute", mt: 2, ml: 20 }}/> }
+      <Box mx={3} py={1}>
+        <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
+          <ArrowBackIos/>back
+        </Button>
+
+        <AdminUser><VehicleFormActionsBar /></AdminUser>
+        <NoneAdminUser><VehicleViewerActionsBar /></NoneAdminUser>
+      </Box>
+
+      <AdminUser><AddToGarageStepAdminView /></AdminUser>
+      <NoneAdminUser><AddToGarageStepUserView /></NoneAdminUser>
+    </ErrorsContext.Provider>
+  )
+}
+
+export default AddToGarageStep;

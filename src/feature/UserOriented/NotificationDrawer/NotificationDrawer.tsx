@@ -11,8 +11,7 @@ import { APIResponse } from '../../../service/model/Response';
 import { Activity } from '../../../store/model/Activity';
 import { VEHICLE } from '../../../App.constants';
 import * as _ from 'lodash';
-import { changePick } from '../../../store/userVehiclesSlice';
-import { SIDE_TABS_OFFSET } from '../../CustomerGarage/GarageSideBar/GarageSideTabs';
+import { changePick, SIDE_TABS_OFFSET } from '../../../store/userVehiclesSlice';
 
 interface Props {
   drawerOpen: boolean

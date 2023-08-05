@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { VehicleProfile } from './model/VehicleProfile';
+import { VehicleProfile, blankVehicleProfile } from './model/VehicleProfile';
 import { vehicleService } from '../service';
 import { PagingSearch, VehicleProfileUpdate } from '../service/model/Request';
 import * as C from '../App.constants';
@@ -26,9 +26,15 @@ export const deleteVehicle = createAsyncThunk('userVehicles/delete',
   async (id:string) => { return vehicleService.delete(id); }
 );
 
+export const SIDE_TABS_OFFSET = 1;
+
+export const calculateOffset = (currentPick:number):number => {
+  return currentPick - SIDE_TABS_OFFSET;
+}
+
 interface UserVehicleListState {
   currentPick: number
-  currentVehicle: VehicleProfile | null
+  currentVehicle: VehicleProfile
   currentVehicleStatus: FormStatus
   vehicles: VehicleProfile[]
   keyword: string
@@ -40,13 +46,13 @@ interface UserVehicleListState {
 }
 
 const initialState: UserVehicleListState = {
-  currentPick: 1,
+  currentPick: 0,
   keyword: '',
   total: 0,
   page: 0,
   pageSize: C.DEFAULT_PAGE_SIZE,
   vehicles: [],
-  currentVehicle: null,
+  currentVehicle: blankVehicleProfile,
   currentVehicleStatus: C.IDLE,
   status: C.IDLE,
   error: ''
@@ -59,9 +65,11 @@ export const userVehiclesSlice = createSlice({
 
   reducers: {
     changePick: (state, action) => {
-      const pick = action.payload;
-      state.currentPick = pick;
-      if (pick > 1) state.currentVehicle = state.vehicles[pick - 2];
+      const index = action.payload;
+      state.currentPick = index;
+      if (index > 0) {
+        state.currentVehicle = state.vehicles[calculateOffset(index)];
+      }
     },
     setCurrentVehicle: (state, action) => {
       state.currentVehicle = action.payload;
@@ -87,11 +95,10 @@ export const userVehiclesSlice = createSlice({
       const index = action.payload;
       state.vehicles.splice(index, 1);
     },
-    syncCurrentVehicleToList: (state) => {
-      if (!_.isNull(state.currentVehicle)
-        && state.currentPick > 1
-        && state.vehicles[state.currentPick - 2].id === state.currentVehicle.id) {
-        state.vehicles[state.currentPick - 2] = state.currentVehicle;
+    syncUpdatedVehicleToList: (state, action) => {
+      const index = calculateOffset(state.currentPick);
+      if (state.currentPick > 1 && state.vehicles[index].id === state.currentVehicle.id) {
+        state.vehicles[index] = action.payload;
       }
     },
     changeName: (state, action) => {
@@ -209,9 +216,7 @@ export const userVehiclesSlice = createSlice({
       .addCase(updateUserVehicleName.fulfilled, (state, action) => {
         state.currentVehicleStatus = C.SUCCEEDED;
         if (action.payload.status === 202) {
-          // the first two index (0 and 1) of tabs are used for specific actions
-          const index = state.currentPick - 2;
-          state.vehicles[index] = action.payload.data;
+          state.vehicles[calculateOffset(state.currentPick)] = action.payload.data;
         }
       })
       .addCase(deleteVehicle.pending, (state) => {
@@ -228,7 +233,7 @@ export const userVehiclesSlice = createSlice({
 
 export const {
   changePick, setCurrentVehicle, setUserVehicles,
-  setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncCurrentVehicleToList,
+  setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncUpdatedVehicleToList,
   changeName, changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope,
   changeMediaGalleryId, changePricingMSRP,
   changeEngineType, changeEngineName, changeEngineFuelType, changeEngineHorsepower, changeEngineCode,

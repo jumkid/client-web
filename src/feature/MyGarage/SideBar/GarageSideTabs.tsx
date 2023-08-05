@@ -1,0 +1,41 @@
+import React from 'react';
+import { Tabs, Tab } from '@mui/material';
+import { ViewList } from '@mui/icons-material';
+import { RootState } from '../../../store';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { changePick } from '../../../store/userVehiclesSlice';
+import SideTabWaitSkeleton from './SideTabWaitSkeleton';
+import * as C from '../../../App.constants';
+import * as _ from 'lodash';
+
+function GarageSideTabs () {
+  const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
+  const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
+  const status = useAppSelector((state: RootState) => state.userVehicles.status);
+  const dispatch = useAppDispatch();
+
+  const handleChange = (event: React.SyntheticEvent, index: number):void => {
+    dispatch(changePick(index));
+  };
+
+  return (
+    <>
+      <Tabs
+        orientation="vertical"
+        variant="standard"
+        value={currentPick}
+        onChange={handleChange}
+        sx={{ borderColor: 'divider', width: '100%', p: 0 }}
+      >
+        <Tab sx={{ border: '1px solid', m: '8px 8px 8px 8px' }} icon={<ViewList/>} iconPosition="start" label="My Vehicles"/>
+
+        { !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
+          <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }} wrapped={true}/>
+        )}
+      </Tabs>
+      { <SideTabWaitSkeleton isShown={status === C.LOADING} /> }
+    </>
+  );
+}
+
+export default GarageSideTabs;

@@ -9,7 +9,7 @@ import { MenuSetting, UserSetting } from './model';
 
 const menuSettings: MenuSetting[] = [
   { title: 'Garage', isCurrent: true, route: '/' },
-  { title: 'Professional', isCurrent: false, route: '/professional' }
+  { title: 'Research', isCurrent: false, route: '/research' }
 ];
 
 const userSettings: UserSetting[] = [
@@ -37,6 +37,7 @@ type Props = {
 
 function MainLayout (props: Props) {
   const [mode, setMode] = React.useState(props.mode);
+
   const colorMode = React.useMemo(
     () => ({
       // The dark mode switch would invoke this method
@@ -48,6 +49,7 @@ function MainLayout (props: Props) {
     }),
     []
   );
+
   const _menuSettings: MenuSetting[] = menuSettings.map((item, _index) => {
     return {
       ...item,
