@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react';
-import VehicleProfileForm from '../../../MyGarage/GarageMainPanel/VeichleProfileForm/VehicleProfileForm';
+import VehicleProfileForm from '../../../MyVehicles/MainPanels/VeichleProfileForm/VehicleProfileForm';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { setCurrentVehicle } from '../../../../store/userVehiclesSlice';
 import { RootState } from '../../../../store';

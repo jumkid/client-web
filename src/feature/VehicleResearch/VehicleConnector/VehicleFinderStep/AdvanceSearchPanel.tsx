@@ -41,7 +41,7 @@ function AdvanceSearchPanel () {
   const isValid = !_.isEmpty(searchKeyword);
 
   return (
-    <Box className="dashboard-viewer-box">
+    <Box>
       <form onSubmit={handleSearch}>
         <FormControl>
           <Box sx={{ pb: 2 }}>

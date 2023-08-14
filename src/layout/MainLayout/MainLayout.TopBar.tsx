@@ -76,7 +76,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
 
   return (
     <AppBar position="static">
-      <Container maxWidth={false} disableGutters={true} sx={{ backgroundColor: '#C41407' }}>
+      <Container maxWidth={false}>
         <Toolbar variant="dense">
           <Icon className="navigation-logo"/>
           <NavButtons items={items} handleClick={menuOnClickHandler}/>
@@ -101,7 +101,6 @@ function TopBar ({ menuSettings, userSettings }: Props) {
             </Tooltip> }
 
             <Menu
-              id="menu-appbar"
               sx={{ mt: '8px' }}
               anchorEl={anchorElUser}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

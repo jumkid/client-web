@@ -6,7 +6,7 @@ describe(AuthThumbnail, () => {
   it('Should render correctly', () => {
     const tree = ReactTestRenderer
       .create(
-        <AuthThumbnail contentId='1234' idx={1} />
+        <AuthThumbnail contentId='1234' idx={1} width={10} height={10}/>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

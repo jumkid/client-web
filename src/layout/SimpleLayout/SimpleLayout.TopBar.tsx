@@ -10,7 +10,7 @@ function TopBar () {
   return (
     <AppBar position="static">
       <Container maxWidth={false} disableGutters={true}>
-        <Toolbar sx={{ backgroundColor: '#C41407' }} variant="dense">
+        <Toolbar variant="dense">
           <Icon className="navigation-logo"/>
         </Toolbar>
       </Container>

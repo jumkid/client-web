@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 
 function AddToGarageStepUserView () {
   const connectedVehicle = useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
-  const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
+  const status = useAppSelector((state:RootState) => state.userVehicles.status);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function AddToGarageStepUserView () {
 
   return (
     <>
-      <Stack className="dashboard-viewer-box">
+      <Stack>
         <Fade in={true} mountOnEnter unmountOnExit>
           <Grid container columns={16}>
             <Grid item xs={12}>

@@ -35,7 +35,6 @@ export const calculateOffset = (currentPick:number):number => {
 interface UserVehicleListState {
   currentPick: number
   currentVehicle: VehicleProfile
-  currentVehicleStatus: FormStatus
   vehicles: VehicleProfile[]
   keyword: string
   total: number
@@ -53,7 +52,6 @@ const initialState: UserVehicleListState = {
   pageSize: C.DEFAULT_PAGE_SIZE,
   vehicles: [],
   currentVehicle: blankVehicleProfile,
-  currentVehicleStatus: C.IDLE,
   status: C.IDLE,
   error: ''
 };
@@ -193,40 +191,49 @@ export const userVehiclesSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(updateVehicle.pending, (state) => {
-        state.currentVehicleStatus = C.LOADING;
+        state.status = C.LOADING;
       })
       .addCase(updateVehicle.fulfilled, (state) => {
-        state.currentVehicleStatus = C.SUCCEEDED;
+        state.status = C.SUCCEEDED;
       })
       .addCase(updateVehicle.rejected, (state) => {
-        state.currentVehicleStatus = C.FAILED;
+        state.status = C.FAILED;
       })
       .addCase(saveNewVehicle.pending, (state) => {
-        state.currentVehicleStatus = C.LOADING;
+        state.status = C.LOADING;
       })
       .addCase(saveNewVehicle.fulfilled, (state, action) => {
-        state.currentVehicleStatus = C.SUCCEEDED;
+        state.status = C.SUCCEEDED;
         if (action.payload.status === 201) {
           state.vehicles.push(action.payload.data);
         }
       })
       .addCase(saveNewVehicle.rejected, (state) => {
-        state.currentVehicleStatus = C.FAILED;
+        state.status = C.FAILED;
       })
       .addCase(updateUserVehicleName.fulfilled, (state, action) => {
-        state.currentVehicleStatus = C.SUCCEEDED;
+        state.status = C.SUCCEEDED;
+        const index = calculateOffset(state.currentPick);
+        const updatedVehicle = action.payload.data as VehicleProfile;
         if (action.payload.status === 202) {
-          state.vehicles[calculateOffset(state.currentPick)] = action.payload.data;
+          // update current vehicle modification date
+          state.currentVehicle.modificationDate = updatedVehicle.modificationDate;
+          // update the vehicle in the list
+          state.vehicles[index].name = updatedVehicle.name;
+          state.vehicles[index].modificationDate = updatedVehicle.modificationDate;
         }
       })
       .addCase(deleteVehicle.pending, (state) => {
-        state.currentVehicleStatus = C.LOADING;
+        state.status = C.LOADING;
       })
       .addCase(deleteVehicle.fulfilled, (state) => {
-        state.currentVehicleStatus = C.SUCCEEDED;
+        state.status = C.SUCCEEDED;
+        const index = state.vehicles.findIndex(vehicle => vehicle.id === state.currentVehicle.id);
+        state.vehicles.splice(index, 1);
+        state.currentVehicle = blankVehicleProfile;
       })
       .addCase(deleteVehicle.rejected, (state) => {
-        state.currentVehicleStatus = C.FAILED;
+        state.status = C.FAILED;
       });
   }
 });

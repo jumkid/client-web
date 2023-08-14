@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { GarageDashboard } from './feature/MyGarage/Dashboard';
 import { UserLogin, UserSignUp } from './security/AuthUser';
 import NotFound from './NotFound';
 import AuthRoute from './security/Auth/AuthRoute';
 import UserProfileMainPanel from './security/AuthUser/UserProfileMain';
 import { store } from './store';
 import { Provider } from 'react-redux';
-import { VehicleResearchDashboard } from './feature/VehicleResearch/Dashboard';
 import { domainDataService } from './service';
 import { DomainData } from './store/model/DomainData';
 import { AutoBrandsContext } from './App.contexts';
+import { MyVehiclesDashboard } from './feature/MyVehicles/Dashboard';
+import VehicleResearchDashboard from './feature/VehicleResearch/Dashboard';
 
 function bootstrapContext () {
 
@@ -36,8 +36,8 @@ function App () {
     <Provider store={store}>
       <AutoBrandsContext.Provider value={contextProvider}>
         <Routes>
-          <Route path="/" element={<AuthRoute><GarageDashboard/></AuthRoute>} />
-          <Route path="/research" element={<AuthRoute><VehicleResearchDashboard/></AuthRoute>} />
+          <Route path="/" element={<AuthRoute><MyVehiclesDashboard/></AuthRoute>} />
+          <Route path="/lookup" element={<AuthRoute><VehicleResearchDashboard/></AuthRoute>} />
           <Route path="/user-profile" element={<AuthRoute><UserProfileMainPanel /></AuthRoute>} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/sign-up" element={<UserSignUp />} />

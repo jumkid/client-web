@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box } from '@mui/material';
+import { Container } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TopBar from './MainLayout.TopBar';
 import authenticationManager from '../../security/Auth/AuthenticationManager';
@@ -8,8 +8,8 @@ import './MainLayout.css';
 import { MenuSetting, UserSetting } from './model';
 
 const menuSettings: MenuSetting[] = [
-  { title: 'Garage', isCurrent: true, route: '/' },
-  { title: 'Research', isCurrent: false, route: '/research' }
+  { title: 'Vehicles', isCurrent: true, route: '/' },
+  { title: 'Lookup', isCurrent: false, route: '/lookup' }
 ];
 
 const userSettings: UserSetting[] = [
@@ -65,10 +65,12 @@ function MainLayout (props: Props) {
       <ThemeProvider theme={jkTheme}>
         <TopBar menuSettings={_menuSettings} userSettings={userSettings}/>
 
-        <Container maxWidth='xl'>
-          <Box className='dashboard-container' sx={{ gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}>
-            { props.children }
-          </Box>
+        <Container
+          className='layout-container'
+          maxWidth='xl'
+          sx={{ gridTemplateColumns: 'repeat(10, 1fr)', display: 'grid', gap: 1 }}
+        >
+          { props.children }
         </Container>
       </ThemeProvider>
     </ColorModeContext.Provider>

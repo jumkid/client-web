@@ -6,10 +6,11 @@ import * as _ from 'lodash';
 interface Props {
   contentId:string | undefined,
   idx:number,
-  sx?: SxProps
+  width:number,
+  height:number,
 }
 
-function AuthThumbnail ({contentId, idx, sx}:Props) {
+function AuthThumbnail ({contentId, idx, width, height}:Props) {
   const [preLoadImage, setPreLoadImage] = useState('');
 
   useEffect(() => {
@@ -26,7 +27,8 @@ function AuthThumbnail ({contentId, idx, sx}:Props) {
     <Paper
       key={idx}
       sx={{
-        ...sx,
+        width,
+        height,
         float: 'left',
         background: `url('${preLoadImage}')`,
         backgroundSize: 'contain',

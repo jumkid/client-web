@@ -14,7 +14,7 @@ function VehicleResearchSideTabs () {
       variant="standard"
       value={currentTab}
       onChange={(event: React.SyntheticEvent, index: number) => setCurrentTab(index)}
-      sx={{ borderColor: 'divider', width: '100%', p: 2 }}
+      className="tab_fullwidth"
     >
       <Tab label="Connect a vehicle" sx={{m:1}}/>
       <Tab label={<AdminUser>Create New Vehicle</AdminUser>} disabled={!UserProfile.isAdmin()} sx={{m:1}}/>

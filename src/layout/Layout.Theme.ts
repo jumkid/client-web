@@ -1,7 +1,7 @@
 import React from 'react';
 import { grey } from '@mui/material/colors';
 import styled from '@emotion/styled';
-import { FormControl, Paper } from '@mui/material';
+import { Box, FormControl, Select } from '@mui/material';
 import { Theme } from '@emotion/react';
 
 const ColorModeContext = React.createContext({ toggleColorMode: ():void => { console.log("empty function");} });
@@ -38,7 +38,7 @@ const DesignTokens = (mode: string):object => ({
             hover: 'rgba(196,20,6,1)'
           },
           background: {
-            default: '#000',
+            default: JK_RED,
             paper: 'rgba(0,0,0,1)'
           },
           text: {
@@ -51,10 +51,19 @@ const DesignTokens = (mode: string):object => ({
     borderRadius: 0
   },
   components: {
-    MuiDialogTitle: {
+    MuiAppBar: {
       styleOverrides: {
         root: {
-          padding: "12px 14px 3px 24px"
+          backgroundColor: '#000',
+          opacity: 1,
+          minHeight: 54
+        }
+      }
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          color: '#686868'
         }
       }
     },
@@ -96,59 +105,12 @@ const DesignTokens = (mode: string):object => ({
         }
       }
     },
-    MuiTableHead: {
+    MuiButton: {
       styleOverrides: {
         root: {
-          backgroundColor: JK_RED
-        }
-      }
-    },
-    MuiTableRow: {
-      styleOverrides: {
-        root: {
-          backgroundColor: grey[900],
-          '&.MuiTableRow-hover:hover': {
-            backgroundColor: grey[700]
-          }
-        }
-      }
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          padding: '8px'
-        },
-        stickyHeader: {
-          backgroundColor: JK_RED,
-          fontWeight: '900'
-        }
-      }
-    },
-    MuiStepper: {
-      styleOverrides: {
-        root: {
-          padding: '28px 120px 18px 120px',
-          backgroundColor: grey[900]
-        }
-      }
-    },
-    MuiTabs: {
-      styleOverrides: {
-        indicator: {
-          width: 8
-        }
-      }
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          cursor: 'hand',
-          fontSize: '1.0rem',
-          color: grey[300],
-          minHeight: 10,
-          alignItems: 'end',
-          justifyContent: 'right',
-          padding: '8px 12px'
+          fontSize: 'medium',
+          marginRight: '6px',
+          padding: '2px 10px 2px 10px'
         }
       }
     },
@@ -174,37 +136,42 @@ const DesignTokens = (mode: string):object => ({
         }
       }
     },
+    MuiCardActions: {
+      styleOverrides: {
+        root: {
+          padding: '2px 0 0 14px',
+        }
+      }
+    },
     MuiChip: {
       styleOverrides: {
         root: {
           color: grey[900],
           backgroundColor: grey[500],
-          padding: '0 0',
-          margin: '2px 2px',
+          padding: '4px 2px',
+          margin: '7px 2px',
           height: '28px'
         }
       }
     },
-    MuiTextField: {
+    MuiDialogTitle: {
       styleOverrides: {
         root: {
-          marginLeft: 0,
-          width: '328px'
+          padding: "12px 14px 3px 13px"
         }
       }
     },
-    MuiSelect: {
+    MuiDialogContent: {
       styleOverrides: {
         root: {
-          width: '328px'
+          padding: "2px 14px"
         }
       }
     },
-    MuiButton: {
+    MuiFormControl: {
       styleOverrides: {
         root: {
-          fontSize: 'medium',
-          padding: '2px 10px 2px 10px'
+          margin: '5px 0 8px 0'
         }
       }
     },
@@ -215,10 +182,89 @@ const DesignTokens = (mode: string):object => ({
         }
       }
     },
-    MuiAvatar: {
+    MuiSnackbar: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: grey[900]
+        }
+      }
+    },
+    MuiStepper: {
       styleOverrides: {
         root: {
-          color: '#686868'
+          padding: '28px 120px 18px 120px',
+          backgroundColor: grey[900]
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          margin: '5px 0 8px 0',
+          width: '328px'
+        }
+      }
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: JK_RED
+        }
+      }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          backgroundColor: grey[900],
+          '&.MuiTableRow-hover:hover': {
+            backgroundColor: grey[700]
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          padding: 3,
+          border: 0,
+        },
+        stickyHeader: {
+          backgroundColor: JK_RED,
+          fontWeight: '900'
+        }
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          width: 8
+        }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          cursor: 'hand',
+          fontSize: '1.0rem',
+          color: grey[300],
+          minHeight: 10,
+          alignItems: 'end',
+          justifyContent: 'right',
+          padding: '8px 12px'
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          width: '328px'
+        }
+      }
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          margin: '0 0'
         }
       }
     }
@@ -229,16 +275,17 @@ type StyledItemProps = {
   theme: Theme
 }
 
-const Item = styled(Paper)(({ theme }:StyledItemProps) => ({
+const Item = styled(Box)(({ theme }:StyledItemProps) => ({
   ...theme,
-  paddingBottom: '8px',
+  paddingTop: '8px',
   marginRight: '8px',
   fontSize: '16px',
   fontWeight: '200',
-  float: 'left'
+  float: 'left',
+  opacity: 1
 }));
 
-const ItemText = styled(Paper)(({ theme }:StyledItemProps) => ({
+const ItemText = styled(Box)(({ theme }:StyledItemProps) => ({
   ...theme,
   width: '248px',
   textTransform: 'uppercase',
@@ -246,10 +293,9 @@ const ItemText = styled(Paper)(({ theme }:StyledItemProps) => ({
   fontSize: '18px'
 }));
 
-const ItemHeader = styled(Paper)(({ theme }:StyledItemProps) => ({
+const ItemHeader = styled(Box)(({ theme }:StyledItemProps) => ({
   ...theme,
   width: '100%',
-  textTransform: 'uppercase',
   fontWeight: '500',
   fontSize: '26px',
   marginTop: '21px'
@@ -257,12 +303,18 @@ const ItemHeader = styled(Paper)(({ theme }:StyledItemProps) => ({
 
 const S_FormControl = styled(FormControl)(({theme}:StyledItemProps) =>({
   ...theme,
-  margin: '0 0'
+  margin: '0 0 0 0'
+}));
+
+const S_Selection = styled(Select)(({ theme }:StyledItemProps) => ({
+  ...theme,
+  width: 183
 }));
 
 export {
   StyledItemProps, Item, ItemText, ItemHeader,
   S_FormControl,
+  S_Selection,
   ColorModeContext,
   DesignTokens
 };

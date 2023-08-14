@@ -1,16 +1,15 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
-import { VehicleProfile, blankVehicleProfile } from '../../../../store/model/VehicleProfile';
+import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import { RootState } from '../../../../store';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
-import { setCurrentVehicle } from '../../../../store/userVehiclesSlice';
 import * as C from '../../../../App.constants';
-import VehicleProfileSummary from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.Summary';
-import GalleryAccordion from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.GalleryAccordion';
-import PricingViewerAccordion from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.PricingAccordion';
-import DetailsAccordion from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.DetailsAccordion';
+import ViewerSummary from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerSummary';
+import ViewerGalleryAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerGalleryAccordion';
+import PricingViewerAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/PricingViewerAccordion';
+import ViewerDetailsAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerDetailsAccordion';
 
 interface Prop {
   connectedVehicle: VehicleProfile
@@ -30,23 +29,24 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
 
   return (
     <>
-      <Box mx={3} pt={1}>
-        <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
+      <Box className="tool-bar-container">
+        <Button variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>Back
         </Button>
-        <Button sx={{ fontSize: 'large' }} variant="outlined" onClick={handleForward}>
+        <Button variant="outlined" onClick={handleForward}>
           Next<ArrowForwardIos/>
         </Button>
       </Box>
-      <Stack className="dashboard-viewer-box">
 
-        <VehicleProfileSummary mode={C.MODE_SIMPLE} showName={false} vehicleProfile={connectedVehicle}/>
+      <Stack className="main-container">
 
-        <GalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
+        <ViewerSummary mode={C.MODE_SIMPLE} showName={false} vehicleProfile={connectedVehicle}/>
+
+        <ViewerGalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
 
         <PricingViewerAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle} />
 
-        <DetailsAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle}/>
+        <ViewerDetailsAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle}/>
 
       </Stack>
     </>

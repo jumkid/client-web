@@ -7,9 +7,9 @@ import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import * as C from '../../../../App.constants';
 import AddToGarageStepAdminView from './AddToGarageStep.AdminView';
-import VehicleFormActionsBar from '../../../MyGarage/GarageMainPanel/VeichleProfileForm/VehicleProfileForm.ActionsBar';
-import { ErrorsContext } from '../../../MyGarage/GarageMainPanel/VehicleProfileContext';
-import VehicleViewerActionsBar from '../../../MyGarage/GarageMainPanel/VehicleProfileViewer/VehicleProfileViewer.ActionsBar';
+import FormActionsBar from '../../../MyVehicles/MainPanels/VeichleProfileForm/FormActionsBar';
+import { ErrorsContext } from '../../../MyVehicles/MainPanels/VehicleProfileContext';
+import VehicleViewerActionsBar from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerActionsBar';
 import AdminUser from '../../../../security/Auth/AdminUser';
 import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
 
@@ -18,7 +18,7 @@ function AddToGarageStep () {
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
 
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
-  const status = useAppSelector((state:RootState) => state.userVehicles.currentVehicleStatus);
+  const status = useAppSelector((state:RootState) => state.userVehicles.status);
 
   const dispatch = useAppDispatch();
 
@@ -28,18 +28,19 @@ function AddToGarageStep () {
 
   return (
     <ErrorsContext.Provider value={errorsProvider}>
-      { status === C.LOADING && <CircularProgress size="1.5rem" sx={{ position: "absolute", mt: 2, ml: 20 }}/> }
-      <Box mx={3} py={1}>
-        <Button sx={{ fontSize: 'large', mr: 1 }} variant="outlined" onClick={handleBackward}>
+      { status === C.LOADING && <CircularProgress size="1.5rem" sx={{ position: "absolute", mt: 3, ml: 18 }}/> }
+      <Box className="tool-bar-container">
+        <Button variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>back
         </Button>
 
-        <AdminUser><VehicleFormActionsBar /></AdminUser>
+        <AdminUser><FormActionsBar /></AdminUser>
         <NoneAdminUser><VehicleViewerActionsBar /></NoneAdminUser>
       </Box>
 
       <AdminUser><AddToGarageStepAdminView /></AdminUser>
       <NoneAdminUser><AddToGarageStepUserView /></NoneAdminUser>
+
     </ErrorsContext.Provider>
   )
 }

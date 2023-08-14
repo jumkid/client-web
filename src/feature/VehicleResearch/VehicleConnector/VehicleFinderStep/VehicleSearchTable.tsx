@@ -67,8 +67,18 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
   };
 
   return (
-    <Box>
-      <TableContainer component={Paper} sx={{ overflowX: 'hidden', maxHeight: '55vh' }}>
+    <Box className="main-container">
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={total}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={pageSize}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
+      <TableContainer component={Paper}>
         <Table stickyHeader aria-label="vehicle fast search table">
           <TableHead>
             <TableRow>
@@ -87,7 +97,6 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
                 key={index}
                 hover
                 tabIndex={-1}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 onClick={() => handleRowClick(vehicle)}
               >
                 <TableCell component="th" scope="row" sx={{ textTransform: "uppercase" }}>{vehicle.make}</TableCell>
@@ -102,15 +111,6 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={total}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={pageSize}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Box>
   )
 }

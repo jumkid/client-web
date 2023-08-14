@@ -1,5 +1,3 @@
 import VehicleResearchDashboard from './VehicleResearchDashboard';
 
-export {
-  VehicleResearchDashboard
-};
+export default VehicleResearchDashboard;

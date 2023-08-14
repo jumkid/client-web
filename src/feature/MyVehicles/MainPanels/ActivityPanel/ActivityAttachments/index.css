@@ -1,0 +1,21 @@
+.attachments-table-row {
+    width: 90%;
+    '&.last-child td, &.last-child th':
+        border: 0
+}
+
+.upload-toolbar {
+    position: absolute;
+    left: 20px;
+    bottom: 12px;
+}
+
+.upload-button {
+    float: left;
+    margin-right: 14px;
+}
+
+.upload-progress {
+    width: 620px;
+    margin-top: 23px;
+}

@@ -1,0 +1,11 @@
+.close-icon {
+    position: absolute !important;
+    right: 8px;
+    top: 8px;
+    color: #cacaca;
+}
+
+.assignee-fieldset {
+    height: 346px;
+    border: 1px solid #606060;
+}

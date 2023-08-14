@@ -22,9 +22,4 @@ function NavButtons ({ items, handleClick }:Props) {
   );
 }
 
-NavButtons.propTypes = {
-  items: PropTypes.array.isRequired,
-  handleClick: PropTypes.func.isRequired
-};
-
 export default NavButtons;

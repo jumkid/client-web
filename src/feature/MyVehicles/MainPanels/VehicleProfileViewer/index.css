@@ -1,0 +1,31 @@
+.brand-avatar {
+    float: left;
+    margin: 1px 20px 2px 0;
+    width: 58px !important;
+    height: 64px !important;
+}
+
+.vehicle-name-input {
+    margin: 13px 0 3px 0 !important;
+    padding: 0 0 !important;
+    width: 580px !important;
+}
+
+.vehicle-name-text {
+    margin: 16px 0 6px 0;
+    padding: 0 0;
+}
+
+.vehicle-name-progress {
+    position: absolute;
+    top: 129px;
+    left: 762px;
+}
+
+.vehicle-delete-btn {
+    margin: 20px 0 0 0 !important;
+}
+
+.access-scope-btn {
+    margin: 18px 0 0 13px !important;
+}

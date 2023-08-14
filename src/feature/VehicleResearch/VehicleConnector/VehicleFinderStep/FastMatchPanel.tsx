@@ -1,51 +1,29 @@
 import React, { useEffect } from 'react';
 import {
   Box,
-  FormControl,
   InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent, TextField,
+  SelectChangeEvent,
 } from '@mui/material';
-import styled from '@emotion/styled';
-import { Theme } from '@emotion/react';
 import { vehicleService } from '../../../../service';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons/faBarcode';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
 import { useAppSelector, useAppDispatch } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import {
-  changeMatchSelections, clearMatchFields,
-  fetchMatchVehicles, fetchVehicleByVin,
+  changeMatchSelections,
+  fetchMatchVehicles,
   setMatchFields, setMatchVehicles,
-  setSearchVIN, setTarget
+  setTarget
 } from '../../../../store/searchVehiclesSlice';
-import { Clear } from '@mui/icons-material';
 import CardWaitSkeleton from './CardWaitSkeleton';
-import VehicleCards from '../../../MyGarage/GarageMainPanel/VehicleCard';
+import VehicleCards from '../../../MyVehicles/MainPanels/VehicleCard';
 import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
-
-type ItemProps = {
-  theme: Theme
-}
-
-const S_Selection = styled(Select)(({ theme }:ItemProps) => ({
-  ...theme,
-  width: 183
-}));
-
-const S_FormControl = styled(FormControl)(({theme}:ItemProps) =>({
-  ...theme,
-  margin: '10px 10px 10px 0'
-}));
+import { Item, S_FormControl, S_Selection } from '../../../../layout/Layout.Theme';
 
 function FastMatchPanel () {
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
   const target = useAppSelector((state:RootState) => state.searchVehicles.target);
-  const searchVIN = useAppSelector((state:RootState) => state.searchVehicles.searchVIN);
-  const vinVehicle = useAppSelector((state:RootState) => state.searchVehicles.vinVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
@@ -53,9 +31,7 @@ function FastMatchPanel () {
   const dispatch = useAppDispatch();
   
   useEffect(() => {
-    if (target === C.VIN) {
-      dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: vinVehicle }));
-    } else if (target === C.SUBMIT) {
+    if (target === C.SUBMIT) {
       dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
     } else {
       vehicleService.getForAggregation(target, matchFields).then(
@@ -81,7 +57,7 @@ function FastMatchPanel () {
         }
       )
     }
-  },[vinVehicle, matchFields]);
+  },[matchFields]);
 
   const handleOnChange = (event:SelectChangeEvent<any>) => {
     const field = event.target.name;
@@ -90,27 +66,6 @@ function FastMatchPanel () {
     dispatch(setMatchFields({field, value}));
     dispatch(setMatchVehicles([]));
   }
-
-  const handleClearClick = () => {
-    cleanUp(C.MAKE);
-    dispatch(setSearchVIN(''));
-  }
-
-  const handleVinOnChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    cleanUp();
-    dispatch(setSearchVIN(event.target.value));
-  }
-
-  const handleVinSearch = (event:React.KeyboardEvent<HTMLInputElement>) => {
-    if (status === C.LOADING) {
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      cleanUp(C.VIN);
-      dispatch(fetchVehicleByVin(searchVIN));
-    }
-  };
 
   const handleCardClick = (index:number): void => {
     dispatch(setConnectedVehicle(matchVehicles[index]));
@@ -148,36 +103,10 @@ function FastMatchPanel () {
     return matchField ? matchField.value : "";
   }
 
-  const cleanUp = (next?:string) => {
-    setTarget(next || '');
-    if (!_.isEmpty(matchFields)) dispatch(clearMatchFields());
-    if (!_.isEmpty(matchVehicles)) dispatch(setMatchVehicles([]));
-  }
-
   return (
-    <Box className="dashboard-viewer-box">
-      <Box>
-        <form>
-          <S_FormControl>
-            <TextField
-              sx={{ width: "60vh" }}
-              name="vin"
-              value={searchVIN}
-              placeholder="Find a vehicle by knowing VIN number"
-              variant="outlined"
-              InputProps={{
-                endAdornment: (<>
-                  <Clear
-                    sx={{ visibility: searchVIN? "visible": "hidden", cursor: 'pointer'}}
-                    onClick={handleClearClick}/>
-                  <FontAwesomeIcon icon={faBarcode} style={{ marginLeft: 15 }}/>
-                </>)
-              }}
-              onChange={handleVinOnChange}
-              onKeyPress={handleVinSearch}
-            />
-          </S_FormControl>
-          <br/>OR<br/>
+    <Box>
+      <Item>
+        <Item>
           <S_FormControl>
             <InputLabel htmlFor="maker-selection">Make</InputLabel>
             <S_Selection
@@ -196,6 +125,9 @@ function FastMatchPanel () {
               ))}
             </S_Selection>
           </S_FormControl>
+        </Item>
+
+        <Item>
           <S_FormControl>
             <InputLabel htmlFor="model-selection">Model</InputLabel>
             <S_Selection
@@ -215,6 +147,9 @@ function FastMatchPanel () {
               ))}
             </S_Selection>
           </S_FormControl>
+        </Item>
+
+        <Item>
           <S_FormControl>
             <InputLabel htmlFor="year-selection">Model Year</InputLabel>
             <S_Selection
@@ -234,6 +169,9 @@ function FastMatchPanel () {
               ))}
             </S_Selection>
           </S_FormControl>
+        </Item>
+
+        <Item>
           <S_FormControl>
             <InputLabel htmlFor="trim-selection">Trim Level</InputLabel>
             <S_Selection
@@ -252,16 +190,20 @@ function FastMatchPanel () {
               ))}
             </S_Selection>
           </S_FormControl>
-        </form>
-      </Box>
-      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
-        :
-        <VehicleCards
-          vehicles={matchVehicles}
-          detailsLnkCallback={handleCardClick}
-          copyDoneCallback={handleGalleryCopyDone}
-        />
-      }
+        </Item>
+      </Item>
+
+      <Item>
+        { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
+          :
+          <VehicleCards
+            vehicles={matchVehicles}
+            detailsLnkCallback={handleCardClick}
+            copyDoneCallback={handleGalleryCopyDone}
+          />
+        }
+      </Item>
+
     </Box>
   )
 }
