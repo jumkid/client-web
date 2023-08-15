@@ -132,23 +132,29 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
 
             <CardContent>
               <Box>
-                <Typography noWrap={true}>
-                  {vehicle.vehicleEngine!.name} {vehicle.vehicleEngine!.horsepower}(HP) {vehicle.vehicleEngine!.torque}(LBF)
-                </Typography>
-                <Typography noWrap={true}>
-                  {vehicle.vehicleTransmission!.name}
-                </Typography>
-                <Typography noWrap={true}>
-                  {vehicle.vehicleTransmission!.drivetrain}
-                </Typography>
+                <Box>
+                  <Chip
+                    icon={<Icon sx={{
+                      background: `url(${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicle.make}.png) no-repeat top left`,
+                      backgroundSize: "contain"
+                    }}/>}
+                    label={vehicle.make}
+                  />
+                  <Chip label={`${vehicle.vehicleEngine!.horsepower}hp`}/>
+                  <Chip label={`${vehicle.vehicleEngine!.torque}lbf`}/>
+                </Box>
 
-                <Chip
-                  icon={<Icon sx={{
-                    background: `url(${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${vehicle.make}.png) no-repeat top left`,
-                    backgroundSize: "contain"
-                  }}/>}
-                  label={vehicle.make}
-                />
+                <ul>
+                  <li>
+                    <Typography noWrap={true}>{vehicle.vehicleEngine!.name}</Typography>
+                  </li>
+                  <li>
+                    <Typography noWrap={true}>{vehicle.vehicleTransmission!.name}</Typography>
+                  </li>
+                  <li>
+                    <Typography noWrap={true}>{vehicle.vehicleTransmission!.drivetrain}</Typography>
+                  </li>
+                </ul>
 
                 {!_.isNil(vehicle.mediaGalleryId) &&
                 <>

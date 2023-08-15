@@ -185,7 +185,9 @@ function UserSignUp () {
                   }
                 </Stack>
                 { isSubmitted && <LinearProgress /> }
-                <Divider sx={{ mb: '28px' }}/>
+
+                <Divider/>
+
               </FormControl>
               <Button onClick={handleSubmit} disabled={!isValidForm} type="submit" variant="contained">Submit</Button>
                 &nbsp;

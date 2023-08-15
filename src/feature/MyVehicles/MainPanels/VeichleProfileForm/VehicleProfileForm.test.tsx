@@ -5,18 +5,21 @@ import { getTestJwtToken, testVehicleProfile } from '../../../../App.test';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import axios from 'axios';
+import mockAxios from 'axios';
 import { act, render, screen } from '@testing-library/react';
+import { AutoBrandsContext, AutoBrandsValue } from '../../../../App.contexts';
 
 //Configuring a mockStore
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 jest.mock('axios');
+mockAxios.get = jest.fn().mockResolvedValue({status: 200, data: []});
 
 describe(VehicleProfileForm, () => {
+
   beforeAll(() => {
-    (axios.get as jest.Mock).mockResolvedValue({data:null});
+    authenticationManager.updateToken(getTestJwtToken());
   });
 
   const store = mockStore({
@@ -27,11 +30,18 @@ describe(VehicleProfileForm, () => {
 
   it('should render correctly', async () => {
     await act(async () => {
-      authenticationManager.updateToken(getTestJwtToken());
+
+      const testDomainData = {id:1, industry:'automobile', name:'brand', value:'porsche'};
+      const autoBrandsContextProvider:AutoBrandsValue = {
+        autoBrands:[testDomainData],
+        setAutoBrands:(domainData) => ({...domainData})
+      };
 
       render(
         <Provider store={store}>
-          <VehicleProfileForm/>
+          <AutoBrandsContext.Provider value={autoBrandsContextProvider}>
+            <VehicleProfileForm/>
+          </AutoBrandsContext.Provider>
         </Provider>
       );
       expect(screen).toMatchSnapshot();

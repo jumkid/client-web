@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Button, FormControl, TextField } from '@mui/material';
+import { Box, Button, FormControl, Grid, TextField } from '@mui/material';
 import Validator from '../UserProfile.Validator';
 import { ValidationErrors } from '../model/ValidationErrors';
-import UserAvatarUploadForm from './UserAvatarUploadForm';
+import AvatarUploadForm from './AvatarUploadForm';
 import { RootState } from '../../../store';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { submitUserProfile, updateUserProfile } from '../../../store/tokenUserSlice';
+import { Item } from '../../../layout/Layout.Theme';
 
 const initValidationErrors:ValidationErrors = { hasUpdate: false }
 
@@ -37,9 +38,9 @@ function UserProfileUpdateForm () {
     }));
   };
 
-  const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnterKeyPress = async (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && isValidForm) {
-      handleSubmit();
+      await handleSubmit();
     }
   };
 
@@ -63,65 +64,76 @@ function UserProfileUpdateForm () {
   const isValidForm = Object.values(errors).length === 0;
 
   return (
-    <div>
-      <FormControl>
-        <TextField
-          disabled
-          margin='dense'
-          name="username"
-          label="Username"
-          value={userProfile.username}
-          variant="outlined"
-          error={!!errors.username}
-          helperText={errors.username}
-        />
-        <TextField
-          disabled
-          margin='dense'
-          name="email"
-          label="Email"
-          autoComplete="email"
-          value={userProfile.email}
-          variant="outlined"
-          error={!!errors.email}
-          helperText={errors.email}
-        />
-        <TextField
-          required
-          margin='dense'
-          name="firstName"
-          label="First Name"
-          value={userProfile.firstName}
-          onChange={handleChange}
-          onKeyPress={handleEnterKeyPress}
-          onBlur={handleBlur}
-          variant="outlined"
-        />
-        <TextField
-          required
-          margin='dense'
-          name="lastName"
-          label="Last Name"
-          value={userProfile.lastName}
-          onChange={handleChange}
-          onKeyPress={handleEnterKeyPress}
-          onBlur={handleBlur}
-          variant="outlined"
-        />
-        <div>
+    <Grid container spacing={1} columns={8}>
+      <Grid item xs={4}>
+        <FormControl>
+          <Item>
+            <TextField
+              disabled
+              margin='dense'
+              name="username"
+              label="Username"
+              value={userProfile.username}
+              variant="outlined"
+              error={!!errors.username}
+              helperText={errors.username}
+            />
+          </Item>
+          <Item>
+            <TextField
+              disabled
+              margin='dense'
+              name="email"
+              label="Email"
+              autoComplete="email"
+              value={userProfile.email}
+              variant="outlined"
+              error={!!errors.email}
+              helperText={errors.email}
+            />
+          </Item>
+          <Item>
+            <TextField
+              required
+              margin='dense'
+              name="firstName"
+              label="First Name"
+              value={userProfile.firstName}
+              onChange={handleChange}
+              onKeyPress={handleEnterKeyPress}
+              onBlur={handleBlur}
+              variant="outlined"
+            />
+          </Item>
+          <Item>
+            <TextField
+              required
+              margin='dense'
+              name="lastName"
+              label="Last Name"
+              value={userProfile.lastName}
+              onChange={handleChange}
+              onKeyPress={handleEnterKeyPress}
+              onBlur={handleBlur}
+              variant="outlined"
+            />
+          </Item>
+        </FormControl>
+        <Item>
           <Button
-            sx={{ mt: 2 }}
             onClick={handleSubmit}
             disabled={!isValidForm}
             type="submit"
             variant="contained">
             Save
           </Button>
-        </div>
-      </FormControl>
+        </Item>
+      </Grid>
 
-      <UserAvatarUploadForm/>
-    </div>
+      <Grid item xs={4}>
+        <AvatarUploadForm/>
+      </Grid>
+    </Grid>
   )
 }
 

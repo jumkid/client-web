@@ -17,12 +17,11 @@ function ViewerDetailsAccordion ({mode, vehicleProfile}:Props) {
 
   return (
     <Accordion defaultExpanded={mode === C.MODE_ACTIVE}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-      >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Technical Spec</Typography>
       </AccordionSummary>
-      <AccordionDetails className="inner-container">
+
+      <AccordionDetails>
         <Stack>
           { vehicleEngine &&
           <>

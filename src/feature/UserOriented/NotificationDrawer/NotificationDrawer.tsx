@@ -12,6 +12,7 @@ import { Activity } from '../../../store/model/Activity';
 import { VEHICLE } from '../../../App.constants';
 import * as _ from 'lodash';
 import { changePick, SIDE_TABS_OFFSET } from '../../../store/userVehiclesSlice';
+import './index.css';
 
 interface Props {
   drawerOpen: boolean
@@ -59,24 +60,21 @@ function NotificationDrawer ({drawerOpen, toggleDrawer}:Props) {
 
   return (
     <Drawer
+      className="user-notify-drawer"
       open={drawerOpen}
       anchor='right'
-      sx={{px: 2, '& .MuiDrawer-paper': {width: '300px', backgroundColor: 'transparent'}}}
       onClose={toggleDrawer}
     >
-      <Paper sx={{ m: 2, borderRadius: '13px' }}>
-        { !_.isNil(activityNotifications) && activityNotifications.map((activityNotification, idx) => (
-          <ListItem key={idx}>
-            <Event sx={{ mr:1 }} fontSize={'small'}/>
-            <ListItemText
-              sx={{cursor: 'pointer', mr: 2}}
-              primary={<Typography variant='body1' fontWeight={activityNotification.unread ? 'bold' : 'normal'}>{activityNotification.title}</Typography>}
-              onClick={() => handleClick(activityNotification)}
-            />
-            <IconButton onClick={() => deleteActivity(activityNotification.id)}><Close fontSize={'small'}/></IconButton>
-          </ListItem>
-        ))}
-      </Paper>
+      { !_.isNil(activityNotifications) && activityNotifications.map((activityNotification, idx) => (
+        <ListItem key={idx}>
+          <Event fontSize={'small'}/>&nbsp;
+          <ListItemText
+            primary={<Typography variant='body1' fontWeight={activityNotification.unread ? 'bold' : 'normal'}>{activityNotification.title}</Typography>}
+            onClick={() => handleClick(activityNotification)}
+          />
+          <IconButton onClick={() => deleteActivity(activityNotification.id)}><Close fontSize={'small'}/></IconButton>
+        </ListItem>
+      ))}
     </Drawer>
   )
 }

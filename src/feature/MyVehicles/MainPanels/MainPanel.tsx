@@ -32,10 +32,7 @@ function MainPanel () {
       <>
         <AdminUser>
           <ErrorsContext.Provider value={errorsProvider}>
-            <Toolbar>
-              <FormActionsBar />
-            </Toolbar>
-
+            <FormActionsBar />
             <VehicleProfileForm />
           </ErrorsContext.Provider>
         </AdminUser>

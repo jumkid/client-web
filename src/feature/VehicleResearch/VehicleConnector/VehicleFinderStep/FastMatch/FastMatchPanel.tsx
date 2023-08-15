@@ -5,21 +5,21 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material';
-import { vehicleService } from '../../../../service';
+import { vehicleService } from '../../../../../service';
 import * as _ from 'lodash';
-import * as C from '../../../../App.constants';
-import { useAppSelector, useAppDispatch } from '../../../../App.hooks';
-import { RootState } from '../../../../store';
+import * as C from '../../../../../App.constants';
+import { useAppSelector, useAppDispatch } from '../../../../../App.hooks';
+import { RootState } from '../../../../../store';
 import {
   changeMatchSelections,
   fetchMatchVehicles,
   setMatchFields, setMatchVehicles,
   setTarget
-} from '../../../../store/searchVehiclesSlice';
-import CardWaitSkeleton from './CardWaitSkeleton';
-import VehicleCards from '../../../MyVehicles/MainPanels/VehicleCard';
-import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
-import { Item, S_FormControl, S_Selection } from '../../../../layout/Layout.Theme';
+} from '../../../../../store/searchVehiclesSlice';
+import CardWaitSkeleton from '../../../../MyVehicles/MainPanels/VehicleCard/CardWaitSkeleton';
+import VehicleCards from '../../../../MyVehicles/MainPanels/VehicleCard';
+import { setConnectedVehicle, setConnectorStep } from '../../../../../store/connectedVehicleSlice';
+import { Item, S_FormControl, S_Selection } from '../../../../../layout/Layout.Theme';
 
 function FastMatchPanel () {
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
@@ -104,7 +104,7 @@ function FastMatchPanel () {
   }
 
   return (
-    <Box>
+    <Box className="main-container">
       <Item>
         <Item>
           <S_FormControl>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
   changePick,
@@ -122,7 +122,7 @@ function FormActionsBar () {
   const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
 
   return (
-    <>
+    <Box className="tool-bar-container">
       <Button
         onClick={handleSave}
         color="primary"
@@ -157,7 +157,7 @@ function FormActionsBar () {
         confirmCallback={dialogConfirm}
         cancelCallback={dialogCancel}
       />
-    </>
+    </Box>
   )
 }
 

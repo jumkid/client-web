@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
+    "test": "jest --config=jest.config.js --watchAll",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint --fix src --ext .js,.jsx,.ts,.tsx"

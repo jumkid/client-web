@@ -82,7 +82,7 @@ function SummaryForm () {
   return (
     <Box>
       <Grid container columns={16}>
-        <Grid item xs={12}>
+        <Grid item xs={15}>
           <TextField
             label="Name"
             name="name"
@@ -95,8 +95,8 @@ function SummaryForm () {
           />
         </Grid>
 
-        <Grid item xs={4}>
-          <IconButton sx={{ float: 'right' }} aria-label="access scope" component="label" onClick={toggleAccessScope}>
+        <Grid item xs={1}>
+          <IconButton aria-label="access scope" component="label" onClick={toggleAccessScope}>
             { currentVehicle.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
           </IconButton>
         </Grid>

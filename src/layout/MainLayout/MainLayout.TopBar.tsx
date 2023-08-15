@@ -18,6 +18,7 @@ import NavButtons from './MainLayout.NavButtons';
 import { Notifications } from '@mui/icons-material';
 import { MenuSetting, UserSetting } from './model';
 import * as C from '../../App.constants';
+import * as _ from 'lodash';
 import { RootState } from '../../store';
 import { useAppDispatch, useAppSelector } from '../../App.hooks';
 import NotificationDrawer from '../../feature/UserOriented/NotificationDrawer';
@@ -47,6 +48,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     })));
   }, []);
 
+  const activityNotifications = useAppSelector((state:RootState) => state.userNotifications.activityNotifications);
   const userNotificationsCount = useAppSelector((state:RootState) => state.userNotifications.count);
   const dispatch = useAppDispatch();
 
@@ -79,29 +81,29 @@ function TopBar ({ menuSettings, userSettings }: Props) {
       <Container maxWidth={false}>
         <Toolbar variant="dense">
           <Icon className="navigation-logo"/>
+
           <NavButtons items={items} handleClick={menuOnClickHandler}/>
 
-          <Box sx={{ flex: 1 }}/>
+          <Box className="navigation-user-tools">
+            { tokenUser &&
+              <>
+                <NotificationDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
+                <Badge sx={{ mr: 2 }} badgeContent={userNotificationsCount} overlap="circular" color="success">
+                  <IconButton onClick={toggleDrawer} aria-label="check notification" disabled={_.isEmpty(activityNotifications)}>
+                    <Notifications fontSize='medium'/>
+                  </IconButton>
+                </Badge>
 
-          { tokenUser &&
-          <IconButton onClick={toggleDrawer} aria-label="check notification" disabled={userNotificationsCount < 1}>
-            <Badge sx={{ mr: 2 }} badgeContent={userNotificationsCount} overlap="circular" color="success">
-              <Notifications fontSize='large'/>
-            </Badge>
-          </IconButton> }
-
-          <NotificationDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
-
-          <Box>
-            { tokenUser && <Tooltip title="Open settings">
-              <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                {!userAvatar && <Avatar alt={userName} />}
-                {userAvatar && <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />}
-              </IconButton>
-            </Tooltip> }
+                <Tooltip title="Open settings">
+                  <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
+                    {!userAvatar && <Avatar alt={userName} />}
+                    {userAvatar && <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />}
+                  </IconButton>
+                </Tooltip>
+              </>
+            }
 
             <Menu
-              sx={{ mt: '8px' }}
               anchorEl={anchorElUser}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -109,9 +111,11 @@ function TopBar ({ menuSettings, userSettings }: Props) {
               onClose={handleCloseUserMenu}
             >
               { userSettings.map((setting, index) => (
-                setting.title === '-'
-                  ? <Divider key={index}/>
-                  : <MenuItem sx={{ minWidth: '148px' }}
+                setting.title === '-' ?
+                  <Divider key={index}/>
+                  :
+                  <MenuItem
+                    className="navigation-user-menu"
                     key={index}
                     onClick={(event) => {setting.callback && setting.callback(event.target);}}>
                     <Typography textAlign="center">{setting.title}</Typography>

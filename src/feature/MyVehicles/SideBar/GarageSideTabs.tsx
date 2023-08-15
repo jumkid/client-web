@@ -22,16 +22,16 @@ function GarageSideTabs () {
   return (
     <>
       <Tabs
+        className="side-tabs"
         orientation="vertical"
         variant="standard"
         value={currentPick}
         onChange={handleChange}
-        className="tab_fullwidth"
       >
         <Tab className="side-bar-menu" icon={<ViewList/>} iconPosition="start" label="My Vehicles"/>
 
         { !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
-          <Tab key={index} label={vehicle.name} sx={{ textAlign: "right" }} wrapped={true}/>
+          <Tab key={index} label={vehicle.name} wrapped={true}/>
         )}
       </Tabs>
       { <SideTabWaitSkeleton isShown={status === C.LOADING} /> }

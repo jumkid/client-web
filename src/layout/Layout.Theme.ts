@@ -101,7 +101,7 @@ const DesignTokens = (mode: string):object => ({
     MuiAccordionDetails: {
       styleOverrides: {
         root: {
-          padding: "0 0"
+          padding: "8px 8px"
         }
       }
     },
@@ -215,6 +215,8 @@ const DesignTokens = (mode: string):object => ({
     MuiTableRow: {
       styleOverrides: {
         root: {
+          margin: 3,
+          cursor: 'pointer',
           backgroundColor: grey[900],
           '&.MuiTableRow-hover:hover': {
             backgroundColor: grey[700]
@@ -225,7 +227,7 @@ const DesignTokens = (mode: string):object => ({
     MuiTableCell: {
       styleOverrides: {
         root: {
-          padding: 3,
+          padding: 10,
           border: 0,
         },
         stickyHeader: {
@@ -250,6 +252,7 @@ const DesignTokens = (mode: string):object => ({
           minHeight: 10,
           alignItems: 'end',
           justifyContent: 'right',
+          margin: '2px 2px',
           padding: '8px 12px'
         }
       }

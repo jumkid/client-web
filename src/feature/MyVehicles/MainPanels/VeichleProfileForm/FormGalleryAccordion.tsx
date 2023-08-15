@@ -24,7 +24,7 @@ function GalleryAccordion ({mode}:Props) {
       <AccordionDetails>
         { vehicleProfile.id ? <GalleryPanel mode={mode} mediaGalleryId={vehicleProfile.mediaGalleryId} />
           :
-          <Typography m={1}>Save new vehicle before you use photo gallery</Typography>
+          <Typography>Save new vehicle before you use photo gallery</Typography>
         }
       </AccordionDetails>
     </Accordion>

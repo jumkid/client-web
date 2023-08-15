@@ -1,25 +1,26 @@
 import React from 'react';
 import MainLayout from '../../../layout/MainLayout';
 import { Box, Divider, Stack } from '@mui/material';
-import UserPasswordResetForm from './UserPasswordResetForm';
+import PasswordResetForm from './PasswordResetForm';
 import UserProfileUpdateForm from './UserProfileUpdateForm';
+import './index.css';
 
 function UserProfileMainPanel () {
   return (
-    <MainLayout mode="light" menuIndex={-1}>
-      <Box/>
-      <Box className="App-container" gridColumn="span 8" minWidth="1024px">
-        <h2>User Profile</h2>
+    <MainLayout mode="dark" menuIndex={-1}>
+      <Box gridColumn="span 2"/>
 
-        <Stack m="auto" alignItems="left" className="App-sub-container">
+      <Stack className="main-panel" alignItems="center" gridColumn="span 6">
+        <Box className="main-container">
+          <h2>User Profile</h2>
+
           <UserProfileUpdateForm/>
 
-          <br/><Divider/><br/>
+          <Box my={2}><Divider/></Box>
 
-          <UserPasswordResetForm/>
-          <br/>
-        </Stack>
-      </Box>
+          <PasswordResetForm/>
+        </Box>
+      </Stack>
     </MainLayout>
   )
 }

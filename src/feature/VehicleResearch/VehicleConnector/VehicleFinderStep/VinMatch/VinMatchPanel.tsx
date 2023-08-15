@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
-import { Box, TextField } from '@mui/material';
-import { Clear } from '@mui/icons-material';
+import { Box, Fab, TextField } from '@mui/material';
+import { Clear, Search } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons/faBarcode';
-import { fetchMatchVehicles, fetchVehicleByVin, setSearchVIN } from '../../../../store/searchVehiclesSlice';
-import * as C from '../../../../App.constants';
-import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { RootState } from '../../../../store';
-import { S_FormControl, Item } from '../../../../layout/Layout.Theme';
-import CardWaitSkeleton from './CardWaitSkeleton';
-import VehicleCards from '../../../MyVehicles/MainPanels/VehicleCard';
-import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { fetchMatchVehicles, fetchVehicleByVin, setSearchVIN } from '../../../../../store/searchVehiclesSlice';
+import * as C from '../../../../../App.constants';
+import { useAppDispatch, useAppSelector } from '../../../../../App.hooks';
+import { RootState } from '../../../../../store';
+import { S_FormControl, Item } from '../../../../../layout/Layout.Theme';
+import CardWaitSkeleton from '../../../../MyVehicles/MainPanels/VehicleCard/CardWaitSkeleton';
+import VehicleCards from '../../../../MyVehicles/MainPanels/VehicleCard';
+import { setConnectedVehicle, setConnectorStep } from '../../../../../store/connectedVehicleSlice';
+import * as _ from 'lodash';
+import './index.css';
 
 function VinMatchPanel () {
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
@@ -23,14 +25,18 @@ function VinMatchPanel () {
     dispatch(setSearchVIN(event.target.value));
   }
 
-  const handleVinSearch = (event:React.KeyboardEvent<HTMLInputElement>) => {
-    if (status === C.LOADING) {
+  const handleVinKeypress = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleVinSearch();
+    }
+    return;
+  }
+
+  const handleVinSearch = () => {
+    if (status === C.LOADING || _.isEmpty(searchVIN)) {
       return;
     }
-
-    if (event.key === 'Enter') {
-      dispatch(fetchVehicleByVin(searchVIN));
-    }
+    dispatch(fetchVehicleByVin(searchVIN));
   };
 
   const handleCardClick = (index:number): void => {
@@ -47,14 +53,13 @@ function VinMatchPanel () {
   }, [vinVehicle]);
 
   return (
-    <Box>
-      <S_FormControl>
+    <Box className="main-container">
+      <Box className="vin-search-com">
         <TextField
-          sx={{ width: "60vh" }}
           name="vin"
           value={searchVIN}
           placeholder="Find a vehicle by knowing VIN number"
-          variant="outlined"
+          variant="standard"
           InputProps={{
             endAdornment: (<>
               <Clear
@@ -64,11 +69,14 @@ function VinMatchPanel () {
             </>)
           }}
           onChange={handleVinOnChange}
-          onKeyPress={handleVinSearch}
+          onKeyPress={handleVinKeypress}
         />
-      </S_FormControl>
+        <Fab onClick={() => handleVinSearch()} size={'small'} variant="extended">
+          <Search fontSize="small"/> Go
+        </Fab>
+      </Box>
 
-      <Item>
+      <Box>
         { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
           :
           <VehicleCards
@@ -77,8 +85,7 @@ function VinMatchPanel () {
             copyDoneCallback={() => {return;}}
           />
         }
-      </Item>
-
+      </Box>
     </Box>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, CircularProgress, Fade, FormControl, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Button, CircularProgress, Fade, IconButton, Stack, Typography } from '@mui/material';
 import * as C from '../../../App.constants';
 import { ValidationErrors } from '../model/ValidationErrors';
 import { contentService } from '../../../service';
@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from '../../../store';
 
 const initValidationErrors:ValidationErrors = { hasUpdate: false }
 
-export default function UserAvatarUploadForm () {
+function AvatarUploadForm () {
   const tokenUser = useAppSelector((state:RootState) => state.tokenUser );
   const [avatarUrl, setAvatarUrl] = useState('');
   const [newAvatar, setNewAvatar] = useState(new Blob());
@@ -64,44 +64,35 @@ export default function UserAvatarUploadForm () {
   const isValidForm = Object.values(errors).length === 0 && (tokenUser.status !== C.LOADING);
 
   return (
-    <FormControl sx={{ width: '48vh', top: 30 }}>
-      <Stack alignItems="center">
-        <label htmlFor="avatar-picture-chooser">
-          <IconButton aria-label="upload picture" component="span">
-            <Avatar
-              alt={tokenUser.userProfile.username}
-              src={ avatarUrl }
-              sx={{ border: 4, width: 168, height: 168 }}
-            />
-          </IconButton>
-        </label>
-        { !errors.avatar
-          ? <Fade appear={true} in={true} timeout={1000}><Typography variant="body2">Click to choose new picture</Typography></Fade>
-          : <Fade appear={true} in={true} timeout={1000}><Typography variant="body2" sx={{ color: '#C41407' }}>{errors.avatar}</Typography></Fade>
-        }
-        <Button
-          sx={{ mt: 1 }}
-          disabled={!isValidForm}
-          onClick={handleSubmit}
-          type="submit"
-          variant="contained"
-        >
-          Upload
-        </Button>
-        {tokenUser.status === C.LOADING && (
-          <CircularProgress
-            size={24}
-            sx={{
-              position: 'absolute',
-              top: '93%',
-              left: '50%',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-            }}
-          />
-        )}
-        <input hidden={true} accept="image/*" id="avatar-picture-chooser" type="file" onChange={handleChange}/>
-      </Stack>
-    </FormControl>
+    <Stack className="user-avatar-upload" alignItems="center">
+      <label htmlFor="avatar-picture-chooser">
+        <IconButton aria-label="upload picture" component="span">
+          <Avatar alt={tokenUser.userProfile.username} src={ avatarUrl }/>
+          {tokenUser.status === C.LOADING && (
+            <CircularProgress sx={{ position: 'absolute' }}/>
+          )}
+        </IconButton>
+      </label>
+      { !errors.avatar ?
+        <Fade appear={true} in={true} timeout={1000}>
+          <Typography variant="body2">Click to choose new picture</Typography>
+        </Fade>
+        :
+        <Fade appear={true} in={true} timeout={1000}>
+          <Typography variant="body2" color="primary">{errors.avatar}</Typography>
+        </Fade>
+      }
+      <Button
+        disabled={!isValidForm}
+        onClick={handleSubmit}
+        type="submit"
+        variant="contained"
+      >
+        Upload
+      </Button>
+      <input hidden={true} accept="image/*" id="avatar-picture-chooser" type="file" onChange={handleChange}/>
+    </Stack>
   )
 }
+
+export default AvatarUploadForm;

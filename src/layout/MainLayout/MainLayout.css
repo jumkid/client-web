@@ -1,50 +1,15 @@
-.position-right {
-    float: right;
-}
-
-.large-font {
-    font-size: large !important;
-}
-
-.layout-container {
-    margin: 2px 6px;
-    padding: 6px 8px;
-    border: 0;
-    min-height: 600px;
-    min-width: 1024px;
-}
-
-.main-container {
-    margin: 8px 14px;
-}
-
-.inner-container {
-    margin: 14px 12px;
-}
-
-.tool-bar-container {
-    margin: 14px 14px;
-}
-
-.navigation-logo {
-    display: block;
-    min-height: 38px;
-    min-width: 128px;
-    padding: 0;
-    margin: 0 6px 0 6px;
-    background: url(/public/images/logo-jumkid-red.png) no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
+ul {
+    margin: 2px 0;
 }
 
 /* navigation */
 nav {
     height: 50px;
-    min-width: 360px;
-    font-size: 20px;
+    min-width: 220px;
+    font-size: 18px;
     font-family: Verdana, arial, serif;
     padding: 0 0;
-    margin: 0 38px 0 338px;
+    margin: 0 38px 0 112px;
 }
 nav > ul {
     margin: 0 0;
@@ -78,8 +43,81 @@ nav > ul li.current_page_item a {
 }
 /* navigation end*/
 
-.tab_fullwidth {
+.layout-container {
+    margin: 2px 6px;
+    padding: 6px 8px;
+    border: 0;
+    min-height: 92vh;
+    min-width: 1024px;
+}
+
+.main-container {
+    margin: 8px 14px;
+}
+
+.inner-container {
+    margin: 14px 12px;
+}
+
+.tool-bar-container {
+    margin: 14px 14px;
+}
+
+.main-panel {
+    height:100%;
+    padding: 0 0;
+    margin: 0 0 10px 0;
+    border: 0 solid #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background-color: #121212;
+}
+
+.side-bar-panel {
+    height: 100%;
+    min-width: 233px;
+    padding: 0 0;
+    margin: 0 0 20px 0;
+    border: 0 solid #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background-color: #121212;
+}
+
+.side-tabs {
     width: 100%;
     margin-bottom: 12px;
-    padding: 0
+    padding: 0;
+}
+
+.side-tabs .MuiTab-root {
+    text-align: right;
+}
+
+.position-right {
+    float: right;
+}
+
+.large-font {
+    font-size: large !important;
+}
+
+.navigation-logo {
+    display: block;
+    min-height: 38px;
+    min-width: 128px;
+    padding: 0;
+    margin: 0 6px 0 6px;
+    background: url(/public/images/logo-jumkid-red.png) no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+}
+
+.navigation-user-tools {
+    width: 100%;
+    text-align: right;
+}
+
+.navigation-user-menu {
+    min-width: 148px;
 }

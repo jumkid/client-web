@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { Route } from '@mui/icons-material';
 
 describe(AuthRoute, () => {
+
   const token = getTestJwtToken();
 
   it('Should render correctly render child component with jwt', async () => {

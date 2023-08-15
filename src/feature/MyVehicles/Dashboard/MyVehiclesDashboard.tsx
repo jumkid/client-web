@@ -6,7 +6,6 @@ import MainPanel from '../MainPanels';
 import { fetchUserVehicles } from '../../../store/userVehiclesSlice';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import * as C from '../../../App.constants';
-import './MyVehiclesDashboard.css';
 
 function MyVehiclesDashboard () {
   const dispatch = useAppDispatch();
@@ -21,10 +20,10 @@ function MyVehiclesDashboard () {
 
   return (
     <MainLayout mode="dark" menuIndex={0}>
-      <Box className="vehicles-dashboard-sidebar" gridColumn="span 2">
+      <Box className="side-bar-panel" gridColumn="span 2">
         <GarageSideBar />
       </Box>
-      <Box className="vehicles-dashboard-main" gridColumn="span 8">
+      <Box className="main-panel" gridColumn="span 8">
         <MainPanel />
       </Box>
     </MainLayout>

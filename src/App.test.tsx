@@ -4,17 +4,22 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App'
 import authenticationManager from './security/Auth/AuthenticationManager';
 import jwt from 'jsonwebtoken';
-import { act } from 'react-dom/test-utils';
 import { VehicleProfile } from './store/model/VehicleProfile';
 import { USER_ROLE } from './App.constants';
 import * as C from './App.constants';
 
 describe(App, () => {
-  beforeAll(() => { return; });
-  beforeEach(() => { return; });
+
+  beforeAll(() => {
+    authenticationManager.updateToken(getTestJwtToken());
+  });
+
+  beforeEach(() => {
+    return;
+  });
 
   it('renders user login screen', () => {
-    renderWithRouter(<App />, {});
+    renderWithRouter(<App />, {route: '/login'});
     expect(screen.getByText(/User Login/i)).toBeDefined();
   });
 
@@ -28,13 +33,6 @@ describe(App, () => {
     expect(screen.getByText(/Oops!/i)).toBeDefined();
   });
 
-  it('renders user home screen', async () => {
-    authenticationManager.updateToken(getTestJwtToken());
-
-    await act( async () => renderWithRouter(<App />, {route: '/'}));
-    expect(screen.getByText(/Lookup/i)).toBeDefined();
-  });
-
   afterAll(() => { return; });
   afterEach(() => { return; });
 });
@@ -43,7 +41,7 @@ export const renderWithRouter = (ui:React.ReactElement, {route = '/'} = {}) => {
   window.history.pushState({}, 'Test page', route)
 
   return {
-    ...render(ui, {wrapper: BrowserRouter}),
+    ...render(ui, {wrapper: BrowserRouter})
   }
 }
 

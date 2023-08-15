@@ -12,7 +12,6 @@ import {
   TableRow
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
 import { AppDispatch, RootState } from '../../../../store';
 import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../../store/searchVehiclesSlice';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +19,7 @@ import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { KeywordMode } from '../../../../service/model/CommonTypes';
 import * as C from '../../../../App.constants';
+import { setCurrentVehicle } from '../../../../store/userVehiclesSlice';
 
 type Props = {
   keyword: string
@@ -54,8 +54,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
   }
 
   const handleRowClick = (vehicle:VehicleProfile):void => {
-    dispatch(setConnectedVehicle(vehicle));
-    dispatch(setConnectorStep(1));
+    dispatch(setCurrentVehicle(vehicle));
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -67,7 +66,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
   };
 
   return (
-    <Box className="main-container">
+    <Box>
       <TablePagination
         rowsPerPageOptions={[10, 25, 50]}
         component="div"

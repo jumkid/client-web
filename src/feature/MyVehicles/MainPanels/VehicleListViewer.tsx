@@ -17,7 +17,7 @@ import {
   setPageSize, setUserVehicles, SIDE_TABS_OFFSET
 } from '../../../store/userVehiclesSlice';
 import { AppDispatch, RootState } from '../../../store';
-import CardWaitSkeleton from '../../VehicleResearch/VehicleConnector/VehicleFinderStep/CardWaitSkeleton';
+import CardWaitSkeleton from './VehicleCard/CardWaitSkeleton';
 import * as _ from 'lodash';
 import * as C from '../../../App.constants';
 import VehicleCards from './VehicleCard';
@@ -109,7 +109,7 @@ function VehicleListViewer () {
             <TextField
               className="search-input"
               name="search"
-              placeholder="search vehicles in your garage"
+              placeholder="Search your vehicles"
               variant="standard"
               value={keyword}
               onChange={handleSearchChange}
@@ -121,7 +121,7 @@ function VehicleListViewer () {
               }}
             />
             <Fab className="search-btn" onClick={() => handleSearch(null)} size={'small'} variant="extended">
-              <Search fontSize="medium"/> Search
+              <Search fontSize="small"/> Go
             </Fab>
           </Box>
         </FormControl>

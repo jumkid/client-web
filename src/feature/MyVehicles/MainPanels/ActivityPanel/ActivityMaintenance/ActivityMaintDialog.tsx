@@ -107,7 +107,7 @@ function ActivityMaintDialog ({vehicleId, showDialog, setShowDialog}:Props) {
   return (
     <Dialog open={showDialog} maxWidth={false}>
       <DialogTitle>
-        <Tabs className="tab_fullwidth" value={currentTab} onChange={handleTabChange}>
+        <Tabs className="side-tabs" value={currentTab} onChange={handleTabChange}>
           <Tab label="Activity Details" />
           <Tab label="Attachments" />
         </Tabs>

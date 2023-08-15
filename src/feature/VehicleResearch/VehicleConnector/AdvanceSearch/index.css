@@ -1,0 +1,17 @@
+.adv-search-com {
+    margin: 10px 2px;
+}
+
+.adv-search-com .MuiTextField-root {
+    width: 380px;
+}
+
+.adv-search-com input {
+    float: left;
+    padding: 8px 4px;
+}
+
+.adv-search-com button {
+    width: 60px;
+    margin: 10px 2px 2px 28px !important;
+}

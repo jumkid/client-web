@@ -21,7 +21,8 @@ function PricingViewerAccordion ({mode, vehicleProfile}:Props) {
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>Prices</Typography>
       </AccordionSummary>
-      <AccordionDetails className="inner-container">
+
+      <AccordionDetails>
         <Stack>
           <Item>MSRP <ItemText>{_.isNil(vehiclePricing) ? '--' : currencyFormatter(vehiclePricing!.msrp)}</ItemText></Item>
         </Stack>

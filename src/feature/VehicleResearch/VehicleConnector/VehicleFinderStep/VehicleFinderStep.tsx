@@ -1,8 +1,8 @@
 import React from 'react';
 import { Tab, Tabs } from '@mui/material';
-import FastMatchPanel from './FastMatchPanel';
-import AdvanceSearchPanel from './AdvanceSearchPanel';
-import VinMatchPanel from './VinMatchPanel';
+import FastMatchPanel from './FastMatch';
+import AdvanceSearchPanel from '../AdvanceSearch/AdvanceSearchPanel';
+import VinMatchPanel from './VinMatch';
 
 interface Prop {
   currentTab: number
@@ -15,15 +15,13 @@ function VehicleFinderStep ({currentTab, handleTabChange}:Prop) {
       <Tabs
         value={currentTab}
         onChange={handleTabChange}
-        className="tab_fullwidth"
+        className="side-tabs"
       >
         <Tab label="Fast Match" />
         <Tab label="Find by VIN" />
-        <Tab label="Advance Search" />
       </Tabs>
       { currentTab == 0 && <FastMatchPanel/> }
       { currentTab == 1 && <VinMatchPanel/> }
-      { currentTab == 2 && <AdvanceSearchPanel/> }
     </>
   )
 }
