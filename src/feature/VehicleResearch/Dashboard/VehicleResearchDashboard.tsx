@@ -6,10 +6,9 @@ import VehicleResearchSideBar from '../SideBar';
 import VehicleConnector from '../VehicleConnector';
 import FormActionsBar from '../../MyVehicles/MainPanels/VeichleProfileForm/FormActionsBar';
 import VehicleProfileForm from '../../MyVehicles/MainPanels/VeichleProfileForm/VehicleProfileForm';
-import AdvanceSearchPanel from '../VehicleConnector/AdvanceSearch';
+import AdvanceSearchConnector from '../AdvanceSearch';
 
 function VehicleResearchDashboard () {
-
   const [currentTab, setCurrentTab] = useState(0);
   const sideTabsProvider = useMemo(() => ({currentTab, setCurrentTab}), [currentTab, setCurrentTab]);
 
@@ -23,10 +22,10 @@ function VehicleResearchDashboard () {
 
           <Box className="main-panel" gridColumn="span 8">
             { currentTab == 0 && <VehicleConnector/> }
-            { currentTab == 1 && <AdvanceSearchPanel/> }
+            { currentTab == 1 && <AdvanceSearchConnector/> }
             { currentTab == 2 &&
               <Box>
-                <FormActionsBar />
+                <Box className="tool-bar-container"><FormActionsBar /></Box>
                 <VehicleProfileForm />
               </Box>
             }

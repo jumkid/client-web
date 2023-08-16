@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tab, Tabs } from '@mui/material';
 import FastMatchPanel from './FastMatch';
-import AdvanceSearchPanel from '../AdvanceSearch/AdvanceSearchPanel';
 import VinMatchPanel from './VinMatch';
 
 interface Prop {

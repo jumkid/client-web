@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { VehicleProfile } from '../../../../store/model/VehicleProfile';
+import { VehicleProfile } from '../../../store/model/VehicleProfile';
 import {
   Box,
   Paper,
@@ -11,15 +11,16 @@ import {
   TablePagination,
   TableRow
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { AppDispatch, RootState } from '../../../../store';
-import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../../store/searchVehiclesSlice';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { AppDispatch, RootState } from '../../../store';
+import { fetchSearchVehicles, setSearchPage, setSearchPageSize } from '../../../store/searchVehiclesSlice';
 import { faCar, faGears, faCarSide } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { KeywordMode } from '../../../../service/model/CommonTypes';
-import * as C from '../../../../App.constants';
-import { setCurrentVehicle } from '../../../../store/userVehiclesSlice';
+import { KeywordMode } from '../../../service/model/CommonTypes';
+import * as C from '../../../App.constants';
+import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
+import { setConnectorStep } from '../../../store/connectedVehicleSlice';
 
 type Props = {
   keyword: string
@@ -55,6 +56,7 @@ function VehicleSearchTable ({keyword, vehicles}:Props) {
 
   const handleRowClick = (vehicle:VehicleProfile):void => {
     dispatch(setCurrentVehicle(vehicle));
+    dispatch(setConnectorStep(2));
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {

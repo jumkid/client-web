@@ -18,8 +18,6 @@ function AddToGarageStep () {
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
 
   const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
-  const status = useAppSelector((state:RootState) => state.userVehicles.status);
-
   const dispatch = useAppDispatch();
 
   const handleBackward = (): void => {
@@ -28,7 +26,6 @@ function AddToGarageStep () {
 
   return (
     <ErrorsContext.Provider value={errorsProvider}>
-      { status === C.LOADING && <CircularProgress size="1.5rem" sx={{ position: "absolute", mt: 3, ml: 18 }}/> }
       <Box className="tool-bar-container">
         <Button variant="outlined" onClick={handleBackward}>
           <ArrowBackIos/>back

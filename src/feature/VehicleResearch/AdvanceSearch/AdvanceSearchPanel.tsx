@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Fab, TextField } from '@mui/material';
 import { Clear, Search } from '@mui/icons-material';
 import VehicleSearchTable from './VehicleSearchTable';
-import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { clearSearchKeyword, fetchSearchVehicles, setSearchKeyword } from '../../../../store/searchVehiclesSlice';
-import { RootState } from '../../../../store';
+import { useAppDispatch, useAppSelector } from '../../../App.hooks';
+import { clearSearchKeyword, fetchSearchVehicles, setSearchKeyword } from '../../../store/searchVehiclesSlice';
+import { RootState } from '../../../store';
 import * as _ from 'lodash';
 import './index.css';
 
 function AdvanceSearchPanel () {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
   const searchKeyword = useAppSelector((state:RootState) => state.searchVehicles.searchKeyword);
   const searchVehicles = useAppSelector((state:RootState) => state.searchVehicles.searchVehicles);
   const searchPage = useAppSelector((state:RootState) => state.searchVehicles.searchPage);
   const searchPageSize = useAppSelector((state:RootState) => state.searchVehicles.searchPageSize);
+
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (currentStep === 1) {
+      dispatch(fetchSearchVehicles({keyword: searchKeyword, page: searchPage, size: searchPageSize}));
+    }
+  }, [currentStep]);
 
   const handleClearClick = ():void => {
     dispatch(clearSearchKeyword());

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import AdvanceSearchPanel from './AdvanceSearchPanel';
 import { Provider } from 'react-redux';
-import { store } from '../../../../store';
+import { store } from '../../../store';
 
 describe(AdvanceSearchPanel, () => {
   it('Should render correctly', () => {
