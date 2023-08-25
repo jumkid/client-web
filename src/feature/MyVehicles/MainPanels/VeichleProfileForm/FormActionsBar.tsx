@@ -14,7 +14,7 @@ import { RootState } from '../../../../store';
 import * as C from '../../../../App.constants';
 import * as _ from 'lodash';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
-import { setConnectedVehicle, setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { setConnectedVehicle } from '../../../../store/connectedVehicleSlice';
 import {
   clearMatchFields,
   fetchMatchVehicles,
@@ -23,6 +23,8 @@ import {
 } from '../../../../store/searchVehiclesSlice';
 import { APIResponse } from '../../../../service/model/Response';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
+import { setUserCenterWarning } from '../../../../store/userNotificationsSlice';
+import { VehicleConnectorContext } from '../../../VehicleResearch/VehicleConnector/VehicleConnectorContext';
 
 function FormActionsBar () {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -32,6 +34,7 @@ function FormActionsBar () {
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const status = useAppSelector((state:RootState) => state.userVehicles.status);
+  const {setConnectorStep} = useContext(VehicleConnectorContext);
 
   const dispatch = useAppDispatch();
 
@@ -39,43 +42,48 @@ function FormActionsBar () {
     setErrors({hasUpdate: false});
   }, []);
 
-  const handleAdd = async (): Promise<void> => {
+  const handleAddAsNew = async (): Promise<void> => {
     if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
 
     try {
       await dispatch(saveNewVehicle({...currentVehicle, id: null}));
       dispatch(clearMatchFields());
       dispatch(setMatchVehicles([]));
-      dispatch(setConnectorStep(0));
+      //go back to first step after add successfully
+      setConnectorStep(0);
     } catch (error) {
       console.error(error)
     }
   };
 
-  const handleSave = ():void => {
+  const handleSave = async () => {
     if (status === C.LOADING || _.isNil(currentVehicle)) {
       return;
     }
 
     if (!_.isNil(currentVehicle.id)) {
-      dispatch(updateVehicle({id:currentVehicle.id, vehicle:currentVehicle}))
-        .then((response) => {
-          const apiResponse = response.payload as APIResponse<VehicleProfile>;
-          const updatedVehicle = apiResponse.data;
+      const response = await dispatch(updateVehicle({id: currentVehicle.id, vehicle: currentVehicle}));
+      const apiResponse = response.payload as APIResponse<VehicleProfile>;
 
-          dispatch(setCurrentVehicle(updatedVehicle));
-          dispatch(syncUpdatedVehicleToList(updatedVehicle));
-          setErrors({hasUpdate:false});
+      if (apiResponse.status === 409) {
+        dispatch(setUserCenterWarning(true));
+        return;
+      }
 
-          if (currentPick === 0) {
-            dispatch(setConnectedVehicle(updatedVehicle));
-            dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
-          }
-        });
+      const updatedVehicle = apiResponse.data;
+
+      dispatch(setCurrentVehicle(updatedVehicle));
+      dispatch(syncUpdatedVehicleToList(updatedVehicle));
+      setErrors({hasUpdate: false});
+
+      if (currentPick === 0) {
+        dispatch(setConnectedVehicle(updatedVehicle));
+        dispatch(fetchMatchVehicles({page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields}));
+      }
     } else {
       dispatch(saveNewVehicle(currentVehicle))
         .then(() => {
-          setErrors({hasUpdate:false});
+          setErrors({hasUpdate: false});
         });
     }
   }
@@ -103,7 +111,8 @@ function FormActionsBar () {
       if (currentPick === 0) {
         dispatch(setStatus(C.LOADING));
         dispatch(setMatchVehicles([]));
-        dispatch(setConnectorStep(0));
+        //go back to first step after delete successfully
+        setConnectorStep(0);
         // delay for a second for search index update on the backend
         await new Promise((resolve) => setTimeout(resolve, 1000));
         dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
@@ -126,7 +135,7 @@ function FormActionsBar () {
       <Button
         onClick={handleSave}
         color="primary"
-        variant="outlined"
+        variant="contained"
         disabled={!isFormValid}
         startIcon={<Save/>}
       >
@@ -135,15 +144,15 @@ function FormActionsBar () {
       <Button
         onClick={confirmDelete}
         color="primary"
-        variant="outlined"
+        variant="contained"
         disabled={currentVehicle!.id === null}
         startIcon={<Delete/>}
       >
         delete
       </Button>
       <Button
-        variant="outlined"
-        onClick={handleAdd}
+        variant="contained"
+        onClick={handleAddAsNew}
         disabled={!isFormValid}
         startIcon={<Add/>}
       >

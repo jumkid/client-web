@@ -9,7 +9,6 @@ import SummaryForm from './SummaryForm';
 function VehicleProfileForm () {
   return (
     <Stack className="main-container">
-
       <SummaryForm/>
 
       <GalleryAccordion mode={C.MODE_ACTIVE}/>
@@ -17,7 +16,6 @@ function VehicleProfileForm () {
       <PricingFormAccordion mode={C.MODE_ACTIVE} />
 
       <DetailsFormAccordion mode={C.MODE_ACTIVE}/>
-
     </Stack>
   );
 }

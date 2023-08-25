@@ -9,13 +9,13 @@ export interface APIResponseWithHeaders<T> {
   data: T | null
 }
 
-export interface APIPagingResponse {
+export interface APIPagingResponse<T> {
   success: boolean
   msg: string | null
   total: number
   size: number
   page: number
-  data: []
+  data: [T]
 }
 
 export interface AuthResponse {

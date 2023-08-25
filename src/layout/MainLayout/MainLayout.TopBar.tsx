@@ -49,7 +49,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
   }, []);
 
   const activityNotifications = useAppSelector((state:RootState) => state.userNotifications.activityNotifications);
-  const userNotificationsCount = useAppSelector((state:RootState) => state.userNotifications.count);
+  const userNotificationsCount = useAppSelector((state:RootState) => state.userNotifications.activityNotificationsCount);
   const dispatch = useAppDispatch();
 
   const autoRefresh = ():ReturnType<typeof setInterval> => {

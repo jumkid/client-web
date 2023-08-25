@@ -96,6 +96,7 @@ export const userVehiclesSlice = createSlice({
     syncUpdatedVehicleToList: (state, action) => {
       const index = calculateOffset(state.currentPick);
       if (state.currentPick > 1 && state.vehicles[index].id === state.currentVehicle.id) {
+        state.currentVehicle = action.payload;
         state.vehicles[index] = action.payload;
       }
     },

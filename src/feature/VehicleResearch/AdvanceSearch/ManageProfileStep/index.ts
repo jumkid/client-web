@@ -1,3 +1,3 @@
-import ManageProfileStep from './ManageProfileStep';
+import ManageProfilePanel from './ManageProfilePanel';
 
-export default ManageProfileStep;
+export default ManageProfilePanel;

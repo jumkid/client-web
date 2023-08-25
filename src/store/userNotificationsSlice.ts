@@ -10,15 +10,17 @@ export const fetchUserActivityNotifications = createAsyncThunk('activityNotifica
 );
 
 interface NotificationState {
-  activityNotifications: ActivityNotification[]
-  count: number
   status: FormStatus
+  userCenterWarning: boolean
+  activityNotificationsCount: number
+  activityNotifications: ActivityNotification[]
 }
 
 const initialState: NotificationState = {
+  status: C.IDLE,
+  userCenterWarning: false,
+  activityNotificationsCount: 0,
   activityNotifications: [],
-  count: 0,
-  status: C.IDLE
 }
 
 export const userNotificationsSlice = createSlice({
@@ -43,7 +45,10 @@ export const userNotificationsSlice = createSlice({
     },
     reCalculateCount: (state) => {
       const unreadList = state.activityNotifications.filter(activityNotification => activityNotification.unread === true);
-      state.count = unreadList?.length || 0;
+      state.activityNotificationsCount = unreadList?.length || 0;
+    },
+    setUserCenterWarning: (state, action) => {
+      state.userCenterWarning = action.payload;
     }
   },
 
@@ -63,6 +68,11 @@ export const userNotificationsSlice = createSlice({
   }
 });
 
-export const { readActivityNotification, removeActivityNotification, reCalculateCount } = userNotificationsSlice.actions;
+export const {
+  readActivityNotification,
+  removeActivityNotification,
+  reCalculateCount,
+  setUserCenterWarning
+} = userNotificationsSlice.actions;
 
 export default userNotificationsSlice.reducer;

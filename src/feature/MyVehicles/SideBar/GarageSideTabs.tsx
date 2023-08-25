@@ -7,7 +7,6 @@ import { changePick } from '../../../store/userVehiclesSlice';
 import SideTabWaitSkeleton from './SideTabWaitSkeleton';
 import * as C from '../../../App.constants';
 import * as _ from 'lodash';
-import './index.css';
 
 function GarageSideTabs () {
   const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
@@ -28,10 +27,10 @@ function GarageSideTabs () {
         value={currentPick}
         onChange={handleChange}
       >
-        <Tab className="side-bar-menu" icon={<ViewList/>} iconPosition="start" label="My Vehicles"/>
+        <Tab icon={<ViewList/>} iconPosition="start" label="My Vehicles"/>
 
         { !_.isNil(userVehicles) && userVehicles.map((vehicle, index) =>
-          <Tab key={index} label={vehicle.name} wrapped={true}/>
+          <Tab className="side-tabs-dynamic-item" key={index} label={vehicle.name} wrapped={true}/>
         )}
       </Tabs>
       { <SideTabWaitSkeleton isShown={status === C.LOADING} /> }

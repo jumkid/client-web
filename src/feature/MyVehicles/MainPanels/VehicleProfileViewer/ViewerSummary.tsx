@@ -4,18 +4,19 @@ import { Delete, Lock, LockOpen } from '@mui/icons-material';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import * as C from '../../../../App.constants';
 import VehicleNameTools from './VehicleNameTools';
-import { Item, ItemHeader, ItemText } from '../../../../layout/Layout.Theme';
+import { Item, ItemText } from '../../../../layout/Layout.Theme';
 import * as _ from 'lodash';
 import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 import { useAppDispatch } from '../../../../App.hooks';
 import {
   changeAccessScope, changePick,
-  deleteVehicle,
+  deleteVehicle, setCurrentVehicle,
   syncUpdatedVehicleToList,
   updateVehicle
 } from '../../../../store/userVehiclesSlice';
 import { APIResponse } from '../../../../service/model/Response';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
+import { setUserCenterWarning } from '../../../../store/userNotificationsSlice';
 
 type Props = {
   mode: DISPLAY_MODE
@@ -28,15 +29,19 @@ function ViewerSummary ({ mode, showName, vehicleProfile}:Props) {
   const showEditableName = _.isUndefined(showName) ? true : showName;
   const dispatch = useAppDispatch();
 
-  const toggleAccessScope = ():void => {
+  const toggleAccessScope = async () => {
     const accessScope = (vehicleProfile.accessScope === C.PRIVATE) ? C.PUBLIC : C.PRIVATE;
-    dispatch(changeAccessScope(accessScope));
-    dispatch(updateVehicle({id:vehicleProfile.id!, vehicle: {accessScope, modificationDate: vehicleProfile.modificationDate}})).then(
-      (response) => {
-        const apiResponse = response.payload as APIResponse<VehicleProfile>;
-        dispatch(syncUpdatedVehicleToList(apiResponse.data));
-      }
-    );
+    const response = await dispatch(updateVehicle({
+      id: vehicleProfile.id!,
+      vehicle: {accessScope, modificationDate: vehicleProfile.modificationDate}
+    }));
+    const apiResponse = response.payload as APIResponse<VehicleProfile>;
+
+    if (apiResponse.status === 409) {
+      dispatch(setUserCenterWarning(true));
+    } else {
+      dispatch(syncUpdatedVehicleToList(apiResponse.data));
+    }
   }
 
   const handleDelete = async () => {

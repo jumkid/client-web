@@ -11,9 +11,9 @@ export interface VehicleFieldValuePair {
 }
 
 export interface IVehicleService {
-  getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
-  getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse>
-  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse | null>
+  getByUser: (pagingSearch:PagingSearch) => Promise<APIPagingResponse<VehicleProfile>>
+  getByPublic: (pagingSearch:PagingSearch) => Promise<APIPagingResponse<VehicleProfile>>
+  getByMatchers: (pagingSearch:PagingSearch) => Promise<APIPagingResponse<VehicleProfile> | null>
   getByVin: (vin:string) => Promise<APIResponse<any>>
   getForAggregation: (field:string, matchFields:VehicleFieldValuePair[]) => Promise<APIResponse<any>>
 
@@ -27,19 +27,19 @@ export interface IVehicleService {
 
 class VehicleService implements IVehicleService {
 
-  async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
+  async getByUser (pagingSearch:PagingSearch): Promise<APIPagingResponse<VehicleProfile>> {
     VehicleService.normalizePagingSearch(pagingSearch);
     const response = await restfulClient.getWithPromise(C.VEHICLES_SEARCH_API, pagingSearch);
     return response.data;
   }
 
-  async getByPublic (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
+  async getByPublic (pagingSearch:PagingSearch): Promise<APIPagingResponse<VehicleProfile>> {
     VehicleService.normalizePagingSearch(pagingSearch);
     const response = await restfulClient.getWithPromise(C.VEHICLES_PUBLIC_SEARCH_API, pagingSearch);
     return response.data;
   }
 
-  async getByMatchers (pagingSearch:PagingSearch): Promise<APIPagingResponse> {
+  async getByMatchers (pagingSearch:PagingSearch): Promise<APIPagingResponse<VehicleProfile>> {
     VehicleService.normalizePagingSearch(pagingSearch);
     return await restfulClient.postWithPaging(C.VEHICLES_MATCHERS_SEARCH_API, pagingSearch, pagingSearch.data);
   }

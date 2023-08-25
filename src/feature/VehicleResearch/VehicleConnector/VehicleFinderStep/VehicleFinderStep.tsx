@@ -14,7 +14,7 @@ function VehicleFinderStep ({currentTab, handleTabChange}:Prop) {
       <Tabs
         value={currentTab}
         onChange={handleTabChange}
-        className="side-tabs"
+        className="main-tabs"
       >
         <Tab label="Fast Match" />
         <Tab label="Find by VIN" />

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Tab, Tabs } from '@mui/material';
 import AdminUser from '../../../security/Auth/AdminUser';
 import UserProfile from '../../../security/AuthUser/UserProfile';
@@ -6,7 +6,6 @@ import { SideTabsContext } from './SideBarContext';
 import { useAppDispatch } from '../../../App.hooks';
 import { setCurrentVehicle } from '../../../store/userVehiclesSlice';
 import { blankVehicleProfile } from '../../../store/model/VehicleProfile';
-import { setConnectorStep } from '../../../store/connectedVehicleSlice';
 
 function VehicleResearchSideTabs () {
   const dispatch = useAppDispatch();
@@ -15,8 +14,6 @@ function VehicleResearchSideTabs () {
   useEffect(() => {
     if (currentTab === 2) {
       dispatch(setCurrentVehicle(blankVehicleProfile));
-    } else {
-      dispatch(setConnectorStep(0));
     }
   }, [currentTab]);
 

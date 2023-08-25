@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '../../../App.hooks';
-import { RootState } from '../../../store';
-import PreviewVehicleStep from '../VehicleConnector/PreviewVehicleStep';
-import AddToGarageStep from '../VehicleConnector/AddToGarageStep';
-import VehicleFinderStep from '../VehicleConnector/VehicleFinderStep';
-import AdvanceSearchPanel from './AdvanceSearchPanel';
-import VehicleProfileForm from '../../MyVehicles/MainPanels/VeichleProfileForm';
+import React, { useMemo, useState } from 'react';
+import AdvanceSearchPanel from './AdvanceSearchStep/AdvanceSearchPanel';
 import VehicleConnectStepper from '../VehicleConnector/VehicleConnectStepper';
-import ManageProfileStep from './ManageProfileStep';
+import ManageProfilePanel from './ManageProfileStep';
+import { AdvanceSearchContext } from './AdvanceSearchContext';
 
 const steps = ['Find Vehicles', 'Manage Profile'];
 
 function AdvanceSearchConnector () {
-  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
+  const [searchStep, setSearchStep] = useState(0);
+  const searchContextProvider = useMemo(() => ({searchStep,setSearchStep}), [searchStep, setSearchStep]);
 
   const getStepComponents = (currentStep:number): JSX.Element => {
     switch (currentStep) {
     case 1:
       return <AdvanceSearchPanel/>
     case 2:
-      return <ManageProfileStep/>
+      return <ManageProfilePanel/>
     default:
       return <AdvanceSearchPanel/>;
     }
   };
 
   return (
-    <>
-      <VehicleConnectStepper currentStep={currentStep} steps={steps}/>
-      { getStepComponents(currentStep) }
-    </>
+    <AdvanceSearchContext.Provider value={searchContextProvider}>
+      <VehicleConnectStepper currentStep={searchStep} steps={steps}/>
+      { getStepComponents(searchStep) }
+    </AdvanceSearchContext.Provider>
   )
 }
 

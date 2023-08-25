@@ -12,7 +12,7 @@ export interface IRestfulClient {
   getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   getBase64WithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
-  postWithPaging (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIPagingResponse>
+  postWithPaging (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIPagingResponse<any>>
   putWithPromise(url: string, params?: object | string):Promise<APIResponse<object>>
 
   upload(url:string,
@@ -45,7 +45,10 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        data: e.response.data || {}
+      };
     }
   }
 
@@ -111,7 +114,10 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        data: e.response.data || {}
+      };
     }
   }
 
@@ -127,7 +133,10 @@ export class RestfulClient implements IRestfulClient {
       return { status: response ? response.status : 500, data: response ? response.data : null };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        data: e.response.data || {}
+      };
     }
   }
 
@@ -135,7 +144,7 @@ export class RestfulClient implements IRestfulClient {
     url: string,
     params: string | object | object[] | null,
     body?: string | object | object[]
-  ):Promise<APIPagingResponse> {
+  ):Promise<APIPagingResponse<any>> {
     const contentType = this.getContentTypeByParams(body);
     const conf = { params, ...this.getConf(contentType)};
     try {
@@ -151,7 +160,14 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        success: false,
+        msg: e.response.status,
+        total: 0,
+        size: 0,
+        page: 0,
+        data: e.response.data || {}
+      };
     }
   }
 
@@ -166,7 +182,10 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        data: e.response.data || {}
+      };
     }
   }
 
@@ -181,7 +200,10 @@ export class RestfulClient implements IRestfulClient {
       };
     } catch (e:any) {
       this.if403Logout(e.response);
-      throw e;
+      return {
+        status: e.response.status,
+        data: e.response.data || {}
+      };
     }
   }
 

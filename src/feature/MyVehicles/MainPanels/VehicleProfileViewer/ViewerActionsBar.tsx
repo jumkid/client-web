@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Add } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
@@ -6,11 +6,12 @@ import { RootState } from '../../../../store';
 import * as _ from 'lodash';
 import * as C from '../../../../App.constants';
 import { changePick, saveNewVehicle } from '../../../../store/userVehiclesSlice';
-import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
+import { VehicleConnectorContext } from '../../../VehicleResearch/VehicleConnector/VehicleConnectorContext';
 
 function ViewerActionsBar () {
   const connectedVehicle = useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
   const status = useAppSelector((state:RootState) => state.userVehicles.status);
+  const {setConnectorStep} = useContext(VehicleConnectorContext);
   const dispatch = useAppDispatch();
 
   const isValid = !_.isNil(connectedVehicle) && !_.isNil(connectedVehicle.name) && connectedVehicle.name.length > 1;
@@ -20,7 +21,7 @@ function ViewerActionsBar () {
 
     try {
       await dispatch(saveNewVehicle({...connectedVehicle, id: null}));
-      dispatch(setConnectorStep(0));
+      setConnectorStep(0);
       dispatch(changePick(1));
     } catch (error) {
       console.error(error)

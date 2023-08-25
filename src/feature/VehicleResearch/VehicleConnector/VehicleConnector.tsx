@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import VehicleConnectStepper from './VehicleConnectStepper';
 import { RootState } from '../../../store';
 import PreviewVehicleStep from './PreviewVehicleStep';
 import AddToGarageStep from './AddToGarageStep';
 import { useAppSelector } from '../../../App.hooks';
 import VehicleFinderStep from './VehicleFinderStep';
+import { VehicleConnectorContext } from './VehicleConnectorContext';
 
 const steps = ['Find a Vehicle', 'Preview Vehicle', 'Add to Garage'];
 
 function VehicleConnector () {
   const [currentTab, setCurrentTab] = useState(0);
   const connectedVehicle =useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
-  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
+
+  const [connectorStep, setConnectorStep] = useState(0);
+  const contextProvider = useMemo(() => ({connectorStep, setConnectorStep}), [connectorStep,setConnectorStep]);
 
   const handleTabChange = (event: React.SyntheticEvent, index: number): void => {
     setCurrentTab(index);
@@ -29,10 +32,10 @@ function VehicleConnector () {
   };
 
   return (
-    <>
-      <VehicleConnectStepper currentStep={currentStep} steps={steps}/>
-      { getStepComponents(currentStep) }
-    </>
+    <VehicleConnectorContext.Provider value={contextProvider}>
+      <VehicleConnectStepper currentStep={connectorStep} steps={steps}/>
+      { getStepComponents(connectorStep) }
+    </VehicleConnectorContext.Provider>
   )
 }
 

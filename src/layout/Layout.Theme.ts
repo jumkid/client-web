@@ -51,6 +51,17 @@ const DesignTokens = (mode: string):object => ({
     borderRadius: 0
   },
   components: {
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#303030'
+        },
+        action: {
+          margin: '0 4px',
+          padding: '0 4px'
+        }
+      }
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
@@ -182,10 +193,12 @@ const DesignTokens = (mode: string):object => ({
         }
       }
     },
-    MuiSnackbar: {
+    MuiSnackbarContent: {
       styleOverrides: {
-        paper: {
-          backgroundColor: grey[900]
+        root: {
+          backgroundColor: '#303030',
+          margin: '0 0',
+          padding: '0 0'
         }
       }
     },
@@ -238,6 +251,9 @@ const DesignTokens = (mode: string):object => ({
     },
     MuiTabs: {
       styleOverrides: {
+        root: {
+          backgroundColor: '#222',
+        },
         indicator: {
           width: 8
         }
@@ -248,12 +264,11 @@ const DesignTokens = (mode: string):object => ({
         root: {
           cursor: 'hand',
           fontSize: '1.0rem',
-          color: grey[300],
           minHeight: 10,
           alignItems: 'end',
           justifyContent: 'right',
-          margin: '2px 2px',
-          padding: '8px 12px'
+          margin: '0 2px',
+          padding: '14px 12px',
         }
       }
     },

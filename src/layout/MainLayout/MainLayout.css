@@ -60,7 +60,9 @@ nav > ul li.current_page_item a {
 }
 
 .tool-bar-container {
-    margin: 14px 14px;
+    margin: 0 0;
+    padding: 12px 12px;
+    background-color: #303030;
 }
 
 .main-panel {
@@ -92,6 +94,17 @@ nav > ul li.current_page_item a {
 
 .side-tabs .MuiTab-root {
     text-align: right;
+    margin: 1px 0 0 0;
+    padding: 10px 14px;
+    background-color: #303030;
+}
+
+.side-tabs-dynamic-item {
+    background-color: transparent !important;
+}
+
+.main-tabs {
+    padding: 0 0;
 }
 
 .position-right {

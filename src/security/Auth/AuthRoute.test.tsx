@@ -2,11 +2,11 @@ import React from 'react';
 import AuthRoute from './AuthRoute';
 import { getTestJwtToken } from '../../App.test';
 import authenticationManager from './AuthenticationManager';
-import ReactTestRenderer from 'react-test-renderer';
 import { act } from 'react-dom/test-utils';
 import { store } from '../../store';
 import { Provider } from 'react-redux';
 import { Route } from '@mui/icons-material';
+import { render } from '@testing-library/react';
 
 describe(AuthRoute, () => {
 
@@ -16,30 +16,27 @@ describe(AuthRoute, () => {
     authenticationManager.updateToken(token);
 
     await act(async () => {
-      const tree = ReactTestRenderer
-        .create(
-          <Provider store={store}>
-            <AuthRoute>
-              <h1>Hello world!</h1>
-            </AuthRoute>
-          </Provider>)
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      render(
+        <Provider store={store}>
+          <AuthRoute>
+            <h1>Hello world!</h1>
+          </AuthRoute>
+        </Provider>);
+      expect(screen).toMatchSnapshot();
     });
   });
 
   it('Should render navigation to login without jwt', () => {
     authenticationManager.updateToken(null);
-    const tree = ReactTestRenderer
-      .create(
-        <Provider store={store}>
-          <Route>
-            <AuthRoute>
-              <h1>Hello world!</h1>
-            </AuthRoute>
-          </Route>
-        </Provider>)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+
+    render(
+      <Provider store={store}>
+        <Route>
+          <AuthRoute>
+            <h1>Hello world!</h1>
+          </AuthRoute>
+        </Route>
+      </Provider>);
+    expect(screen).toMatchSnapshot();
   });
 });

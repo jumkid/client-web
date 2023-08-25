@@ -7,7 +7,6 @@ import { fetchMatchVehicles, fetchVehicleByVin, setSearchVIN } from '../../../..
 import * as C from '../../../../../App.constants';
 import { useAppDispatch, useAppSelector } from '../../../../../App.hooks';
 import { RootState } from '../../../../../store';
-import { S_FormControl, Item } from '../../../../../layout/Layout.Theme';
 import CardWaitSkeleton from '../../../../MyVehicles/MainPanels/VehicleCard/CardWaitSkeleton';
 import VehicleCards from '../../../../MyVehicles/MainPanels/VehicleCard';
 import { setConnectedVehicle, setConnectorStep } from '../../../../../store/connectedVehicleSlice';

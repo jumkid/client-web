@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Box,
   InputLabel,
@@ -18,8 +18,9 @@ import {
 } from '../../../../../store/searchVehiclesSlice';
 import CardWaitSkeleton from '../../../../MyVehicles/MainPanels/VehicleCard/CardWaitSkeleton';
 import VehicleCards from '../../../../MyVehicles/MainPanels/VehicleCard';
-import { setConnectedVehicle, setConnectorStep } from '../../../../../store/connectedVehicleSlice';
+import { setConnectedVehicle } from '../../../../../store/connectedVehicleSlice';
 import { Item, S_FormControl, S_Selection } from '../../../../../layout/Layout.Theme';
+import { VehicleConnectorContext } from '../../VehicleConnectorContext';
 
 function FastMatchPanel () {
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
@@ -27,6 +28,7 @@ function FastMatchPanel () {
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
+  const {setConnectorStep} = useContext(VehicleConnectorContext);
 
   const dispatch = useAppDispatch();
   
@@ -69,7 +71,7 @@ function FastMatchPanel () {
 
   const handleCardClick = (index:number): void => {
     dispatch(setConnectedVehicle(matchVehicles[index]));
-    dispatch(setConnectorStep(1));
+    setConnectorStep(1);
   }
 
   const handleGalleryCopyDone = (vehicleId:string, mediaGalleryId:string):void => {

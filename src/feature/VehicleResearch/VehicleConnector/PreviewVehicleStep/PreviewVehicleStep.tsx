@@ -1,39 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
-import { RootState } from '../../../../store';
-import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { setConnectorStep } from '../../../../store/connectedVehicleSlice';
 import * as C from '../../../../App.constants';
 import ViewerSummary from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerSummary';
 import ViewerGalleryAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerGalleryAccordion';
 import PricingViewerAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/PricingViewerAccordion';
 import ViewerDetailsAccordion from '../../../MyVehicles/MainPanels/VehicleProfileViewer/ViewerDetailsAccordion';
+import { VehicleConnectorContext } from '../VehicleConnectorContext';
 
 interface Prop {
   connectedVehicle: VehicleProfile
 }
 
 function PreviewVehicleStep ({connectedVehicle}:Prop) {
-  const currentStep = useAppSelector((state:RootState) => state.connectedVehicle.connectorStep);
-  const dispatch = useAppDispatch();
+  const {setConnectorStep} = useContext(VehicleConnectorContext);
 
   const handleBackward = (): void => {
-    dispatch(setConnectorStep(currentStep - 1));
+    setConnectorStep(prevState => prevState - 1);
   };
 
   const handleForward = (): void => {
-    dispatch(setConnectorStep(currentStep + 1));
+    setConnectorStep(prevState => prevState + 1);
   };
 
   return (
     <>
       <Box className="tool-bar-container">
-        <Button variant="outlined" onClick={handleBackward}>
+        <Button variant="contained" onClick={handleBackward}>
           <ArrowBackIos/>Back
         </Button>
-        <Button variant="outlined" onClick={handleForward}>
+        <Button variant="contained" onClick={handleForward}>
           Next<ArrowForwardIos/>
         </Button>
       </Box>

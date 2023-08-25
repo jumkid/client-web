@@ -6,6 +6,9 @@ import authenticationManager from '../../security/Auth/AuthenticationManager';
 import { DesignTokens, ColorModeContext } from '../Layout.Theme';
 import './MainLayout.css';
 import { MenuSetting, UserSetting } from './model';
+import { useAppSelector } from '../../App.hooks';
+import { RootState } from '../../store';
+import CenterWarningBar from '../../component/CenterWarningBar';
 
 const menuSettings: MenuSetting[] = [
   { title: 'Vehicles', isCurrent: true, route: '/' },
@@ -37,6 +40,7 @@ type Props = {
 
 function MainLayout (props: Props) {
   const [mode, setMode] = React.useState(props.mode);
+  const userCenterWarning = useAppSelector((state:RootState) => state.userNotifications.userCenterWarning);
 
   const colorMode = React.useMemo(
     () => ({
@@ -64,7 +68,12 @@ function MainLayout (props: Props) {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={jkTheme}>
         <TopBar menuSettings={_menuSettings} userSettings={userSettings}/>
-
+        <CenterWarningBar
+          open={userCenterWarning}
+          message="Data is not up to date. Please reload your browser."
+          actionButton="RELOAD"
+          actionButtonCallBack={() => {window.location.reload();}}
+        />
         <Container
           className='layout-container'
           maxWidth='xl'

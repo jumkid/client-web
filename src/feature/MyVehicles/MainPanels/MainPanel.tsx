@@ -11,6 +11,7 @@ import * as C from '../../../App.constants';
 import * as _ from 'lodash';
 import AdminUser from '../../../security/Auth/AdminUser';
 import NoneAdminUser from '../../../security/Auth/NoneAdminUser';
+import { Box } from '@mui/material';
 
 function MainPanel () {
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
@@ -31,7 +32,7 @@ function MainPanel () {
       <>
         <AdminUser>
           <ErrorsContext.Provider value={errorsProvider}>
-            <FormActionsBar />
+            <Box className="tool-bar-container"><FormActionsBar /></Box>
             <VehicleProfileForm />
           </ErrorsContext.Provider>
         </AdminUser>
