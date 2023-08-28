@@ -9,9 +9,8 @@ import * as _ from 'lodash';
 import { DISPLAY_MODE } from '../../../../service/model/CommonTypes';
 import { useAppDispatch } from '../../../../App.hooks';
 import {
-  changeAccessScope, changePick,
-  deleteVehicle, setCurrentVehicle,
-  syncUpdatedVehicleToList,
+  changePick,
+  deleteVehicle,
   updateVehicle
 } from '../../../../store/userVehiclesSlice';
 import { APIResponse } from '../../../../service/model/Response';
@@ -39,8 +38,6 @@ function ViewerSummary ({ mode, showName, vehicleProfile}:Props) {
 
     if (apiResponse.status === 409) {
       dispatch(setUserCenterWarning(true));
-    } else {
-      dispatch(syncUpdatedVehicleToList(apiResponse.data));
     }
   }
 

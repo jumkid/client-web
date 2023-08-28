@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Box, IconButton, Link, Slide, Snackbar } from '@mui/material';
+import { Alert, Box, IconButton, Link, Snackbar } from '@mui/material';
 import './WarningSignText.css';
 import { Close } from '@mui/icons-material';
 import { useAppDispatch } from '../App.hooks';
@@ -29,7 +29,7 @@ function CenterWarningBar ({open, message, closeCallBack, actionButton, actionBu
         <Alert severity="warning" onClose={handleClose} action={
           <Box>
             { actionButton &&
-            <><Link fontSize="small" color="secondary" onClick={actionButtonCallBack}>{actionButton}</Link>&nbsp;</>
+              <><Link fontSize="small" color="secondary" onClick={actionButtonCallBack}>{actionButton}</Link>&nbsp;</>
             }
             <IconButton onClick={handleClose}>
               <Close fontSize="small"/>

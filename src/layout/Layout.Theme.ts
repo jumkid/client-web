@@ -168,14 +168,14 @@ const DesignTokens = (mode: string):object => ({
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          padding: "12px 14px 3px 13px"
+          padding: "12px 14px 13px 13px"
         }
       }
     },
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          padding: "2px 14px"
+          padding: "15px 15px"
         }
       }
     },
@@ -252,7 +252,7 @@ const DesignTokens = (mode: string):object => ({
     MuiTabs: {
       styleOverrides: {
         root: {
-          backgroundColor: '#222',
+          backgroundColor: 'transparent',
         },
         indicator: {
           width: 8

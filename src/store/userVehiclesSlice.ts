@@ -6,6 +6,10 @@ import * as C from '../App.constants';
 import * as _ from 'lodash';
 import { FormStatus } from '../service/model/CommonTypes';
 
+export const fetchVehicle = createAsyncThunk('userVehicles/fetchVehicle',
+  async (id:string) => vehicleService.getById(id)
+);
+
 export const fetchUserVehicles = createAsyncThunk('userVehicles/fetchUserVehicles',
   async (pagingSearch:PagingSearch) => { return vehicleService.getByUser(pagingSearch); }
 );
@@ -93,13 +97,6 @@ export const userVehiclesSlice = createSlice({
       const index = action.payload;
       state.vehicles.splice(index, 1);
     },
-    syncUpdatedVehicleToList: (state, action) => {
-      const index = calculateOffset(state.currentPick);
-      if (state.currentPick > 1 && state.vehicles[index].id === state.currentVehicle.id) {
-        state.currentVehicle = action.payload;
-        state.vehicles[index] = action.payload;
-      }
-    },
     changeName: (state, action) => {
       state.currentVehicle!.name = action.payload;
     },
@@ -179,6 +176,13 @@ export const userVehiclesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(fetchVehicle.pending, (state) => {
+        state.status = C.LOADING;
+      })
+      .addCase(fetchVehicle.fulfilled, (state, action) => {
+        state.status = C.SUCCEEDED;
+        syncToList(state, action);
+      })
       .addCase(fetchUserVehicles.pending, (state) => {
         state.status = C.LOADING;
       })
@@ -194,8 +198,9 @@ export const userVehiclesSlice = createSlice({
       .addCase(updateVehicle.pending, (state) => {
         state.status = C.LOADING;
       })
-      .addCase(updateVehicle.fulfilled, (state) => {
+      .addCase(updateVehicle.fulfilled, (state,action) => {
         state.status = C.SUCCEEDED;
+        syncToList(state, action);
       })
       .addCase(updateVehicle.rejected, (state) => {
         state.status = C.FAILED;
@@ -239,9 +244,23 @@ export const userVehiclesSlice = createSlice({
   }
 });
 
+const syncToList = (state:UserVehicleListState, action:any) => {
+  if (action.payload.status === 409) {
+    state.status = C.FAILED;
+  } else {
+    state.status = C.SUCCEEDED;
+    const vehicleProfile = action.payload;
+    state.currentVehicle = vehicleProfile;
+    const index = state.vehicles.findIndex(vehicle => vehicle.id === state.currentVehicle.id);
+    if (index !== null) {
+      state.vehicles[index] = vehicleProfile;
+    }
+  }
+}
+
 export const {
   changePick, setCurrentVehicle, setUserVehicles,
-  setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList, syncUpdatedVehicleToList,
+  setKeyword, clearKeyword, setPage, setPageSize, removeVehicleFromList,
   changeName, changeMake, changeModel, changeTrimLevel, changeModelYear, changeAccessScope,
   changeMediaGalleryId, changePricingMSRP,
   changeEngineType, changeEngineName, changeEngineFuelType, changeEngineHorsepower, changeEngineCode,

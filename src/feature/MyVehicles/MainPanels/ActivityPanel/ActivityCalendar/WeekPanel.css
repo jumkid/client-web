@@ -1,17 +1,17 @@
 .calendar-previous-btn {
     position: absolute;
-    top: 90px;
+    top: 106px;
     left: 6px;
 }
 
 .calendar-today-btn {
     position: absolute;
-    top: 90px;
+    top: 106px;
     left: 52px;
 }
 
 .calendar-next-btn {
     position: absolute;
-    top: 90px;
+    top: 106px;
     right: 6px;
 }

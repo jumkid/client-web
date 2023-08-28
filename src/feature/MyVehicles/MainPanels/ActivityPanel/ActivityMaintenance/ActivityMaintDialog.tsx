@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -13,7 +13,7 @@ import { Close } from '@mui/icons-material';
 import ActivityMaintForm from './ActivityMaintForm';
 import ConfirmDialog from '../../../../../component/ConfirmDialog';
 import {
-  deleteActivity,
+  deleteActivity, fetchActivity,
   fetchVehicleActivities,
   resetCurrentActivity,
   saveNew,
@@ -28,6 +28,10 @@ import { contentService } from '../../../../../service';
 import * as _ from 'lodash';
 import WarningSignText from '../../../../../component/WarningSignText';
 import './index.css';
+import { setUserCenterWarning } from '../../../../../store/userNotificationsSlice';
+import CenterWarningBar from '../../../../../component/CenterWarningBar';
+import { APIResponse } from '../../../../../service/model/Response';
+import { VehicleProfile } from '../../../../../store/model/VehicleProfile';
 
 interface Props {
   vehicleId: string
@@ -43,32 +47,37 @@ function ActivityMaintDialog ({vehicleId, showDialog, setShowDialog}:Props) {
   const [serverError, setServerError] = useState('');
 
   const currentActivity = useAppSelector((state:RootState) => state.vehicleActivities.currentActivity);
+  const userCenterWarning = useAppSelector((state:RootState) => state.userNotifications.userCenterWarning);
+
   const dispatch = useAppDispatch();
 
   const handleTabChange = (event: React.SyntheticEvent, index: number) => {
     setCurrentTab(index);
   };
 
-  const handleSaveClick = async () => {
+  const handleSave = async () => {
     const activity = { ...currentActivity, activityEntityLinks: currentActivity.activityEntityLinks || []}
     const action = currentActivity.id > 0 ? saveUpdate(activity) : saveNew(activity);
 
     try {
       const response = await dispatch(action);
-      if (response.type.endsWith('/fulfilled')) {
-        setShowDialog(false);
-        setErrors({hasUpdate: false});
-        dispatch(fetchVehicleActivities(vehicleId));
-      } else {
-        setServerError(response.payload as string);
+      const apiResponse = response.payload as APIResponse<VehicleProfile>;
+
+      if (apiResponse.status === 409) {
+        dispatch(setUserCenterWarning(true));
+        return;
       }
+
+      setShowDialog(false);
+      setErrors({hasUpdate: false});
+      dispatch(fetchVehicleActivities(vehicleId));
     } catch (e:any) {
       setServerError(e.response.data);
     }
 
   }
 
-  const handleDeleteClick = () => {
+  const handleDelete = () => {
     setIsConfirmOpen(true);
   }
 
@@ -101,21 +110,21 @@ function ActivityMaintDialog ({vehicleId, showDialog, setShowDialog}:Props) {
     );
   }
 
-  const showDeleteButton = currentActivity.id > 0;
+  const reloadActivity = (id:number) => {
+    dispatch(fetchActivity(id));
+  }
+
+  const showDeleteButton = useMemo(() => currentActivity.id > 0, [currentActivity]);
   const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
 
   return (
     <Dialog open={showDialog} maxWidth={false}>
       <DialogTitle>
-        <Tabs className="side-tabs" value={currentTab} onChange={handleTabChange}>
+        <Tabs value={currentTab} onChange={handleTabChange}>
           <Tab label="Activity Details" />
           <Tab label="Attachments" />
         </Tabs>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          className="close-icon"
-        >
+        <IconButton aria-label="close" onClick={handleClose} className="close-icon">
           <Close/>
         </IconButton>
       </DialogTitle>
@@ -126,19 +135,27 @@ function ActivityMaintDialog ({vehicleId, showDialog, setShowDialog}:Props) {
       </DialogContent>
 
       <DialogActions className="activity-dialog-action">
-        <>
-          { !_.isEmpty(serverError) && <WarningSignText message={serverError} />}
-          <Button onClick={handleSaveClick} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
-          &nbsp;
-          <Button onClick={handleDeleteClick} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
-          <ConfirmDialog
-            title="Delete Activity"
-            message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
-            isShown={isConfirmOpen}
-            confirmCallback={deleteConfirm}
-            cancelCallback={deleteCancel}
-          />
-        </>
+        { !_.isEmpty(serverError) && <WarningSignText message={serverError} />}
+        <Button onClick={handleSave} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
+        &nbsp;
+        <Button onClick={handleDelete} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
+
+        <ConfirmDialog
+          title="Delete Activity"
+          message="This activity record and its attachments will be removed. Are you sure to delete this activity?"
+          isShown={isConfirmOpen}
+          confirmCallback={deleteConfirm}
+          cancelCallback={deleteCancel}
+        />
+        <CenterWarningBar
+          open={userCenterWarning}
+          message="Activity data is not up to date. Please reload before making changes."
+          actionButton="RELOAD"
+          actionButtonCallBack={async () => {
+            await reloadActivity(currentActivity.id!);
+            dispatch(setUserCenterWarning(false));
+          }}
+        />
       </DialogActions>
     </Dialog>
   )

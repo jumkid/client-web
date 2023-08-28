@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
   changePick,
-  deleteVehicle, removeVehicleFromList,
+  deleteVehicle, fetchVehicle, removeVehicleFromList,
   saveNewVehicle, setCurrentVehicle,
-  syncUpdatedVehicleToList,
   updateVehicle
 } from '../../../../store/userVehiclesSlice';
 import { ErrorsContext } from '../VehicleProfileContext';
@@ -25,16 +24,19 @@ import { APIResponse } from '../../../../service/model/Response';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import { setUserCenterWarning } from '../../../../store/userNotificationsSlice';
 import { VehicleConnectorContext } from '../../../VehicleResearch/VehicleConnector/VehicleConnectorContext';
+import CenterWarningBar from '../../../../component/CenterWarningBar';
 
 function FormActionsBar () {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const {errors, setErrors} = useContext(ErrorsContext);
 
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const status = useAppSelector((state:RootState) => state.userVehicles.status);
+  const userCenterWarning = useAppSelector((state:RootState) => state.userNotifications.userCenterWarning);
+
   const {setConnectorStep} = useContext(VehicleConnectorContext);
+  const {errors, setErrors} = useContext(ErrorsContext);
 
   const dispatch = useAppDispatch();
 
@@ -56,7 +58,7 @@ function FormActionsBar () {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (status === C.LOADING || _.isNil(currentVehicle)) {
       return;
     }
@@ -73,7 +75,6 @@ function FormActionsBar () {
       const updatedVehicle = apiResponse.data;
 
       dispatch(setCurrentVehicle(updatedVehicle));
-      dispatch(syncUpdatedVehicleToList(updatedVehicle));
       setErrors({hasUpdate: false});
 
       if (currentPick === 0) {
@@ -86,7 +87,7 @@ function FormActionsBar () {
           setErrors({hasUpdate: false});
         });
     }
-  }
+  },[currentVehicle]);
 
   const confirmDelete = ():void => {
     if (status === C.LOADING || _.isNil(currentVehicle)) {
@@ -130,6 +131,10 @@ function FormActionsBar () {
 
   const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
 
+  const reloadCurrentVehicle = (id: string) => {
+    dispatch(fetchVehicle(id));
+  }
+
   return (
     <>
       <Button
@@ -165,6 +170,15 @@ function FormActionsBar () {
         isShown={isConfirmOpen}
         confirmCallback={dialogConfirm}
         cancelCallback={dialogCancel}
+      />
+      <CenterWarningBar
+        open={userCenterWarning}
+        message="Vehicle profile is not up to date. Please reload before making changes."
+        actionButton="RELOAD"
+        actionButtonCallBack={async () => {
+          await reloadCurrentVehicle(currentVehicle.id!);
+          dispatch(setUserCenterWarning(false));
+        }}
       />
     </>
   )

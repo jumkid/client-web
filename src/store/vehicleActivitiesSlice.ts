@@ -129,7 +129,9 @@ export const vehicleActivitiesSlice = createSlice({
       .addCase(fetchActivity.fulfilled, (state, action) => {
         state.status = C.SUCCEEDED;
         const data = action.payload.data;
-        if (data != null) state.currentActivity = data;
+        if (data != null) {
+          state.currentActivity = data;
+        }
       })
       .addCase(fetchActivity.rejected, (state) => {
         state.status = C.FAILED;
