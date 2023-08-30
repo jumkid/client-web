@@ -11,8 +11,6 @@ import {
   Link,
   Typography
 } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faCarSide, faGears } from '@fortawesome/free-solid-svg-icons';
 import * as _ from 'lodash';
 import AdminUser from '../../../../security/Auth/AdminUser';
 import BootstrapTooltip from '../../../../component/BootstrapTooltip';
@@ -109,6 +107,7 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
   return (
     <>
       {!_.isNil(vehicles) && vehicles.map((vehicle, index) => (
+        !_.isEmpty(vehicle.make) &&
         <Fade key={index} in={true}>
           <Card
             className="vehicle-card"
@@ -140,16 +139,18 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
                     }}/>}
                     label={vehicle.make}
                   />
-                  <Chip label={`${vehicle.vehicleEngine!.horsepower}hp`}/>
-                  <Chip label={`${vehicle.vehicleEngine!.torque}lbf`}/>
+                  { vehicle.vehicleEngine!.horsepower && <Chip label={`${vehicle.vehicleEngine!.horsepower}hp`}/> }
+                  { vehicle.vehicleEngine!.torque && <Chip label={`${vehicle.vehicleEngine!.torque}lbf`}/> }
                 </Box>
 
                 <ul>
                   <li>
-                    <Typography noWrap={true}>{vehicle.vehicleEngine!.name}</Typography>
+                    <Typography noWrap={true}>{vehicle.vehicleEngine!.displacement}L {vehicle.vehicleEngine!.cylinder} cylinders</Typography>
                   </li>
                   <li>
-                    <Typography noWrap={true}>{vehicle.vehicleTransmission!.name}</Typography>
+                    <Typography noWrap={true}>
+                      {vehicle.vehicleTransmission!.numberOfSpeeds} speed {vehicle.vehicleTransmission!.type} transmission
+                    </Typography>
                   </li>
                   <li>
                     <Typography noWrap={true}>{vehicle.vehicleTransmission!.drivetrain}</Typography>

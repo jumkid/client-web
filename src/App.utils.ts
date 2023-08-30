@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import { VehicleFieldValuePair } from './service/VehicleService';
 import { contentService } from './service';
 import { Buffer } from 'buffer';
 
@@ -80,18 +79,6 @@ function preloadImage(url:string, loadedCallback:() => void){
   img.src = url;
 }
 
-function vinVehicleToFieldValuePairs(vinVehicle: Record<string, unknown>): VehicleFieldValuePair[] {
-  const fieldValuePairs: VehicleFieldValuePair[] = [];
-
-  for (const [key, value] of Object.entries(vinVehicle)) {
-    if (value !== 'n/a') {
-      fieldValuePairs.push({ field: key, value: _.toLower(String(value)) });
-    }
-  }
-
-  return fieldValuePairs;
-}
-
 export {
   isJson,
   currencyFormatter,
@@ -100,7 +87,6 @@ export {
   preloadContentThumbnails,
   preloadContentThumbnail,
   preloadImage,
-  preloadImages,
-  vinVehicleToFieldValuePairs
+  preloadImages
 };
 

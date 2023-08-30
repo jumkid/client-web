@@ -1,17 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { VehicleFieldValuePair } from '../service/VehicleService';
-import * as C from '../App.constants';
-import * as U from '../App.utils';
-import { VehicleProfile } from './model/VehicleProfile';
+import { blankVehicleProfile, VehicleProfile } from './model/VehicleProfile';
 import { PagingSearch } from '../service/model/Request';
 import { vehicleService } from '../service';
 import { FormStatus } from '../service/model/CommonTypes';
+import * as C from '../App.constants';
 
 interface SearchVehiclesState {
   status: FormStatus
   target: string
-  searchVIN: string
-  vinVehicle: VehicleFieldValuePair[]
+  vinVehicle: VehicleProfile
   searchKeyword: string
   searchVehicles: VehicleProfile[]
   searchTotal: number
@@ -30,8 +28,7 @@ interface SearchVehiclesState {
 const initialState:SearchVehiclesState = {
   status: C.IDLE,
   target: C.MAKE,
-  searchVIN: '',
-  vinVehicle: [],
+  vinVehicle: blankVehicleProfile,
   searchKeyword: '',
   searchVehicles: [],
   searchTotal: 0,
@@ -67,9 +64,6 @@ export const searchVehiclesSlice = createSlice({
   reducers: {
     setStatus: (state, action) => {
       state.status = action.payload;
-    },
-    setSearchVIN: (state, action) => {
-      state.searchVIN = action.payload;
     },
     changeMatchSelections: (state, action) => {
       state.matchSelections = { ...state.matchSelections , ...action.payload}
@@ -113,6 +107,9 @@ export const searchVehiclesSlice = createSlice({
     setSearchPage: (state, action) => {
       state.searchPage = action.payload;
     },
+    setVinVehicle: (state, action) => {
+      state.vinVehicle = action.payload;
+    },
     setMatchVehicles: (state, action) => {
       state.matchVehicles = action.payload
     },
@@ -128,7 +125,8 @@ export const searchVehiclesSlice = createSlice({
       })
       .addCase(fetchVehicleByVin.fulfilled, (state, action) => {
         state.status = C.SUCCEEDED;
-        state.vinVehicle = U.vinVehicleToFieldValuePairs(action.payload.data);
+        state.vinVehicle = action.payload.data;
+        // state.vinVehicle = U.vinVehicleToFieldValuePairs(action.payload.data);
       })
       .addCase(fetchMatchVehicles.pending, (state) => {
         state.status = C.LOADING;
@@ -156,11 +154,11 @@ export const {
   changeMatchSelections,
   setMatchFields,
   clearMatchFields,
-  setSearchVIN,
   setSearchKeyword,
   clearSearchKeyword,
   setSearchPage,
   setSearchPageSize,
+  setVinVehicle,
   setMatchVehicles,
   setTarget
 } = searchVehiclesSlice.actions;

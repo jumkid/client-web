@@ -3,6 +3,7 @@ import { Skeleton, Box } from '@mui/material';
 import { useAppSelector } from '../../../../App.hooks';
 import { RootState } from '../../../../store';
 import * as _ from 'lodash';
+import './index.css';
 
 type Props = {
   isShown: boolean
@@ -17,7 +18,7 @@ function CardWaitSkeleton ({isShown}:Props) {
       { isShown &&
         <Box>
           {_.times(count, (i) => (
-            <Skeleton key={i} variant="rectangular" width={240} height={160} sx={{ float: 'left', mr: 2 }}/>
+            <Skeleton key={i} variant="rectangular" width="366px" height="240px"/>
           ))}
         </Box>
       }

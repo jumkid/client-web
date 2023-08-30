@@ -121,7 +121,8 @@ const DesignTokens = (mode: string):object => ({
         root: {
           fontSize: 'medium',
           marginRight: '6px',
-          padding: '2px 10px 2px 10px'
+          padding: '2px 10px 2px 10px',
+          borderRadius: 4
         }
       }
     },

@@ -21,6 +21,8 @@ export type VehicleProfile = {
 
 export const blankVehicleProfile:VehicleProfile = {
   id: null,
+  make: '',
+  model: '',
   accessScope: C.PUBLIC,
   vehicleEngine: {},
   vehicleTransmission: {}

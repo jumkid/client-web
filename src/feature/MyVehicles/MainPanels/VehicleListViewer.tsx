@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box, Fab,
   FormControl,
@@ -26,6 +26,7 @@ import './VehicleListViewer.css';
 
 function VehicleListViewer () {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showUserHint, setShowUserHint] = useState(false);
 
   const keyword = useAppSelector((state:RootState) => state.userVehicles.keyword);
   const [keywordMode, setKeywordMode] = useState<KeywordMode>(C.MODE_KEYWORD);
@@ -34,7 +35,22 @@ function VehicleListViewer () {
   const pageSize = useAppSelector((state:RootState) => state.userVehicles.pageSize);
   const userVehicles = useAppSelector(state => state.userVehicles.vehicles);
   const status = useAppSelector(state => state.userVehicles.status);
+
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (status === C.IDLE) {
+      const pagingSearch = { keyword: '*', page: 1, size: C.DEFAULT_PAGE_SIZE }
+      dispatch(fetchUserVehicles(pagingSearch)).then(
+        (response) => {
+          if (_.isEmpty(response.payload)) {
+            console.log("no user vehicle");
+            setShowUserHint(true);
+          }
+        }
+      );
+    }
+  }, []);
 
   const changePageAction = (newPage:number):(dispatch: AppDispatch) => void => {
     return (dispatch:AppDispatch) => {
@@ -139,9 +155,10 @@ function VehicleListViewer () {
           onRowsPerPageChange={handleChangeRowsPerPage}
           variant="head"
         />
-        { status === C.LOADING ?  <CardWaitSkeleton isShown={true} /> :
-          _.isNil(userVehicles) || _.isEmpty(userVehicles) ?
-            <Typography variant='h6' m={3}>There is no vehicle in your garage, click the connect button to start.</Typography>
+        { status === C.LOADING ? <CardWaitSkeleton isShown={true} />
+          :
+          showUserHint ?
+            <Typography variant='h6'>There is no vehicle in your garage, go to the Lookup to start.</Typography>
             :
             <VehicleCards
               vehicles={userVehicles}
