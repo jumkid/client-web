@@ -29,10 +29,10 @@ function ConfirmDialog ({title, action, message, isShown, confirmCallback, cance
       </DialogContent>
 
       <DialogActions>
-        <Button autoFocus onClick={cancelCallback}>
+        <Button variant="contained" autoFocus onClick={cancelCallback}>
           Cancel
         </Button>
-        <Button onClick={confirmCallback} autoFocus>
+        <Button variant="contained" onClick={confirmCallback} autoFocus>
           Confirm
         </Button>
       </DialogActions>

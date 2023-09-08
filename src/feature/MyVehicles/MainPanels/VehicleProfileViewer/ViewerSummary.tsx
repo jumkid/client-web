@@ -61,9 +61,11 @@ function ViewerSummary ({ mode, showName, vehicleProfile}:Props) {
           { showEditableName && <VehicleNameTools vehicleName={vehicleProfile.name!} vehicleId={vehicleProfile.id!} />}
         </Grid>
         <Grid item xs={2}>
-          <Button className="vehicle-delete-btn" variant="outlined" onClick={() => setIsConfirmOpen(true)}>
-            <Delete/> Delete
-          </Button>
+          {mode === C.MODE_ACTIVE &&
+            <Button className="vehicle-delete-btn" variant="contained" onClick={() => setIsConfirmOpen(true)}>
+              <Delete/> Delete
+            </Button>
+          }
           <IconButton
             className="access-scope-btn"
             component="label"

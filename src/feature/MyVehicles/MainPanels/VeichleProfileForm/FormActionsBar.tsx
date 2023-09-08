@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
@@ -39,10 +39,6 @@ function FormActionsBar () {
   const {errors, setErrors} = useContext(ErrorsContext);
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    setErrors({hasUpdate: false});
-  }, []);
 
   const handleAddAsNew = async (): Promise<void> => {
     if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
@@ -129,7 +125,7 @@ function FormActionsBar () {
     setIsConfirmOpen(false);
   };
 
-  const isFormValid = (Object.values(errors).length === 1 && errors.hasUpdate);
+  const isFormValid = useMemo(() => Object.values(errors).length === 1 && errors.hasUpdate, [errors]);
 
   const reloadCurrentVehicle = (id: string) => {
     dispatch(fetchVehicle(id));
@@ -141,7 +137,7 @@ function FormActionsBar () {
         onClick={handleSave}
         color="primary"
         variant="contained"
-        disabled={!isFormValid}
+        disabled={currentVehicle!.id === null || !isFormValid}
         startIcon={<Save/>}
       >
         save
@@ -161,7 +157,7 @@ function FormActionsBar () {
         disabled={!isFormValid}
         startIcon={<Add/>}
       >
-        add
+        add new
       </Button>
 
       <ConfirmDialog

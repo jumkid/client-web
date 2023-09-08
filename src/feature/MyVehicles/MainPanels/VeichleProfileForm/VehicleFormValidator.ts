@@ -54,7 +54,7 @@ class VehicleFormValidator {
   }
 
   validateName (value: string) {
-    if (_.isEmpty(value)) {
+    if (_.isNil(value) || _.isEmpty(value)) {
       this.errors.name = "name is required";
     } else if (value.length < 2) {
       this.errors.name = "name is invalid";
@@ -66,7 +66,7 @@ class VehicleFormValidator {
   }
 
   validateMake (value: string) {
-    if (_.isEmpty(value)) {
+    if (_.isNil(value) || _.isEmpty(value)) {
       this.errors.make = "make is required";
     } else if (value.length < 2) {
       this.errors.make = "make is invalid";
@@ -78,7 +78,7 @@ class VehicleFormValidator {
   }
 
   validateModel (value: string) {
-    if (_.isEmpty(value)) {
+    if (_.isNil(value) || _.isEmpty(value)) {
       this.errors.model = "model is required";
     } else {
       delete this.errors.model;
@@ -88,7 +88,7 @@ class VehicleFormValidator {
   }
 
   validateTrimLevel (value: string) {
-    if (_.isEmpty(value)) {
+    if (_.isNil(value) || _.isEmpty(value)) {
       this.errors.trimLevel = "trim level is required";
     } else {
       delete this.errors.trimLevel;
@@ -98,7 +98,7 @@ class VehicleFormValidator {
   }
 
   validateModelYear (value: number) {
-    if (_.isNull(value)) {
+    if (_.isNil(value) || _.isNull(value)) {
       this.errors.modelYear = "model year is required";
     } else if (value < 1900) {
       this.errors.modelYear = "model year should be 1900 or later year";
@@ -165,8 +165,8 @@ class VehicleFormValidator {
     this.setHasUpdate();
   }
 
-  validateEngineHorsepowerRpm (value: number) {
-    if (value <= 0) {
+  validateEngineHorsepowerRpm (value: number | null) {
+    if (value! <= 0) {
       this.errors.engine = { horsepowerRpm: "horsepower RPM should be larger than 0"};
     } else {
       delete this.errors.engine?.horsepowerRpm;
@@ -185,8 +185,8 @@ class VehicleFormValidator {
     this.setHasUpdate();
   }
 
-  validateEngineTorqueRpm (value: number) {
-    if (value <= 0) {
+  validateEngineTorqueRpm (value: number | null) {
+    if (value! <= 0) {
       this.errors.engine = { torqueRpm: "torque RPM should be larger than 0"};
     } else {
       delete this.errors.engine?.torqueRpm;

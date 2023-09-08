@@ -44,8 +44,9 @@ function VehicleListViewer () {
       dispatch(fetchUserVehicles(pagingSearch)).then(
         (response) => {
           if (_.isEmpty(response.payload)) {
-            console.log("no user vehicle");
             setShowUserHint(true);
+          } else {
+            setShowUserHint(false);
           }
         }
       );
@@ -124,7 +125,7 @@ function VehicleListViewer () {
           <Box>
             <TextField
               className="search-input"
-              name="search"
+              id="search"
               placeholder="Search your vehicles"
               variant="standard"
               value={keyword}

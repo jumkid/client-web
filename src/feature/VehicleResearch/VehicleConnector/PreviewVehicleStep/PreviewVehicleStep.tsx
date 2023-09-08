@@ -39,11 +39,11 @@ function PreviewVehicleStep ({connectedVehicle}:Prop) {
 
         <ViewerSummary mode={C.MODE_SIMPLE} showName={false} vehicleProfile={connectedVehicle}/>
 
-        <ViewerGalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
+        <ViewerDetailsAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle}/>
 
         <PricingViewerAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle} />
 
-        <ViewerDetailsAccordion mode={C.MODE_ACTIVE} vehicleProfile={connectedVehicle}/>
+        <ViewerGalleryAccordion mode={C.MODE_SIMPLE} mediaGalleryId={connectedVehicle.mediaGalleryId}/>
 
       </Stack>
     </>

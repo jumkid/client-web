@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Fab, TextField } from '@mui/material';
 import { Clear, Search } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,6 +24,10 @@ function VinMatchPanel () {
   const {setConnectorStep} = useContext(VehicleConnectorContext);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    handleClear();
+  }, []);
+
   const handleVinOnChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setSearchVIN(event.target.value);
   }
@@ -45,7 +49,7 @@ function VinMatchPanel () {
     setConnectorStep(1);
   }
 
-  const handleClearClick = () => {
+  const handleClear = () => {
     dispatch(setVinVehicle(blankVehicleProfile));
     dispatch(setConnectedVehicle(blankVehicleProfile));
     setSearchVIN('');
@@ -63,7 +67,7 @@ function VinMatchPanel () {
             endAdornment: (<>
               <Clear
                 sx={{ visibility: searchVIN? "visible": "hidden", cursor: 'pointer'}}
-                onClick={handleClearClick}/>
+                onClick={handleClear}/>
               <FontAwesomeIcon icon={faBarcode} style={{ marginLeft: 15 }}/>
             </>)
           }}

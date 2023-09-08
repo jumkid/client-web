@@ -249,9 +249,9 @@ const syncToList = (state:UserVehicleListState, action:any) => {
     state.status = C.FAILED;
   } else {
     state.status = C.SUCCEEDED;
-    const vehicleProfile = action.payload;
+    const vehicleProfile = action.payload.data;
     state.currentVehicle = vehicleProfile;
-    const index = state.vehicles.findIndex(vehicle => vehicle.id === state.currentVehicle.id);
+    const index = state.vehicles.findIndex(vehicle => vehicle.id === vehicleProfile.id);
     if (index !== null) {
       state.vehicles[index] = vehicleProfile;
     }

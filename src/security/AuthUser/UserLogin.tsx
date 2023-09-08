@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Divider, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
-import authenticationService from '../../service/AuthenticationService';
+import authenticationManager from '../Auth/AuthenticationManager';
 import SimpleLayout from '../../layout/SimpleLayout';
 
 const initialLoginMessage:string | null = null;
@@ -22,7 +22,7 @@ function UserLogin () {
 
   const handleSubmit = () => {
     setLoginMessage(null);
-    authenticationService.login(username, password)
+    authenticationManager.login(username, password)
       .then(({ isSuccess, status }) => {
         if (isSuccess) {
           navigate('/');

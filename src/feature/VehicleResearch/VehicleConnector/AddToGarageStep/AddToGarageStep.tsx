@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import AddToGarageStepUserView from './AddToGarageStep.UserView';
 import { Box, Button } from '@mui/material';
 import { ArrowBackIos } from '@mui/icons-material';
@@ -9,12 +9,16 @@ import VehicleViewerActionsBar from '../../../MyVehicles/MainPanels/VehicleProfi
 import AdminUser from '../../../../security/Auth/AdminUser';
 import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
 import { VehicleConnectorContext } from '../VehicleConnectorContext';
+import {
+  initValidationErrors,
+  ValidationErrors
+} from '../../../MyVehicles/MainPanels/VeichleProfileForm/VehicleFormValidator';
 
 function AddToGarageStep () {
-  const [errors, setErrors] = useState({hasUpdate: false});
+  const [errors, setErrors] = useState<ValidationErrors>({hasUpdate:false});
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
 
-  const {setConnectorStep} = useContext(VehicleConnectorContext);
+  const { setConnectorStep } = useContext(VehicleConnectorContext);
 
   const handleBackward = (): void => {
     setConnectorStep(prevState => prevState - 1);

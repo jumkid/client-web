@@ -7,14 +7,14 @@ import {
   CardContent,
   CardHeader, Chip,
   CircularProgress,
-  Fade, Icon,
+  Fade, Icon, IconButton,
   Link,
   Typography
 } from '@mui/material';
 import * as _ from 'lodash';
 import AdminUser from '../../../../security/Auth/AdminUser';
 import BootstrapTooltip from '../../../../component/BootstrapTooltip';
-import { Collections } from '@mui/icons-material';
+import { Collections, Lock, LockOpen } from '@mui/icons-material';
 import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
 import { vehicleService } from '../../../../service';
 import { AxiosError } from 'axios';
@@ -105,7 +105,7 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
   }
 
   return (
-    <>
+    <Box className="vehicle-card-container clear-all">
       {!_.isNil(vehicles) && vehicles.map((vehicle, index) => (
         !_.isEmpty(vehicle.make) &&
         <Fade key={index} in={true}>
@@ -129,6 +129,10 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
               sx={{pb: 0}}
             />
 
+            <IconButton className="vehicle-card-access-scope" aria-label="access scope" component="label" disabled={true}>
+              { vehicle.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
+            </IconButton>
+
             <CardContent>
               <Box>
                 <Box>
@@ -139,8 +143,14 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
                     }}/>}
                     label={vehicle.make}
                   />
-                  { vehicle.vehicleEngine!.horsepower && <Chip label={`${vehicle.vehicleEngine!.horsepower}hp`}/> }
-                  { vehicle.vehicleEngine!.torque && <Chip label={`${vehicle.vehicleEngine!.torque}lbf`}/> }
+                  { !_.isNil(vehicle.vehicleEngine) &&
+                    <>
+                      { !_.isNil(vehicle.vehicleEngine.horsepower) && vehicle.vehicleEngine.horsepower !== 0
+                        && <Chip label={`${vehicle.vehicleEngine!.horsepower} hp`}/> }
+                      { !_.isNil(vehicle.vehicleEngine.torque) && vehicle.vehicleEngine.torque !== 0
+                        && <Chip label={`${vehicle.vehicleEngine!.torque} lbf`}/> }
+                    </>
+                  }
                 </Box>
 
                 <ul>
@@ -199,7 +209,7 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
         confirmCallback={doConfirm}
         cancelCallback={doCancel}
       />
-    </>
+    </Box>
   )
 }
 

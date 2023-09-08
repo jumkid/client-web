@@ -29,6 +29,9 @@ describe(VehicleProfileViewer, () => {
     },
     userVehicles: {
       currentVehicle: testVehicleProfile
+    },
+    userNotifications: {
+      userCenterWarning: false
     }
   });
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Fade, LinearProgress, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import authenticationService from '../../service/AuthenticationService';
+import authenticationManager from '../Auth/AuthenticationManager';
 import SimpleLayout from '../../layout/SimpleLayout';
 
 type Props = {
@@ -15,7 +15,7 @@ function UserAutoLogin ({ username, password }: Props) {
   const navigate = useNavigate();
 
   const handleAutoLogin = (username?: string, password?: string) => {
-    authenticationService.login(username, password)
+    authenticationManager.login(username, password)
       .then((isLoggedIn) => {
         if (isLoggedIn) {
           setTimeout(() => { navigate('/'); }, 2000);

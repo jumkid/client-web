@@ -26,7 +26,7 @@ type Props = {
 
 function PricingFormAccordion ({mode}:Props) {
   const vehicleProfile = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
-  const vehiclePricing = vehicleProfile!.vehiclePricing!;
+  const vehiclePricing = _.isNil(vehicleProfile!.vehiclePricing) ? { msrp:0 } : vehicleProfile!.vehiclePricing;
 
   const dispatch = useAppDispatch();
   const {errors, setErrors} = useContext(ErrorsContext);
@@ -35,9 +35,11 @@ function PricingFormAccordion ({mode}:Props) {
 
   const handlePricingMsrpChange = (event:ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    dispatch(changePricingMSRP(value));
-    validator.validatePricingMSRP(value);
-    validateForm();
+    if (value !== vehiclePricing.msrp) {
+      dispatch(changePricingMSRP(value));
+      validator.validatePricingMSRP(value);
+      validateForm();
+    }
   };
 
   const validateForm = () => {setErrors( { ...validator.errors });};
@@ -58,7 +60,7 @@ function PricingFormAccordion ({mode}:Props) {
                 type="integer"
                 onChange={handlePricingMsrpChange}
                 variant="outlined"
-                value={_.isNil(vehiclePricing) ? 0 : vehiclePricing.msrp}
+                value={vehiclePricing.msrp}
                 InputProps={{
                   inputComponent: NumberInputWithDecimal as any,
                   startAdornment: <InputAdornment position="start">$</InputAdornment>

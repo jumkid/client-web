@@ -125,8 +125,7 @@ export const searchVehiclesSlice = createSlice({
       })
       .addCase(fetchVehicleByVin.fulfilled, (state, action) => {
         state.status = C.SUCCEEDED;
-        state.vinVehicle = action.payload.data;
-        // state.vinVehicle = U.vinVehicleToFieldValuePairs(action.payload.data);
+        state.vinVehicle = { ...action.payload.data, accessScope:C.PRIVATE };
       })
       .addCase(fetchMatchVehicles.pending, (state) => {
         state.status = C.LOADING;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, IconButton, ListItem, ListItemText, Paper, Typography } from '@mui/material';
+import { Drawer, IconButton, ListItem, ListItemText, Typography } from '@mui/material';
 import { Close, Event } from '@mui/icons-material';
 import ActivityNotification from '../../../layout/MainLayout/model/ActivityNotification';
 import { userService } from '../../../service';

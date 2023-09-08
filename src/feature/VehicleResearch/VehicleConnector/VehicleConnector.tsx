@@ -7,7 +7,7 @@ import { useAppSelector } from '../../../App.hooks';
 import VehicleFinderStep from './VehicleFinderStep';
 import { VehicleConnectorContext } from './VehicleConnectorContext';
 
-const steps = ['Find a Vehicle', 'Preview Vehicle', 'Add to Garage'];
+const steps = ['Find a Vehicle', 'Preview Vehicle', 'Add to Vehicles'];
 
 function VehicleConnector () {
   const [currentTab, setCurrentTab] = useState(0);

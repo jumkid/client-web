@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MainLayout from '../../../layout/MainLayout';
 import { SideTabsContext } from '../SideBar/SideBarContext';
 import { Box } from '@mui/material';
@@ -7,6 +7,7 @@ import VehicleConnector from '../VehicleConnector';
 import FormActionsBar from '../../MyVehicles/MainPanels/VeichleProfileForm/FormActionsBar';
 import VehicleProfileForm from '../../MyVehicles/MainPanels/VeichleProfileForm/VehicleProfileForm';
 import AdvanceSearchConnector from '../AdvanceSearch';
+import authenticationManager from '../../../security/Auth/AuthenticationManager';
 
 function VehicleResearchDashboard () {
   const [currentTab, setCurrentTab] = useState(0);

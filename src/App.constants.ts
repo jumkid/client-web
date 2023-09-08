@@ -16,6 +16,7 @@ export const PRIVATE = 'private';
 export const USERNAME = 'username';
 export const PASSWORD = 'password';
 export const JWT_TOKEN_KEY = 'jwToken';
+export const JWT_REFRESH_TOKEN_KEY = 'jwRefreshToken';
 export const USER_ROLE = 'USER_ROLE';
 export const ADMIN_ROLE = 'ADMIN_ROLE';
 

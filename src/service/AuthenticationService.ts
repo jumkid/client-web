@@ -1,4 +1,3 @@
-import authenticationManager from '../security/Auth/AuthenticationManager';
 import restfulClient from './RestfulClient';
 import * as C from '../App.constants';
 import { UserProfile } from '../security/AuthUser/model/UserProfile';
@@ -9,7 +8,7 @@ interface IAuthenticationService {
   signUp (userProfile: UserProfile):Promise<AuthResponse>
   updateUser (userId:string, userProfile: UserProfile):Promise<AuthResponse>
   resetPassword (userId:string, newPassword:string):Promise<AuthResponse>
-  login (username:string, password?:string):Promise<AuthResponse>
+  signIn (username:string, password?:string):Promise<AuthResponse>
   refresh (refreshToken:string):Promise<AuthResponse>
 }
 
@@ -59,20 +58,15 @@ export class AuthenticationService implements IAuthenticationService{
     };
   }
 
-  async login (username?:string, password?:string) {
-    let isSuccess = false;
+  async signIn (username?:string, password?:string) {
     const body = `${C.USERNAME}=${username}&${C.PASSWORD}=${password}`;
     const response = await restfulClient.postWithPromise(C.USER_LOGIN_API, null, body);
-    if (response && response.status === 200 && response.data) {
-      authenticationManager.updateToken(response.data.access_token);
-      isSuccess = true;
-    }
-    return { isSuccess, status: response.status, data: null };
+    return { isSuccess:(response.status === 200), status:response.status, data:response.data };
   }
 
   async refresh (refreshToken:string) {
-    const response = await restfulClient
-      .postWithPromise(C.USER_TOKEN_REFRESH_API, refreshToken);
+    const body = `refresh_token=${refreshToken}`;
+    const response = await restfulClient.postWithPromise(C.USER_TOKEN_REFRESH_API, null, body);
     return {
       isSuccess: response ? response.status === 204: false,
       status: response.status,

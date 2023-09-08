@@ -107,7 +107,7 @@ function FastMatchPanel () {
 
   return (
     <Box className="main-container">
-      <Item>
+      <Box height={90}>
         <Item>
           <S_FormControl>
             <InputLabel htmlFor="maker-selection">Make</InputLabel>
@@ -193,19 +193,16 @@ function FastMatchPanel () {
             </S_Selection>
           </S_FormControl>
         </Item>
-      </Item>
+      </Box>
 
-      <Item>
-        { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
-          :
-          <VehicleCards
-            vehicles={matchVehicles}
-            detailsLnkCallback={handleCardClick}
-            copyDoneCallback={handleGalleryCopyDone}
-          />
-        }
-      </Item>
-
+      { status === C.LOADING ? <CardWaitSkeleton isShown={true}/>
+        :
+        <VehicleCards
+          vehicles={matchVehicles}
+          detailsLnkCallback={handleCardClick}
+          copyDoneCallback={handleGalleryCopyDone}
+        />
+      }
     </Box>
   )
 }

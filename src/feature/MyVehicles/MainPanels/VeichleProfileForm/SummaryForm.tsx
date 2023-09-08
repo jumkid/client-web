@@ -79,6 +79,7 @@ function SummaryForm () {
     validator.validateModelYear(value);
     validateForm();
   };
+
   return (
     <Box>
       <Grid container columns={16}>
@@ -125,7 +126,7 @@ function SummaryForm () {
           </S_FormControl>
         </Item>
         <Item>
-          { !_.isNil(currentVehicle.make) &&
+          { !_.isEmpty(currentVehicle.make) &&
           <Avatar
             className="brand-avatar"
             variant="rounded"

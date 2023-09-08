@@ -78,7 +78,6 @@ function UserSignUp () {
     if (event.target.checked) {
       setErrors((errors:ValidationErrors) => {
         const { acceptedTerms, ...rest } = errors;
-        console.log(acceptedTerms);
         return rest;
       });
     } else {

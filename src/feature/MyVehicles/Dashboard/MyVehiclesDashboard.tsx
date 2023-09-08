@@ -3,9 +3,6 @@ import MainLayout from '../../../layout/MainLayout';
 import { Box } from '@mui/material';
 import GarageSideBar from '../SideBar';
 import MainPanel from '../MainPanels';
-import { fetchUserVehicles } from '../../../store/userVehiclesSlice';
-import { useAppDispatch, useAppSelector } from '../../../App.hooks';
-import * as C from '../../../App.constants';
 
 function MyVehiclesDashboard () {
   return (

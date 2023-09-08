@@ -15,12 +15,9 @@ function CardWaitSkeleton ({isShown}:Props) {
 
   return (
     <>
-      { isShown &&
-        <Box>
-          {_.times(count, (i) => (
-            <Skeleton key={i} variant="rectangular" width="366px" height="240px"/>
-          ))}
-        </Box>
+      { isShown && _.times(count, (i) => (
+        <Skeleton key={i} variant="rectangular" width="366px" height="240px"/>
+      ))
       }
     </>
   )

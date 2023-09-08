@@ -60,11 +60,12 @@
     "react-phone-number-input": "^3.2.11",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",
-    "react-scripts": "^5.0.0",
+    "react-scripts": "^5.0.1",
     "redux": "^4.2.0",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/jest": "^29.5.0",
     "@types/jsonwebtoken": "^9.0.1",

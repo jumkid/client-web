@@ -1,4 +1,10 @@
 .vehicle-card {
     width: 356px !important;
     height: 248px !important;
+    margin: 5px 5px 0 0 !important;
+}
+
+.vehicle-card-access-scope {
+    float: right;
+    top: 10px;
 }

@@ -29,7 +29,7 @@ function ViewerActionsBar () {
   };
 
   return (
-    <Button variant="outlined" onClick={handleAdd} disabled={!isValid}>
+    <Button variant="contained" onClick={handleAdd} disabled={!isValid}>
       <Add/>add
     </Button>
   )

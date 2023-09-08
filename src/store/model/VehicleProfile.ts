@@ -23,6 +23,7 @@ export const blankVehicleProfile:VehicleProfile = {
   id: null,
   make: '',
   model: '',
+  modelYear: 1900,
   accessScope: C.PUBLIC,
   vehicleEngine: {},
   vehicleTransmission: {}

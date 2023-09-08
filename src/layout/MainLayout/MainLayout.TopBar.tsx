@@ -23,6 +23,7 @@ import { RootState } from '../../store';
 import { useAppDispatch, useAppSelector } from '../../App.hooks';
 import NotificationDrawer from '../../feature/UserOriented/NotificationDrawer';
 import { fetchUserActivityNotifications } from '../../store/userNotificationsSlice';
+import authenticationManager from '../../security/Auth/AuthenticationManager';
 
 type Props = {
   menuSettings: MenuSetting[],
@@ -56,12 +57,16 @@ function TopBar ({ menuSettings, userSettings }: Props) {
     dispatch(fetchUserActivityNotifications()); // run at the very first time
     return setInterval(() => {
       dispatch(fetchUserActivityNotifications());
-    }, 5000);
+    }, 10000);
   }
 
   useEffect(() => {
     const autoRefreshEvent = autoRefresh();
-    return () => { clearInterval(autoRefreshEvent); }
+    const keepAliveIntervalEvent = authenticationManager.keepAliveInterval();
+    return () => {
+      clearInterval(autoRefreshEvent);
+      clearInterval(keepAliveIntervalEvent);
+    }
   },[]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>):void => {

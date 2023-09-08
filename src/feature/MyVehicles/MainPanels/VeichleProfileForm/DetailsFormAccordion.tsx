@@ -99,7 +99,7 @@ function DetailsFormAccordion ({mode}:Props) {
   };
 
   const handleHorsepowerRpmChange = (event:ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
+    const value = _.isNil(event.target.value) ? null : Number(event.target.value);
     dispatch(changeEngineHorsepowerRpm(value));
     validator.validateEngineHorsepowerRpm(value);
     validateForm();
@@ -113,7 +113,7 @@ function DetailsFormAccordion ({mode}:Props) {
   };
 
   const handleTorqueRpmChange = (event:ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
+    const value = _.isNil(event.target.value) ? null : Number(event.target.value);
     dispatch(changeEngineTorqueRpm(value));
     validator.validateEngineTorqueRpm(value);
     validateForm();

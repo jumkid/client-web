@@ -1,15 +1,19 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
-import { changeConnectedVehicleName } from '../../../../store/connectedVehicleSlice';
+import { changeConnectedVehicleName, setConnectedVehicle } from '../../../../store/connectedVehicleSlice';
 import { saveNewVehicle } from '../../../../store/userVehiclesSlice';
-import { Avatar, Box, Fade, Grid, Stack, TextField } from '@mui/material';
+import { Avatar, Box, IconButton, Stack, TextField } from '@mui/material';
 import { Item, ItemHeader, ItemText } from '../../../../layout/Layout.Theme';
 import * as C from '../../../../App.constants';
 import { RootState } from '../../../../store';
 import * as _ from 'lodash';
 import { VehicleConnectorContext } from '../VehicleConnectorContext';
+import { preloadContentThumbnail } from '../../../../App.utils';
+import { Lock, LockOpen } from '@mui/icons-material';
 
 function AddToGarageStepUserView () {
+  const [preLoadImage, setPreLoadImage] = useState('');
+
   const connectedVehicle = useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
   const status = useAppSelector((state:RootState) => state.userVehicles.status);
 
@@ -18,6 +22,17 @@ function AddToGarageStepUserView () {
 
   useEffect(() => {
     dispatch(changeConnectedVehicleName(''));
+
+    try {
+      if (!_.isNil(connectedVehicle)) {
+        preloadContentThumbnail(connectedVehicle.mediaGalleryId!, 'large').then((imageBase64) => {
+          setPreLoadImage(imageBase64);
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
   }, []);
 
   const handleAdd = async (): Promise<void> => {
@@ -30,6 +45,11 @@ function AddToGarageStepUserView () {
       console.error(error)
     }
   };
+
+  const toggleAccessScope = () => {
+    const accessScope = connectedVehicle!.accessScope === C.PRIVATE ? C.PUBLIC : C.PRIVATE;
+    dispatch(setConnectedVehicle({...connectedVehicle, accessScope}));
+  }
 
   const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     dispatch(changeConnectedVehicleName(event.target.value));
@@ -45,55 +65,56 @@ function AddToGarageStepUserView () {
 
   return (
     <Stack className="main-container">
-      <Fade in={true} mountOnEnter unmountOnExit>
-        <Grid container columns={16}>
-          <Grid item xs={12}>
-            <ItemHeader sx={{ mb:3 }}>
-              <Avatar
-                variant="rounded"
-                src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${connectedVehicle!.make}.png`}
-                sx={{ float: "left", mr: 2, width: 72, height: 80 }}
-              />
-              <TextField
-                sx={{ width:380 }}
-                label="Vehicle Name"
-                variant="standard"
-                autoFocus={true}
-                required
-                value={connectedVehicle!.name}
-                onChange={handleNameChange}
-                onKeyPress={handleEnterKeyPress}
-                placeholder={`say, ${connectedVehicle!.model} ${connectedVehicle!.trimLevel}`}
-                error={!isValid}
-                helperText="please name this vehicle in your garage"
-                inputProps={{ style: {fontSize: 22} }}
-              />
-            </ItemHeader>
-          </Grid>
-          <Grid item>
-            <Item>
-              <Item>Make <ItemText>{connectedVehicle!.make}</ItemText></Item>
-              <Item>Model <ItemText>{connectedVehicle!.model}</ItemText></Item>
-              <Item>Trim Level <ItemText>{connectedVehicle!.trimLevel}</ItemText></Item>
-              <Item>Model Year <ItemText>{connectedVehicle!.modelYear}</ItemText></Item>
-            </Item>
-          </Grid>
-          <Grid width="90%" height="380px">
-            <Stack alignItems="center" height="100%">
-              <Box
-                sx={{
-                  width: '60%',
-                  height: '100%',
-                  background: `url(${C.CONTENT_STREAM_API}/${connectedVehicle!.mediaGalleryId})`,
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center center'
-                }}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-      </Fade>
+      <ItemHeader>
+        <Avatar
+          className="brand-avatar"
+          variant="rounded"
+          src={`${C.DOMAIN_IMAGES_AUTO_BRAND_API}/${connectedVehicle!.make}.png`}
+        />
+        <TextField
+          className="name-text"
+          label="Vehicle Name"
+          variant="standard"
+          autoFocus={true}
+          required
+          value={connectedVehicle!.name}
+          onChange={handleNameChange}
+          onKeyPress={handleEnterKeyPress}
+          placeholder={`say, ${connectedVehicle!.model} ${connectedVehicle!.trimLevel}`}
+          error={!isValid}
+          helperText="please name this vehicle in your garage"
+          inputProps={{ style: {fontSize: 'x-large'} }}
+        />
+        <IconButton
+          className="access-scope-btn"
+          component="label"
+          aria-label="access scope"
+          onClick={toggleAccessScope}
+        >
+          { connectedVehicle!.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
+        </IconButton>
+      </ItemHeader>
+
+      <Item>
+        <Item>Make <ItemText>{connectedVehicle!.make}</ItemText></Item>
+        <Item>Model <ItemText>{connectedVehicle!.model}</ItemText></Item>
+        <Item>Trim Level <ItemText>{connectedVehicle!.trimLevel}</ItemText></Item>
+        <Item>Model Year <ItemText>{connectedVehicle!.modelYear}</ItemText></Item>
+      </Item>
+
+      <Stack alignItems="center" height="380px">
+        <Box
+          my={2}
+          sx={{
+            width: '60%',
+            height: '100%',
+            background: `url('${preLoadImage}')`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center'
+          }}
+        />
+      </Stack>
     </Stack>
   )
 }

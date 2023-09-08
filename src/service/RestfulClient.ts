@@ -46,8 +46,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        data: e.response.data || {}
+        status: e.response?.status,
+        data: e.response?.data || {}
       };
     }
   }
@@ -96,8 +96,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        headers: e.response.headers,
+        status: e.response?.status,
+        headers: e.response?.headers,
         data: null
       };
     }
@@ -115,8 +115,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        data: e.response.data || {}
+        status: e.response?.status,
+        data: e.response?.data || {}
       };
     }
   }
@@ -134,8 +134,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        data: e.response.data || {}
+        status: e.response?.status,
+        data: e.response?.data || {}
       };
     }
   }
@@ -162,7 +162,7 @@ export class RestfulClient implements IRestfulClient {
       this.if403Logout(e.response);
       return {
         success: false,
-        msg: e.response.status,
+        msg: e.response?.status,
         total: 0,
         size: 0,
         page: 0,
@@ -183,8 +183,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        data: e.response.data || {}
+        status: e.response?.status,
+        data: e.response?.data || {}
       };
     }
   }
@@ -201,8 +201,8 @@ export class RestfulClient implements IRestfulClient {
     } catch (e:any) {
       this.if403Logout(e.response);
       return {
-        status: e.response.status,
-        data: e.response.data || {}
+        status: e.response?.status,
+        data: e.response?.data || {}
       };
     }
   }
@@ -217,13 +217,10 @@ export class RestfulClient implements IRestfulClient {
   }
 
   getContentTypeByParams(params?: string | object | object[] | null):string {
-    if (!_.isNil(params)) {
-      if (params instanceof FormData) {
-        return 'multipart/form-data';
-      } else
-      if (U.isJson(params)) {
-        return 'application/json';
-      }
+    if (!_.isNil(params) && params instanceof FormData) {
+      return 'multipart/form-data';
+    } else if (!_.isNil(params) && U.isJson(params)) {
+      return 'application/json';
     }
     return 'application/x-www-form-urlencoded';
   }

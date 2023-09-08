@@ -136,9 +136,9 @@ function ActivityMaintDialog ({vehicleId, showDialog, setShowDialog}:Props) {
 
       <DialogActions className="activity-dialog-action">
         { !_.isEmpty(serverError) && <WarningSignText message={serverError} />}
-        <Button onClick={handleSave} color="primary" variant="outlined" disabled={!isFormValid}>save</Button>
+        <Button onClick={handleSave} color="primary" variant="contained" disabled={!isFormValid}>save</Button>
         &nbsp;
-        <Button onClick={handleDelete} color="primary" variant="outlined" disabled={!showDeleteButton}>delete</Button>
+        <Button onClick={handleDelete} color="primary" variant="contained" disabled={!showDeleteButton}>delete</Button>
 
         <ConfirmDialog
           title="Delete Activity"
