@@ -10,17 +10,25 @@ import AdminUser from '../../../../security/Auth/AdminUser';
 import NoneAdminUser from '../../../../security/Auth/NoneAdminUser';
 import { VehicleConnectorContext } from '../VehicleConnectorContext';
 import {
-  initValidationErrors,
   ValidationErrors
 } from '../../../MyVehicles/MainPanels/VeichleProfileForm/VehicleFormValidator';
+import authenticationManager from '../../../../security/Auth/AuthenticationManager';
+import { setConnectedVehicle } from '../../../../store/connectedVehicleSlice';
+import { useAppDispatch, useAppSelector } from '../../../../App.hooks';
+import { RootState } from '../../../../store';
 
 function AddToGarageStep () {
   const [errors, setErrors] = useState<ValidationErrors>({hasUpdate:false});
   const errorsProvider = useMemo(() => ({errors, setErrors}), [errors, setErrors]);
+  const currentVehicle = useAppSelector((state: RootState) => state.userVehicles.currentVehicle);
+  const dispatch = useAppDispatch();
 
   const { setConnectorStep } = useContext(VehicleConnectorContext);
 
   const handleBackward = (): void => {
+    if (authenticationManager.isAdmin()) {
+      dispatch(setConnectedVehicle(currentVehicle));
+    }
     setConnectorStep(prevState => prevState - 1);
   };
 

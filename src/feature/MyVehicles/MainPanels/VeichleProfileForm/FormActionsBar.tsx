@@ -125,7 +125,7 @@ function FormActionsBar () {
     setIsConfirmOpen(false);
   };
 
-  const isFormValid = useMemo(() => Object.values(errors).length === 1 && errors.hasUpdate, [errors]);
+  const isFormValid = Object.values(errors).length === 1 && errors.hasUpdate;
 
   const reloadCurrentVehicle = (id: string) => {
     dispatch(fetchVehicle(id));
@@ -157,7 +157,7 @@ function FormActionsBar () {
         disabled={!isFormValid}
         startIcon={<Add/>}
       >
-        add new
+        add
       </Button>
 
       <ConfirmDialog
