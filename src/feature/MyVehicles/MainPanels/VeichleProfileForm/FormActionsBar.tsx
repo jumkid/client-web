@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
@@ -27,7 +27,7 @@ import { VehicleConnectorContext } from '../../../VehicleResearch/VehicleConnect
 import CenterWarningBar from '../../../../component/CenterWarningBar';
 
 function FormActionsBar () {
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
@@ -40,7 +40,7 @@ function FormActionsBar () {
 
   const dispatch = useAppDispatch();
 
-  const handleAddAsNew = async (): Promise<void> => {
+  const doAdd = async (): Promise<void> => {
     if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
 
     try {
@@ -91,11 +91,11 @@ function FormActionsBar () {
     }
 
     if (!_.isNil(currentVehicle.id)) {
-      setIsConfirmOpen(true);
+      setShowDeleteConfirm(true);
     }
   }
 
-  const dialogConfirm = async (): Promise<void> => {
+  const doDelete = async (): Promise<void> => {
     if (status === C.LOADING || _.isNil(currentVehicle)) {
       return;
     }
@@ -103,7 +103,7 @@ function FormActionsBar () {
     const response = await dispatch(deleteVehicle(currentVehicle.id!));
 
     if (response.type.endsWith('/fulfilled')) {
-      setIsConfirmOpen(false);
+      setShowDeleteConfirm(false);
 
       if (currentPick === 0) {
         dispatch(setStatus(C.LOADING));
@@ -119,10 +119,6 @@ function FormActionsBar () {
         dispatch(changePick(1));
       }
     }
-  };
-
-  const dialogCancel = ():void => {
-    setIsConfirmOpen(false);
   };
 
   const isFormValid = Object.values(errors).length === 1 && errors.hasUpdate;
@@ -153,7 +149,7 @@ function FormActionsBar () {
       </Button>
       <Button
         variant="contained"
-        onClick={handleAddAsNew}
+        onClick={doAdd}
         disabled={!isFormValid}
         startIcon={<Add/>}
       >
@@ -163,9 +159,9 @@ function FormActionsBar () {
       <ConfirmDialog
         title="Delete Vehicle"
         message="All related data will be removed. Are you sure to delete this vehicle?"
-        isShown={isConfirmOpen}
-        confirmCallback={dialogConfirm}
-        cancelCallback={dialogCancel}
+        isShown={showDeleteConfirm}
+        confirmCallback={doDelete}
+        cancelCallback={ ():void => setShowDeleteConfirm(false) }
       />
       <CenterWarningBar
         open={userCenterWarning}

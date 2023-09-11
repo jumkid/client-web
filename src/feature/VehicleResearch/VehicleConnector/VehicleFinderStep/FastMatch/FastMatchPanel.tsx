@@ -21,6 +21,7 @@ import VehicleCards from '../../../../MyVehicles/MainPanels/VehicleCard';
 import { setConnectedVehicle } from '../../../../../store/connectedVehicleSlice';
 import { Item, S_FormControl, S_Selection } from '../../../../../layout/Layout.Theme';
 import { VehicleConnectorContext } from '../../VehicleConnectorContext';
+import './index.css';
 
 function FastMatchPanel () {
   const status = useAppSelector((state:RootState) => state.searchVehicles.status);
@@ -115,6 +116,7 @@ function FastMatchPanel () {
               id="maker-selection"
               label="Make"
               name="make"
+              className="fast-match-select"
               defaultValue=""
               value={getMatchFieldValue(C.MAKE)}
               onChange={handleOnChange}
@@ -136,6 +138,7 @@ function FastMatchPanel () {
               id="model-selection"
               label="Model"
               name="model"
+              className="fast-match-select"
               defaultValue=""
               value={getMatchFieldValue(C.MODEL)}
               disabled={_.isEmpty(matchSelections.models)}
@@ -158,6 +161,7 @@ function FastMatchPanel () {
               id="year-selection"
               label="modelYear"
               name="modelYear"
+              className="fast-match-select"
               defaultValue=""
               value={getMatchFieldValue(C.MODEL_YEAR)}
               disabled={_.isEmpty(matchSelections.modelYears)}
@@ -180,6 +184,7 @@ function FastMatchPanel () {
               id="trim-selection"
               label="trimLevel"
               name="trimLevel"
+              className="fast-match-select"
               defaultValue=""
               value={getMatchFieldValue(C.TRIM_LEVEL)}
               disabled={_.isEmpty(matchSelections.trimLevels)}
