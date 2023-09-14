@@ -138,10 +138,10 @@ class VehicleFormValidator {
   }
 
   validateEngineDisplacement (value: number) {
-    if (value <= 0) {
-      this.errors.engine = { displacement: "displacement should be larger than 0"};
-    } else {
+    if (value >= 0) {
       delete this.errors.engine?.displacement;
+    } else {
+      this.errors.engine = { displacement: "displacement is invalid"};
     }
     this.cleanUpEngineError();
     this.setHasUpdate();
@@ -166,10 +166,10 @@ class VehicleFormValidator {
   }
 
   validateEngineHorsepowerRpm (value: number | null) {
-    if (value! <= 0) {
-      this.errors.engine = { horsepowerRpm: "horsepower RPM should be larger than 0"};
-    } else {
+    if (value! >= 0) {
       delete this.errors.engine?.horsepowerRpm;
+    } else {
+      this.errors.engine = { horsepowerRpm: "horsepower RPM is invalid"};
     }
     this.cleanUpEngineError();
     this.setHasUpdate();
@@ -186,10 +186,10 @@ class VehicleFormValidator {
   }
 
   validateEngineTorqueRpm (value: number | null) {
-    if (value! <= 0) {
-      this.errors.engine = { torqueRpm: "torque RPM should be larger than 0"};
-    } else {
+    if (value! >= 0) {
       delete this.errors.engine?.torqueRpm;
+    } else {
+      this.errors.engine = { torqueRpm: "torque RPM is invalid"};
     }
     this.cleanUpEngineError();
     this.setHasUpdate();

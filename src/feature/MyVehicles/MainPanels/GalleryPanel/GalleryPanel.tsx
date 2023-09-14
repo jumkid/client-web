@@ -386,7 +386,7 @@ function GalleryPanel ({mode, mediaGalleryId}:Props) {
             { _.isEmpty(itemImage) && '?' }
             <Checkbox
               name={state.itemsId[idx]}
-              color='secondary'
+              color='primary'
               sx={{float:'right', verticalAlign:'top', p:'0 !important' }}
               onChange={toggleImageCheckBox}
               disabled={mode === MODE_SIMPLE}

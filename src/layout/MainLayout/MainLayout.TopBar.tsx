@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AppBar,
   Avatar,
   Badge,
-  Box,
+  Box, CircularProgress,
   Container,
   Divider,
   Icon,
@@ -40,6 +40,11 @@ function TopBar ({ menuSettings, userSettings }: Props) {
   const userProfile = tokenUser.userProfile;
   const userAvatar = userProfile.attributes?.avatar[0];
   const userName = userProfile.username;
+
+  const userVehiclesStatus = useAppSelector((state:RootState) => state.userVehicles.status);
+  const searchVehicleStatus = useAppSelector((state:RootState) => state.searchVehicles.status);
+  const isLoading = useMemo(() => userVehiclesStatus === C.LOADING || searchVehicleStatus === C.LOADING,
+    [userVehiclesStatus, searchVehicleStatus]);
 
   const [items, setItems] = useState(menuSettings);
   const menuOnClickHandler = useCallback((index:number) => {
@@ -88,6 +93,10 @@ function TopBar ({ menuSettings, userSettings }: Props) {
           <Icon className="navigation-logo"/>
 
           <NavButtons items={items} handleClick={menuOnClickHandler}/>
+
+          <Box sx={{width: '100%', textAlign: 'right'}}>
+            { isLoading && <CircularProgress size="large" color="secondary" sx={{width:38, margin:'8px 118px 0 0'}}/> }
+          </Box>
 
           <Box className="navigation-user-tools">
             { tokenUser &&

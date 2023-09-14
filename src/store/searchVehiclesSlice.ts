@@ -91,6 +91,7 @@ export const searchVehiclesSlice = createSlice({
     },
     clearMatchFields: (state) => {
       state.matchFields = [];
+      state.searchVehicles = [];
     },
     setSearchKeyword: (state, action) => {
       state.searchKeyword = action.payload;

@@ -237,6 +237,7 @@ export const userVehiclesSlice = createSlice({
         const index = state.vehicles.findIndex(vehicle => vehicle.id === state.currentVehicle.id);
         state.vehicles.splice(index, 1);
         state.currentVehicle = blankVehicleProfile;
+        state.currentPick = 0;
       })
       .addCase(deleteVehicle.rejected, (state) => {
         state.status = C.FAILED;

@@ -29,12 +29,12 @@ function FastMatchPanel () {
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const matchSelections = useAppSelector((state:RootState) => state.searchVehicles.matchSelections);
   const matchVehicles = useAppSelector((state:RootState) => state.searchVehicles.matchVehicles);
-  const {setConnectorStep} = useContext(VehicleConnectorContext);
+  const { setConnectorStep } = useContext(VehicleConnectorContext);
 
   const dispatch = useAppDispatch();
   
   useEffect(() => {
-    if (target === C.SUBMIT) {
+    if (target === C.SUBMIT && !_.isEmpty(matchFields)) {
       dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
     } else {
       vehicleService.getForAggregation(target, matchFields).then(

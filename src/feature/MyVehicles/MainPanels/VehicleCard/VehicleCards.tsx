@@ -106,7 +106,7 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
 
   return (
     <Box className="vehicle-card-container clear-all">
-      {!_.isNil(vehicles) && vehicles.map((vehicle, index) => (
+      {!_.isEmpty(vehicles) && vehicles.map((vehicle, index) => (
         !_.isEmpty(vehicle.make) &&
         <Fade key={index} in={true}>
           <Card

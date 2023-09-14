@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
   changePick,
-  deleteVehicle, fetchVehicle, removeVehicleFromList,
+  deleteVehicle, fetchVehicle,
   saveNewVehicle, setCurrentVehicle,
   updateVehicle
 } from '../../../../store/userVehiclesSlice';
@@ -16,9 +16,8 @@ import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { setConnectedVehicle } from '../../../../store/connectedVehicleSlice';
 import {
   clearMatchFields,
-  fetchMatchVehicles,
-  setMatchVehicles,
-  setStatus
+  fetchMatchVehicles, setMatchFields,
+  setMatchVehicles
 } from '../../../../store/searchVehiclesSlice';
 import { APIResponse } from '../../../../service/model/Response';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
@@ -28,61 +27,50 @@ import CenterWarningBar from '../../../../component/CenterWarningBar';
 
 function FormActionsBar () {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showAddConfirm, setShowAddConfirm] = useState(false);
 
-  const currentPick = useAppSelector((state: RootState) => state.userVehicles.currentPick);
   const currentVehicle = useAppSelector((state:RootState) => state.userVehicles.currentVehicle);
+  const connectedVehicle = useAppSelector((state:RootState) => state.connectedVehicle.vehicle);
   const matchFields = useAppSelector((state:RootState) => state.searchVehicles.matchFields);
   const status = useAppSelector((state:RootState) => state.userVehicles.status);
   const userCenterWarning = useAppSelector((state:RootState) => state.userNotifications.userCenterWarning);
 
-  const {setConnectorStep} = useContext(VehicleConnectorContext);
+  const {connectorStep, setConnectorStep} = useContext(VehicleConnectorContext);
   const {errors, setErrors} = useContext(ErrorsContext);
 
   const dispatch = useAppDispatch();
 
-  const doAdd = async (): Promise<void> => {
+  const handleSave = useCallback(async () => {
     if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
 
-    try {
-      await dispatch(saveNewVehicle({...currentVehicle, id: null}));
-      dispatch(clearMatchFields());
-      dispatch(setMatchVehicles([]));
-      //go back to first step after add successfully
-      setConnectorStep(0);
-    } catch (error) {
-      console.error(error)
-    }
-  };
+    const isUpdated = !_.isNil(currentVehicle.id);
+    const response = isUpdated ?
+      await dispatch(updateVehicle({id: currentVehicle.id!, vehicle: currentVehicle}))
+      :
+      await dispatch(saveNewVehicle(currentVehicle));
 
-  const handleSave = useCallback(async () => {
-    if (status === C.LOADING || _.isNil(currentVehicle)) {
+    const apiResponse = response.payload as APIResponse<VehicleProfile>;
+
+    if (apiResponse.status === 409) {
+      dispatch(setUserCenterWarning(true));
       return;
     }
 
-    if (!_.isNil(currentVehicle.id)) {
-      const response = await dispatch(updateVehicle({id: currentVehicle.id, vehicle: currentVehicle}));
-      const apiResponse = response.payload as APIResponse<VehicleProfile>;
+    setErrors({hasUpdate: false});
 
-      if (apiResponse.status === 409) {
-        dispatch(setUserCenterWarning(true));
-        return;
-      }
-
+    if (isUpdated) {
       const updatedVehicle = apiResponse.data;
-
       dispatch(setCurrentVehicle(updatedVehicle));
       setErrors({hasUpdate: false});
 
-      if (currentPick === 0) {
+      if (connectedVehicle && connectedVehicle!.id === updatedVehicle!.id) {
         dispatch(setConnectedVehicle(updatedVehicle));
         dispatch(fetchMatchVehicles({page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields}));
       }
-    } else {
-      dispatch(saveNewVehicle(currentVehicle))
-        .then(() => {
-          setErrors({hasUpdate: false});
-        });
     }
+
+
+
   },[currentVehicle]);
 
   const confirmDelete = ():void => {
@@ -100,24 +88,36 @@ function FormActionsBar () {
       return;
     }
 
+    setShowDeleteConfirm(false);
+
     const response = await dispatch(deleteVehicle(currentVehicle.id!));
 
     if (response.type.endsWith('/fulfilled')) {
-      setShowDeleteConfirm(false);
-
-      if (currentPick === 0) {
-        dispatch(setStatus(C.LOADING));
+      if (connectorStep > 0) {
         dispatch(setMatchVehicles([]));
         //go back to first step after delete successfully
-        setConnectorStep(0);
-        // delay for a second for search index update on the backend
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        dispatch(fetchMatchVehicles({ page: 1, size: C.DEFAULT_PAGE_SIZE, data: matchFields }));
-      } else {
-        const index = currentPick - 1;
-        dispatch(removeVehicleFromList(index));
-        dispatch(changePick(1));
+        setTimeout(() => setConnectorStep(0), 500);
       }
+    }
+  };
+
+  const confirmAdd = ():void => {
+    if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
+    setShowAddConfirm(true);
+  }
+
+  const doAdd = async (): Promise<void> => {
+    if (status === C.LOADING || _.isNil(currentVehicle)) { return; }
+
+    try {
+      await dispatch(saveNewVehicle({...currentVehicle, id: null}));
+      setErrors({hasUpdate: false});
+      setShowAddConfirm(false);
+
+      dispatch(clearMatchFields());
+      dispatch(setMatchVehicles([]));
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -149,7 +149,7 @@ function FormActionsBar () {
       </Button>
       <Button
         variant="contained"
-        onClick={doAdd}
+        onClick={confirmAdd}
         disabled={!isFormValid}
         startIcon={<Add/>}
       >
@@ -163,6 +163,15 @@ function FormActionsBar () {
         confirmCallback={doDelete}
         cancelCallback={ ():void => setShowDeleteConfirm(false) }
       />
+
+      <ConfirmDialog
+        title="Add Vehicle"
+        message="Are you sure to add this vehicle as new one?"
+        isShown={showAddConfirm}
+        confirmCallback={doAdd}
+        cancelCallback={ ():void => setShowAddConfirm(false) }
+      />
+
       <CenterWarningBar
         open={userCenterWarning}
         message="Vehicle profile is not up to date. Please reload before making changes."
