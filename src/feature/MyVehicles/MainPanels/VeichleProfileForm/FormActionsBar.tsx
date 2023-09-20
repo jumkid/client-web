@@ -94,7 +94,6 @@ function FormActionsBar () {
 
     if (response.type.endsWith('/fulfilled')) {
       if (connectorStep > 0) {
-        dispatch(setMatchVehicles([]));
         //go back to first step after delete successfully
         setTimeout(() => setConnectorStep(0), 500);
       }
@@ -113,9 +112,6 @@ function FormActionsBar () {
       await dispatch(saveNewVehicle({...currentVehicle, id: null}));
       setErrors({hasUpdate: false});
       setShowAddConfirm(false);
-
-      dispatch(clearMatchFields());
-      dispatch(setMatchVehicles([]));
     } catch (error) {
       console.error(error);
     }

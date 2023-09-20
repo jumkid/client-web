@@ -105,7 +105,7 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
   }
 
   return (
-    <Box className="vehicle-card-container clear-all">
+    <Box className="clear-all">
       {!_.isEmpty(vehicles) && vehicles.map((vehicle, index) => (
         !_.isEmpty(vehicle.make) &&
         <Fade key={index} in={true}>
@@ -122,16 +122,16 @@ function VehicleCards ({vehicles, detailsLnkCallback, copyDoneCallback}:Props) {
               handleOnDrop(event, vehicle.id);
             }}
           >
+            <IconButton className="vehicle-card-access-scope" aria-label="access scope" component="label" disabled={true}>
+              { vehicle.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
+            </IconButton>
+
             <CardHeader
               titleTypographyProps={{noWrap: true, fontSize: 16, fontWeight: 'bold'}}
               title={`${vehicle.modelYear} ${vehicle.model}`}
               subheader={vehicle.trimLevel}
               sx={{pb: 0}}
             />
-
-            <IconButton className="vehicle-card-access-scope" aria-label="access scope" component="label" disabled={true}>
-              { vehicle.accessScope === C.PRIVATE ? <Lock fontSize="large"/> : <LockOpen fontSize="large"/> }
-            </IconButton>
 
             <CardContent>
               <Box>

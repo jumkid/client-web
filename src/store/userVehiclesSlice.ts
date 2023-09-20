@@ -210,8 +210,9 @@ export const userVehiclesSlice = createSlice({
       })
       .addCase(saveNewVehicle.fulfilled, (state, action) => {
         state.status = C.SUCCEEDED;
+        const vehicle = action.payload.data as VehicleProfile;
         if (action.payload.status === 201) {
-          state.vehicles.push(action.payload.data);
+          state.vehicles.push(vehicle);
         }
       })
       .addCase(saveNewVehicle.rejected, (state) => {

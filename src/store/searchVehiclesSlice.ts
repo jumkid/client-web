@@ -65,8 +65,11 @@ export const searchVehiclesSlice = createSlice({
     setStatus: (state, action) => {
       state.status = action.payload;
     },
-    changeMatchSelections: (state, action) => {
+    setMatchSelections: (state, action) => {
       state.matchSelections = { ...state.matchSelections , ...action.payload}
+    },
+    resetMatchSelections: (state) => {
+      state.matchSelections = initialState.matchSelections;
     },
     setMatchFields: (state, action) => {
       const matchField: VehicleFieldValuePair = action.payload;
@@ -92,6 +95,7 @@ export const searchVehiclesSlice = createSlice({
     clearMatchFields: (state) => {
       state.matchFields = [];
       state.searchVehicles = [];
+      state.matchVehicles = [];
     },
     setSearchKeyword: (state, action) => {
       state.searchKeyword = action.payload;
@@ -151,7 +155,8 @@ export const searchVehiclesSlice = createSlice({
 
 export const {
   setStatus,
-  changeMatchSelections,
+  setMatchSelections,
+  resetMatchSelections,
   setMatchFields,
   clearMatchFields,
   setSearchKeyword,

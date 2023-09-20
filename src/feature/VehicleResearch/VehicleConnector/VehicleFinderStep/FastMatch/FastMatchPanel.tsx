@@ -11,7 +11,7 @@ import * as C from '../../../../../App.constants';
 import { useAppSelector, useAppDispatch } from '../../../../../App.hooks';
 import { RootState } from '../../../../../store';
 import {
-  changeMatchSelections,
+  setMatchSelections,
   fetchMatchVehicles,
   setMatchFields, setMatchVehicles,
   setTarget
@@ -39,20 +39,22 @@ function FastMatchPanel () {
     } else {
       vehicleService.getForAggregation(target, matchFields).then(
         (response) => {
+          const selectionValues = response.data as string[];
+
           switch (target) {
           case C.MAKE:
-            dispatch(changeMatchSelections({makers:response.data}));
+            dispatch(setMatchSelections({makers:selectionValues}));
             return;
           case C.MODEL:
-            dispatch(changeMatchSelections({models:response.data}));
+            dispatch(setMatchSelections({models:selectionValues}));
             return;
           case C.MODEL_YEAR:
-            dispatch(changeMatchSelections({
-              modelYears: _.orderBy(response.data, (e) => Number(e), 'desc')
+            dispatch(setMatchSelections({
+              modelYears: _.orderBy(selectionValues, (e) => Number(e), 'desc')
             }));
             return;
           case C.TRIM_LEVEL:
-            dispatch(changeMatchSelections({trimLevels:response.data}));
+            dispatch(setMatchSelections({trimLevels:selectionValues}));
             return;
           default:
             return;

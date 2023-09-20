@@ -95,7 +95,15 @@ function TopBar ({ menuSettings, userSettings }: Props) {
           <NavButtons items={items} handleClick={menuOnClickHandler}/>
 
           <Box sx={{width: '100%', textAlign: 'right'}}>
-            { isLoading && <CircularProgress size="large" color="secondary" sx={{width:38, margin:'8px 118px 0 0'}}/> }
+            { isLoading &&
+              <CircularProgress
+                color="secondary"
+                thickness={3}
+                variant="indeterminate"
+                disableShrink
+                sx={{width:38, margin:'4px 118px 0 0'}}
+              />
+            }
           </Box>
 
           <Box className="navigation-user-tools">
