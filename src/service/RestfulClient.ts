@@ -4,32 +4,29 @@ import authenticationManager from '../security/Auth/AuthenticationManager';
 import { APIPagingResponse, APIResponse, APIResponseWithHeaders } from './model/Response';
 import * as _ from 'lodash';
 
-type Callback = (data?:object | object[] | string) => void
+type Callback = (data?:any) => void
 
 export interface IRestfulClient {
-  get(url: string, params?: object, callback?: Callback):void
+  get(url: string, params?: string | object, callback?: Callback):void
   post(url: string, params?: object, callback?: Callback):void
   getWithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
   getBase64WithPromise(url: string, params?: string | object | object[]):Promise<APIResponse<any>>
-  postWithPromise (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
+  postWithPromise(url: string, params: object | string | null, body?: string | object | object[]):Promise<APIResponse<any>>
   postWithPaging (url: string, params: object | string | null, body?: string | object | object[]):Promise<APIPagingResponse<any>>
   putWithPromise(url: string, params?: object | string):Promise<APIResponse<object>>
-
-  upload(url:string,
-         formData:FormData,
-         setProgress?:(progress:any) => void):Promise<APIResponse<any>>
-  download(url:string, fileName:string | undefined):void
-
   deleteWithPromise(url:string, params?: object | string | null):Promise<APIResponse<any>>
+  upload(url:string, formData:FormData, setProgress?:(progress:any) => void):Promise<APIResponse<any>>
+  download(url:string, fileName:string | undefined):void
 }
 
+/**
+ * Single instance of restful client which uses axios library for handling http calls
+ */
 export class RestfulClient implements IRestfulClient {
 
-  async upload(url: string,
-    formData: FormData,
-    setProgress?:(progress:any) => void ): Promise<APIResponse<any>> {
-
+  async upload(url: string, formData: FormData, setProgress?:(progress:any) => void ): Promise<APIResponse<any>> {
     const { headers } = this.getConf('');
+
     try {
       const response = await axios.post(url, formData, {
         headers,
@@ -64,7 +61,7 @@ export class RestfulClient implements IRestfulClient {
       });
   }
 
-  get(url: string, params: object | undefined, callback?:Callback): void {
+  get(url: string, params: string | object, callback?:Callback): void {
     const _url = this.buildUrlWithParams(url, params);
 
     axios.get(_url).then(response => {
@@ -235,22 +232,28 @@ export class RestfulClient implements IRestfulClient {
   }
 
   buildUrlWithParams(url: string, params?: string | object | object[] | null ): string {
-    let _url = url;
-    if (params !== null) {
-      _url = url + ((params != null) ? '?' : '');
-      if (typeof params === "string") {
-        _url += `params`;
-      } else {
-        for (const param in params) {
-          if (Object.prototype.hasOwnProperty.call(params, param)) {
-            type ObjectKey = keyof typeof params
-            const key = param as ObjectKey;
-            _url += `${param}=${params[key]}&`;
-          }
-        }
+    if (_.isNil(params)) { return url; }
+
+    url += (params ? '?' : '');
+    if ( Array.isArray(params)) {
+      for (let i=0;i<params.length;i++) {
+        url += this.buildUrlWithObject(params[i]) + (i < params.length-1 ? '&' : '');
       }
+    } else if (typeof params === "string") {
+      url += params;
+    } else if (typeof params === "object") {
+      url += this.buildUrlWithObject(params);
     }
-    return _url;
+
+    return url;
+  }
+
+  buildUrlWithObject(param:object): string {
+    let paramStr = '';
+    for (const [key, val] of Object.entries(param)) {
+      paramStr += `${key}=${val}&`;
+    }
+    return paramStr.substring(0, paramStr.length-1); // remove the last & character
   }
 }
 

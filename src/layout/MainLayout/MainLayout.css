@@ -120,7 +120,7 @@ nav > ul li.current_page_item a {
     min-width: 128px;
     padding: 0;
     margin: 0 6px 0 6px;
-    background: url(/public/images/logo-jumkid-red.png) no-repeat top left;
+    background: url(/images/logo-jumkid-red.png) no-repeat top left;
     background-size: contain;
     cursor: pointer;
 }

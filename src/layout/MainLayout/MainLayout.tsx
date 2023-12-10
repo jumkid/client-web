@@ -30,7 +30,7 @@ const userSettings: UserSetting[] = [
 ];
 
 type Props = {
-  mode: string
+  mode: 'light' | 'dark'
   menuIndex: number
   children?: React.ReactNode
 }

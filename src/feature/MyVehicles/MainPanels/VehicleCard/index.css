@@ -1,7 +1,7 @@
 .vehicle-card {
-    width: 379px !important;
+    width: 370px !important;
     height: 248px !important;
-    margin: 5px 5px 0 0 !important;
+    margin: 5px 4px 0 4px !important;
 }
 
 .vehicle-card-access-scope {

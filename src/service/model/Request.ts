@@ -4,7 +4,7 @@ import { KeywordMode } from './CommonTypes';
 interface PagingSearch {
   page:number | undefined
   size:number | undefined
-  keyword?:string,
+  keyword?: string,
   keywordMode?: KeywordMode,
   data?: object | object[] | string
 }

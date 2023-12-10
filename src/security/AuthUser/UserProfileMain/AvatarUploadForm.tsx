@@ -6,6 +6,7 @@ import { contentService } from '../../../service';
 import { useAppDispatch, useAppSelector } from '../../../App.hooks';
 import { updateAvatar, submitAvatarUpdate, setStatus, UserProfileState } from '../../../store/tokenUserSlice';
 import { AppDispatch, RootState } from '../../../store';
+import { preloadContentThumbnail } from '../../../App.utils';
 
 const initValidationErrors:ValidationErrors = { hasUpdate: false }
 
@@ -16,9 +17,14 @@ function AvatarUploadForm () {
   const [errors, setErrors] = useState(initValidationErrors);
 
   const dispatch = useAppDispatch();
-  const avatarId = tokenUser.userProfile.attributes?.avatar[0];
+  const avatarId = tokenUser.userProfile.attributes?.avatar![0];
+
   useEffect(() => {
-    if (avatarId && avatarId.length > 0) setAvatarUrl(`${C.CONTENT_THUMBNAIL_API}/${avatarId}?size=medium`);
+    if (avatarId) {
+      preloadContentThumbnail(avatarId, 'medium').then((imageBase64) => {
+        setAvatarUrl(imageBase64);
+      });
+    }
   }, [avatarId]);
 
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {

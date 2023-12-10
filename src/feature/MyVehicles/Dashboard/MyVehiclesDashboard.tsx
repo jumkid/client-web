@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import MainLayout from '../../../layout/MainLayout';
 import { Box } from '@mui/material';
 import GarageSideBar from '../SideBar';
@@ -10,6 +10,7 @@ function MyVehiclesDashboard () {
       <Box className="side-bar-panel" gridColumn="span 2">
         <GarageSideBar />
       </Box>
+
       <Box className="main-panel" gridColumn="span 8">
         <MainPanel />
       </Box>

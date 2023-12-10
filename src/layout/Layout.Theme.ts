@@ -43,7 +43,7 @@ const DesignTokens = (mode: string):object => ({
           },
           text: {
             primary: '#FFF',
-            secondary: '#EDEDED'
+            secondary: grey[300]
           }
         })
   },
@@ -54,7 +54,7 @@ const DesignTokens = (mode: string):object => ({
     MuiAlert: {
       styleOverrides: {
         root: {
-          backgroundColor: '#303030'
+          backgroundColor: grey[900]
         },
         action: {
           margin: '0 4px',

@@ -8,7 +8,7 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: url(/public/images/garage-wallpaper.jpg) repeat-x top left #000;
+    background: url(/images/garage-wallpaper.jpg) repeat-x top left #000;
 }
 
 code {

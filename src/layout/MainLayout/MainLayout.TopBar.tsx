@@ -24,6 +24,7 @@ import { useAppDispatch, useAppSelector } from '../../App.hooks';
 import NotificationDrawer from '../../feature/UserOriented/NotificationDrawer';
 import { fetchUserActivityNotifications } from '../../store/userNotificationsSlice';
 import authenticationManager from '../../security/Auth/AuthenticationManager';
+import { preloadContentThumbnail } from '../../App.utils';
 
 type Props = {
   menuSettings: MenuSetting[],
@@ -35,10 +36,11 @@ const initialElement: HTMLButtonElement | null = null;
 function TopBar ({ menuSettings, userSettings }: Props) {
   const [anchorElUser, setAnchorElUser] = useState(initialElement);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   const tokenUser = useAppSelector((state:RootState) => state.tokenUser);
   const userProfile = tokenUser.userProfile;
-  const userAvatar = userProfile.attributes?.avatar[0];
+  const userAvatar = userProfile.attributes?.avatar![0];
   const userName = userProfile.username;
 
   const userVehiclesStatus = useAppSelector((state:RootState) => state.userVehicles.status);
@@ -66,13 +68,18 @@ function TopBar ({ menuSettings, userSettings }: Props) {
   }
 
   useEffect(() => {
+    if (userAvatar) {
+      preloadContentThumbnail(userAvatar, 'medium').then((imageBase64) => {
+        setAvatarUrl(imageBase64);
+      });
+    }
     const autoRefreshEvent = autoRefresh();
     const keepAliveIntervalEvent = authenticationManager.keepAliveInterval();
     return () => {
       clearInterval(autoRefreshEvent);
       clearInterval(keepAliveIntervalEvent);
     }
-  },[]);
+  },[tokenUser]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>):void => {
     setAnchorElUser(event.currentTarget);
@@ -118,8 +125,7 @@ function TopBar ({ menuSettings, userSettings }: Props) {
 
                 <Tooltip title="Open settings">
                   <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                    {!userAvatar && <Avatar alt={userName} />}
-                    {userAvatar && <Avatar alt={userName} src={`${C.CONTENT_THUMBNAIL_API}/${userAvatar}?size=medium`} />}
+                    {userAvatar && <Avatar alt={userName} src={avatarUrl} />}
                   </IconButton>
                 </Tooltip>
               </>

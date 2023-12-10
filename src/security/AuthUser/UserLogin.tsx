@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Box, Button, Divider, FormControl, Stack, TextField, Typography, Link } from '@mui/material';
 import authenticationManager from '../Auth/AuthenticationManager';
 import SimpleLayout from '../../layout/SimpleLayout';
-
-const initialLoginMessage:string | null = null;
+import * as _ from 'lodash';
 
 function UserLogin () {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginMessage, setLoginMessage] = useState(initialLoginMessage);
+  const [loginMessage, setLoginMessage] = useState('');
 
   const changeUsername = (event:React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -20,25 +19,30 @@ function UserLogin () {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = () => {
-    setLoginMessage(null);
-    authenticationManager.login(username, password)
-      .then(({ isSuccess, status }) => {
-        if (isSuccess) {
-          navigate('/');
-        }
-      }).catch(({ isSuccess, status }) => {
-        setLoginMessage(status === 500
-          ? 'Oops! Something goes wrong with network connection or the online service.'
-          : 'Login failed. Please make sure username and password is correct');
-      });
-  };
-
-  const handleEnterKeyPress = (event:React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
+  const handleSubmit = async () => {
+    setLoginMessage('');
+    try {
+      const response = await authenticationManager.login(username, password);
+      if (response.isSuccess) {
+        navigate('/');
+      }
+    } catch (error:any) {
+      const warning = (error.status === 500)
+        ? 'Oops! Something goes wrong with network connection or the online service.'
+        : 'Login failed. Please make sure username and password is correct';
+      setLoginMessage(warning);
     }
   };
+
+  const handleEnterKeyPress = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      await handleSubmit();
+    }
+  };
+
+  const isFormValid:boolean = useMemo(() => {
+    return !_.isEmpty(username) && !_.isEmpty(password);
+  }, [username, password]);
 
   return (
     <SimpleLayout>
@@ -50,7 +54,7 @@ function UserLogin () {
             <Stack alignItems="center">
               <TextField
                 margin='dense'
-                id="username"
+                name="username"
                 label="Username"
                 autoComplete="username"
                 value={username}
@@ -60,7 +64,9 @@ function UserLogin () {
               />
               <TextField
                 margin='dense'
-                id="user-password"
+                inputProps={{
+                  "data-testid": "password",
+                }}
                 label="Password"
                 type="password"
                 autoComplete="current-password"
@@ -74,7 +80,7 @@ function UserLogin () {
             </Stack>
             <Divider sx={{ mb: '28px' }}/>
           </FormControl>
-          <Button onClick={handleSubmit} variant="contained" type="submit">Submit</Button>
+          <Button name="submit" onClick={handleSubmit} variant="contained" type="submit" disabled={!isFormValid}>Submit</Button>
           &nbsp;
           <Typography>Not have a user account? <Link href="/sign-up">SignUp</Link> here</Typography>
         </Stack>

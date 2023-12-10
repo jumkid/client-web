@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useState } from 'react';
 import { Button } from '@mui/material';
 import { Add, Delete, Save } from '@mui/icons-material';
 import {
-  changePick,
   deleteVehicle, fetchVehicle,
   saveNewVehicle, setCurrentVehicle,
   updateVehicle
@@ -14,11 +13,7 @@ import * as C from '../../../../App.constants';
 import * as _ from 'lodash';
 import ConfirmDialog from '../../../../component/ConfirmDialog';
 import { setConnectedVehicle } from '../../../../store/connectedVehicleSlice';
-import {
-  clearMatchFields,
-  fetchMatchVehicles, setMatchFields,
-  setMatchVehicles
-} from '../../../../store/searchVehiclesSlice';
+import { fetchMatchVehicles } from '../../../../store/searchVehiclesSlice';
 import { APIResponse } from '../../../../service/model/Response';
 import { VehicleProfile } from '../../../../store/model/VehicleProfile';
 import { setUserCenterWarning } from '../../../../store/userNotificationsSlice';

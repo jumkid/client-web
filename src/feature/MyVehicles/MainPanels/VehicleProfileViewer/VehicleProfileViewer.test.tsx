@@ -8,6 +8,7 @@ import * as C from '../../../../App.constants';
 import { act, render } from '@testing-library/react';
 import mockAxios from 'axios';
 import authenticationManager from '../../../../security/Auth/AuthenticationManager';
+import renderer from 'react-test-renderer';
 
 //Configuring a mockStore
 const middlewares = [thunk];
@@ -35,14 +36,12 @@ describe(VehicleProfileViewer, () => {
     }
   });
 
-  it('Should render correctly', async () => {
-    await act(async () => {
-      render(
-          <Provider store={store}>
-            <VehicleProfileViewer showName={false} vehicleProfile={testVehicleProfile} mode={C.MODE_ACTIVE} />
-          </Provider>
-        );
-      expect(screen).toMatchSnapshot();
-    });
+  it('Should render correctly', () => {
+    const tree = renderer.create(
+      <Provider store={store}>
+        <VehicleProfileViewer showName={false} vehicleProfile={testVehicleProfile} mode={C.MODE_ACTIVE} />
+      </Provider>
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 })
