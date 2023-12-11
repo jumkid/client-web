@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Paper, SxProps } from '@mui/material';
+import { CircularProgress, Paper } from '@mui/material';
 import { preloadContentThumbnail } from '../App.utils';
 import * as _ from 'lodash';
 
@@ -27,8 +27,8 @@ function AuthThumbnail ({contentId, idx, width, height}:Props) {
     <Paper
       key={idx}
       sx={{
-        width,
         height,
+        width,
         float: 'left',
         background: `url('${preLoadImage}')`,
         backgroundSize: 'contain',

@@ -1,4 +1,4 @@
-const _API_URL: string = process.env.NODE_ENV === 'production' ? process.env.VITE_APP_API_GATEWAY_HOST! : "http://localhost";
+const _API_URL: string = process.env.NODE_ENV === 'production' ? process.env.VITE_APP_API_GATEWAY_HOST! : "https://localhost";
 
 export const IDLE = "idle";
 export const LOADING = "loading";
